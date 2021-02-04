@@ -4,7 +4,7 @@ import SearchBar from "../Components/SearchBar";
 import Elements from "../CustomProperties/Elements";
 import { ScrollView } from "react-native";
 
-const FeedScreen = () => {
+const RecipeScreen = () => {
   return (
     <React.Fragment>
       <SearchBar />
@@ -26,4 +26,4 @@ const FeedScreen = () => {
   );
 };
 
-export default FeedScreen;
+export default RecipeScreen;

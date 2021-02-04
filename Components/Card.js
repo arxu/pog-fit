@@ -21,15 +21,18 @@ const CustomCard = (props) => {
         <Card.Content>
           <Paragraph>{props.content.substring(0, 100)}</Paragraph>
         </Card.Content>
-          {/* <Card.Content style={styles.contentStart}>
+        </Card.Actions>
+
+        {/* <Card.Actions>
+          <Card.Content style={styles.contentStart}>
             <Likes likes={props.likes} />
           </Card.Content>
           <Card.Content style={styles.contentEnd}>
             <Text>{props.comment} Comments </Text>
             <Text>{props.shares} Shares </Text>
             <Text>{props.views} Views</Text>
-          </Card.Content> */}
-        </Card.Actions>
+          </Card.Content>
+        </Card.Actions> */}
 
         <Card.Content style={styles.horizontalLine} />
 
