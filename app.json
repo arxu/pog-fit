@@ -1,0 +1,12 @@
+{
+  "name": "pog-fit",
+  "displayName": "pog-fit",
+  "expo": {
+    "name": "pog-fit",
+    "slug": "pog-fit",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
