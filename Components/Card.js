@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Image, StyleSheet } from "react-native";
+import { Button, Image, StyleSheet } from "react-native";
 import { Card, Text, Paragraph } from "react-native-paper";
 
 import CardAction from "./CardAction";
