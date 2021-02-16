@@ -9,7 +9,7 @@ const CustomIcon = (props) => {
           name={props.name}
           size={props.size}
           style={{
-            backgroundColor: `${props.bcolor}`,
+            /*backgroundColor: `${props.bcolor}`, ---- causes errors*/ 
             color: `${props.color}`,
             paddingLeft: props.pLeft,
             borderRadius: props.rad,
@@ -19,5 +19,6 @@ const CustomIcon = (props) => {
     </View>
   );
 };
+
 
 export default CustomIcon;

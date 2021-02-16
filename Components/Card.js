@@ -6,13 +6,18 @@ import CardAction from "./CardAction";
 //import Likes from "./Likes";
 
 const CustomCard = (props) => {
+
+  function giveMeFive() {
+    return 5;
+  }
+
   return (
     <React.Fragment>
       <Card style={styles.container}>
         <Card.Content style={{ flexDirection: "row" }}>
           <Image source={{ uri: props.uri }} style={styles.img} />
           <Paragraph style={{ marginTop: 15 }}>
-            <Text style={{ fontWeight: "bold" }}>{props.title}</Text>
+            <Text style={{ fontWeight: "bold", backgroundColor: "transparent" }}>{props.title}</Text>
           </Paragraph>
         </Card.Content>
         <Card.Cover source={{ uri: props.uri }} />
@@ -38,7 +43,7 @@ const CustomCard = (props) => {
 
         <Card.Content style={styles.action}>
           <CardAction name="thumb-up-outline" text="Plan" />
-          <CardAction name="message-outline" text="Edit" />
+          <CardAction name="message-outline" text="Edit" eventTest={props.eventTest} navigation={props.navigation}/>
           <CardAction name="share-outline" text="Delete" />
         </Card.Content>
       </Card>
