@@ -5,7 +5,7 @@ import {StackActions} from '@react-navigation/native';
 import { roundToNearestPixel } from 'react-native/Libraries/Utilities/PixelRatio';
 
 const RecipeEditRoute = (props) => {
-    const recipe = props.route.params.recipe;
+    let recipe = props.route.params.recipe;
     return (
         <View><Text>{recipe.title}</Text></View>
     );

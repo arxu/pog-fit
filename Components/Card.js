@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, Image, StyleSheet } from "react-native";
+import { Image, StyleSheet, TouchableHighlight } from "react-native";
 import { Card, Text, Paragraph } from "react-native-paper";
 
 import CardAction from "./CardAction";
@@ -8,43 +8,42 @@ import CardAction from "./CardAction";
 const CustomCard = (props) => {
   return (
     <React.Fragment>
-      <Card style={styles.container}>
-        <Card.Content style={{ flexDirection: "row" }}>
-          <Image source={{ uri: props.uri }} style={styles.img} />
-          <Paragraph style={{ marginTop: 15 }}>
-            <Text style={{ fontWeight: "bold", backgroundColor: "transparent" }}>{props.title}</Text>
-          </Paragraph>
-        </Card.Content>
-        <Card.Cover source={{ uri: props.uri }} />
-
-        <Card.Actions>
-        <Card.Content>
-          <Paragraph>{props.content.substring(0, 100)}</Paragraph>
-        </Card.Content>
-        </Card.Actions>
-
-        {/* <Card.Actions>
-          <Card.Content style={styles.contentStart}>
-            <Likes likes={props.likes} />
+      <TouchableHighlight
+        activeOpacity={0.85}
+        underlayColor='#eee'
+        onPress={() => props.navigation.push('Recipe', { recipe: props.recipe })}
+      >
+        <Card style={styles.container}>
+          {/* Image and title */}
+          <Card.Content style={{ flexDirection: "row" }}>
+            <Image source={{ uri: props.uri }} style={styles.img} />
+            <Paragraph style={{ marginTop: 15 }}>
+              <Text style={{ fontWeight: "bold", backgroundColor: "transparent" }}>{props.title}</Text>
+            </Paragraph>
           </Card.Content>
-          <Card.Content style={styles.contentEnd}>
-            <Text>{props.comment} Comments </Text>
-            <Text>{props.shares} Shares </Text>
-            <Text>{props.views} Views</Text>
+          
+          <Card.Cover source={{ uri: props.uri }} />
+
+          {/*
+          <Card.Actions>
+            <Card.Content>
+              <Paragraph>{props.content.substring(0, 100)}</Paragraph>
+            </Card.Content>
+          </Card.Actions>
+          
+          <Card.Content style={styles.horizontalLine} />
+
+          <Card.Content style={styles.action}>
+            <CardAction name="thumb-up-outline" text="Plan" />
+            <CardAction 
+              name="message-outline" text="Edit" 
+              navigation={props.navigation}
+              recipe={props.recipe}/>
+            <CardAction name="share-outline" text="Delete" />
           </Card.Content>
-        </Card.Actions> */}
-
-        <Card.Content style={styles.horizontalLine} />
-
-        <Card.Content style={styles.action}>
-          <CardAction name="thumb-up-outline" text="Plan" />
-          <CardAction 
-            name="message-outline" text="Edit" 
-            navigation={props.navigation}
-            recipe={props.recipe}/>
-          <CardAction name="share-outline" text="Delete" />
-        </Card.Content>
-      </Card>
+          */}
+        </Card>
+      </TouchableHighlight>
     </React.Fragment>
   );
 };

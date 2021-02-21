@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import RecipeRoute from "./RecipeScreen";
 import WorkoutRoute from "./WorkoutScreen";
 import ProfileRoute from "./ProfileScreen";
-import RecipeEditRoute from './EditRecipeScreen';
 import CalendarRoute from "./CalendarScreen";
 import { BottomNavigation } from "react-native-paper";
 import { baseProps } from "react-native-gesture-handler/dist/src/handlers/gestureHandlers";
@@ -20,8 +19,7 @@ const Screen = (props) => {
     recipes: RecipeRoute,
     workouts: WorkoutRoute,
     profile: ProfileRoute,
-    calendar: CalendarRoute,
-    editRecipe: RecipeEditRoute
+    calendar: CalendarRoute
   });
 
   return (
