@@ -14,10 +14,10 @@ const RecipeList = (props) => {
     <React.Fragment>
       <SearchBar />
       <ScrollView>
-        {Elements.map((e) => (
-          <CustomCard
+        {Elements.map(function(e) {
+          return <CustomCard
+            recipe = {e}
             navigation = {props.navigation}
-            eventTest = {props.eventTest /* for testing events */}
             key={e.id}
             title={e.title}
             content={e.content}
@@ -27,7 +27,7 @@ const RecipeList = (props) => {
             views={e.views}
             likes={e.likes}
           />
-        ))}
+        })}
       </ScrollView>
     </React.Fragment>
   );

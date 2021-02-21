@@ -1,10 +1,13 @@
 import React from 'react';
 import {View} from 'react-native';
 import {Text} from 'react-native-paper';
+import {StackActions} from '@react-navigation/native';
+import { roundToNearestPixel } from 'react-native/Libraries/Utilities/PixelRatio';
 
-const RecipeEditRoute = () => {
+const RecipeEditRoute = (props) => {
+    const recipe = props.route.params.recipe;
     return (
-        <View><Text>Edit Recipe Screen</Text></View>
+        <View><Text>{recipe.title}</Text></View>
     );
 }
 

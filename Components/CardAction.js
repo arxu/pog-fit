@@ -10,7 +10,7 @@ const CardAction = (props) => {
     <TouchableHighlight
       activeOpacity={0.85}
       underlayColor='#eee'
-      onPress={() => props.navigation.push('Edit Recipe')}
+      onPress={() => props.navigation.push('Edit Recipe', { recipe: props.recipe})}
       style={{
         /* style here */
       }}

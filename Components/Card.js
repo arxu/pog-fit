@@ -6,11 +6,6 @@ import CardAction from "./CardAction";
 //import Likes from "./Likes";
 
 const CustomCard = (props) => {
-
-  function giveMeFive() {
-    return 5;
-  }
-
   return (
     <React.Fragment>
       <Card style={styles.container}>
@@ -43,7 +38,10 @@ const CustomCard = (props) => {
 
         <Card.Content style={styles.action}>
           <CardAction name="thumb-up-outline" text="Plan" />
-          <CardAction name="message-outline" text="Edit" eventTest={props.eventTest} navigation={props.navigation}/>
+          <CardAction 
+            name="message-outline" text="Edit" 
+            navigation={props.navigation}
+            recipe={props.recipe}/>
           <CardAction name="share-outline" text="Delete" />
         </Card.Content>
       </Card>
