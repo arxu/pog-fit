@@ -11,16 +11,11 @@ const RecipeListRoute = (props) => {
         <ScrollView>
           {Elements.map(function(e) {
             return <CustomCard
-              recipe = {e}
               navigation = {props.navigation}
+              recipe = {e}
               key={e.id}
               title={e.title}
-              content={e.content}
               uri={e.uri}
-              comment={e.comment}
-              shares={e.shares}
-              views={e.views}
-              likes={e.likes}
             />
           })}
         </ScrollView>

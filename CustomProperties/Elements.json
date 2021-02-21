@@ -1,10 +1,16 @@
 [
   {
     "id": 1,
-    "title": "Meal",
-    "content":
-      "1. Lorem ipsum dolor sit amet\n2. consectetur adipiscing elit\n3. sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "uri": "https://picsum.photos/700"
+    "title": "Eggs on Toast",
+    "ingredients": ["3 Eggs", "Butter", "Toast"],
+    "method":
+      "1. Put pan on medium heat and add oil\n2. Crack open eggs into a bowl\n3. Add eggs to pan and fry until ready\n4. Toast bread\n5. Spread butter on bread and lay eggs on top.",
+    "uri": "https://picsum.photos/700",
+    "category": "Breakfast",
+    "fat": 4.6,
+    "protein": 6.4,
+    "carbohydrates": 0,
+    "sugars": 0
   },
   {
     "id": 2,

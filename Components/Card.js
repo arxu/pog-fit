@@ -14,7 +14,6 @@ const CustomCard = (props) => {
         onPress={() => props.navigation.push('Recipe', { recipe: props.recipe })}
       >
         <Card style={styles.container}>
-          {/* Image and title */}
           <Card.Content style={{ flexDirection: "row" }}>
             <Image source={{ uri: props.uri }} style={styles.img} />
             <Paragraph style={{ marginTop: 15 }}>
