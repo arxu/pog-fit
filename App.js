@@ -12,7 +12,6 @@ export default function App() {
   return (
       <PaperProvider theme = { theme }>
         <NavigationContainer>
-          <TopBar />
           <MainScreen />
         </NavigationContainer>
       </PaperProvider>
