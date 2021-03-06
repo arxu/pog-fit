@@ -1,22 +1,54 @@
 import React from 'react';
-import {Headline, Subheading, Paragraph, List, DataTable, Appbar} from 'react-native-paper';
-import { Image, StyleSheet, ScrollView} from "react-native";
+import {Headline, Subheading, Paragraph, List, DataTable, Appbar, TextInput} from 'react-native-paper';
+import {Image, StyleSheet, ScrollView} from "react-native";
+
+var ld = require('lodash');
+//var rnfs = require('react-native-fs');
 
 const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
+//const filePath = rnfs.DocumentDirectoryPath + '/CustomProperties/Elements.json';
 
 const RecipeViewRoute = (props) => {
-    
     let recipe = props.route.params.recipe;
+    let editing = false;
+    let newRecipe = undefined;
+    
+    function enterEditMode(){
+        editing = true;
+        newRecipe = ld.cloneDeep(recipe);
+    }
+
+    function saveAndExitEditMode() {
+        // save the recipe to file
+        recipe = newRecipe;
+        editing = false;
+    }
+
+    function cancelAndExitEditMode() {
+        newRecipe = undefined;
+        editing = false;
+    }
+
+    function EditableHeadline(editing) {
+        if (!editing) {
+            return <Headline>{recipe.title}</Headline>;
+        }
+        else {
+            return <TextInput label="title" value={recipe.title}/>
+        }
+    }
+
+    
     
     return (
         <React.Fragment>
             <Appbar.Header>
                 <Appbar.Content title={recipe.title}/>
-                <Appbar.Action icon={MORE_ICON}/>
+                <Appbar.Action icon={MORE_ICON} onPress={ () => enterEditMode()}/>
             </Appbar.Header>
             <ScrollView>
                 <React.Fragment>
-                    <Headline>{recipe.title}</Headline>
+                    
 
                     <Image source={{ uri: recipe.uri }} style={styles.image}/>
                     
