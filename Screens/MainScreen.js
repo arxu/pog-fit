@@ -4,7 +4,7 @@ import WorkoutRoute from "./WorkoutScreen";
 import ProfileRoute from "./ProfileScreen";
 import CalendarRoute from "./CalendarScreen";
 import { BottomNavigation } from "react-native-paper";
-import { baseProps } from "react-native-gesture-handler/dist/src/handlers/gestureHandlers";
+//import { baseProps } from "react-native-gesture-handler/dist/src/handlers/gestureHandlers";
 
 const Screen = (props) => {
   const [index, setIndex] = useState(0);
