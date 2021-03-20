@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Headline, Subheading, Paragraph, List, DataTable, Appbar, TextInput} from 'react-native-paper';
 import {Image, StyleSheet, ScrollView} from "react-native";
+import {removeOne} from "../FileStorage/DBManager";
 
 var ld = require('lodash');
 //var rnfs = require('react-native-fs');
@@ -36,15 +37,13 @@ const RecipeViewRoute = (props) => {
         else {
             return <TextInput label="title" value={recipe.title}/>
         }
-    }
-
-    
+    }   
     
     return (
         <React.Fragment>
             <Appbar.Header>
                 <Appbar.Content title={recipe.title}/>
-                <Appbar.Action icon={MORE_ICON} onPress={ () => enterEditMode()}/>
+                <Appbar.Action icon={MORE_ICON} onPress={ () =>enterEditMode()}/>
             </Appbar.Header>
             <ScrollView>
                 <React.Fragment>

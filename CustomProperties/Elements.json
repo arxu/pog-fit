@@ -1,9 +1,5 @@
 [
   {
-    "id": 0,
-    "nextDeletedId": -1
-  },
-  {
     "isDeleted": false,
     "nextDeletedId": -1,
     "id": 1,

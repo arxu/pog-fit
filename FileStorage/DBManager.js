@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import React from "react";
 
 var ld = require('lodash');
 
@@ -49,18 +50,28 @@ export const storeOne = async (collection, record) => {
 // removes record with specified id from collection. 
 export const removeOne = async (collection, id) => {
     try {
-        await AsyncStorage.getItem(collection + id.toString(), (error, result) => {
-            if (error) {
-                console.log(error);
-            }
-            else if (result) {
-                let lastDeleted = await findNearestDeletedId(collection, id);
-                if (lastDeleted === null){
-
-                }
-                await AsyncStorage.setItem(collection + id.toString(), )
-            }
-        });
+      await AsyncStorage.getItem(collection + id.toString(), async (error, result) => {
+        if (error) {
+          console.log(error);
+        }
+        else if (result) {
+          let lastDeleted = await findNearestDeletedId(collection, id);
+          console.log("Last deteled: " + lastDeleted);
+          if (lastDeleted === null){
+            return;
+          }
+          else {
+            // insert result into the deleted "linked list" by swapping pointers
+            result.nextDeletedID = lastDeleted.nextDeletedID;
+            lastDeleted.nextDeletedID = result.id;
+            result.isDeleted = true;
+            
+            // write changes to database
+            await AsyncStorage.setItem(collection + lastDeleted.id.toString, JSON.stringify(lastDeleted));
+            await AsyncStorage.setItem(collection + result.id, JSON.stringify(result));
+          }
+        }    
+      });
     } catch(e) {
         console.log(e);
     }
@@ -79,31 +90,33 @@ export const storeMultipleFromJSON = async (collection, elementsJSON) => {
 
 // Returns the id of the nearest deleted item before the id in the database
 const findNearestDeletedId = async (collection, id) => {
-  let outResult = null;  
-  const fNDI = async (collection, id) => {
-      if (id < 0) {
-        console.log("ERROR: getNeearestDeletedID received id smaller than 0; ID=" + id);
-      }
-      try {
-          await AsyncStorage.getItem(collection + id.toString(), (error, result) => {
-            if (error) {
-                console.log(error);
-            }
-            else if (!result){
-                console.log("ERROR: could not finish search for nearest deleted ID");
-            }
-            else if (result.isDeleted || result.id === "0"){
-                outResult = result;
-            }
-            else {
-                await fNDI(collection, id - 1, outResult);
-            }  
-          });
-               
-      } catch(e) {
-          console.log(e);
-      }
+  if (id < 0) {
+    console.log("ERROR: getNeearestDeletedID received id smaller than 0; ID=" + id);
   }
-  await fNDI(collection, id);
-  return outResult;
+  try {
+    // loop backwards through objects until a deleted one is found or obj with id=0 is found
+    let foundLastDeleted = false;
+    while (!foundLastDeleted) {
+      let item = await AsyncStorage.getItem(collection + id.toString());
+      if (item) {
+        item = JSON.parse(item);
+        if (item.id == 0){
+          return null;
+        }
+        else if (item.isDeleted) {
+          return item;
+        }
+        else {
+          id--;
+        }
+      }
+      else {
+        console.log("no item");
+      }
+    }   
+  } catch(e) {
+      console.log(e);
+  }
+  console.log("uh oh");
+  return null;
 }
