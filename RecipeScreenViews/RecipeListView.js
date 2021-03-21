@@ -10,7 +10,6 @@ import {createDefaultTables, testQuery} from "../FileStorage/Database";
 const RecipeListRoute = (props) => {
   let [recipes, setRecipes] = useState([]);
   createDefaultTables();
-  testQuery();
   
   // WARNING: the contents of the array passed into useEffect are compared to their previous state.
   // The function is called only when there is a change to the contents (I think) of the array.

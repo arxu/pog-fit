@@ -4,6 +4,16 @@ import Elements from "../CustomProperties/Elements";
 export function createDefaultTables() {
     const db = SQLite.openDatabase("pogFit");
     /*
+    Delete any previously constructed tables 
+    NOTE: Drop tables mainly for testing purposes
+    */
+    db.transaction((tx) => { tx.executeSql("DROP TABLE IF EXISTS users"); }, (error) => { console.log(error); });
+    db.transaction((tx) => { tx.executeSql("DROP TABLE IF EXISTS recipes"); }, (error) => { console.log(error); });
+    db.transaction((tx) => { tx.executeSql("DROP TABLE IF EXISTS recipe_ingredients"); }, (error) => { console.log(error); });
+    db.transaction((tx) => { tx.executeSql("DROP TABLE IF EXISTS workouts"); }, (error) => { console.log(error); });
+    db.transaction((tx) => { tx.executeSql("DROP TABLE IF EXISTS workout_muscle_groups"); }, (error) => { console.log(error); });
+    
+    /*
     Create tables
     */
     // dates stored as text in form of "YYYY-MM-DD HH:MM:SS.SSS"
@@ -135,11 +145,12 @@ export function createDefaultTables() {
     });
 
     // Insert premade recipes
-    Elements.map((e) => {
+    Elements.map((elm, idx) => {
+        // Insert recipe
         db.transaction((tx) => {         
             tx.executeSql(`
                 INSERT INTO recipes (title, method, uri, category, fat, protein, carbohydrates, sugars, user_id)
-                VALUES ("${e.title}", "${e.method}", "${e.uri}", "${e.category}", ${e.fat}, ${e.protein}, ${e.carbohydrates}, ${e.sugars}, 0);
+                VALUES ("${elm.title}", "${elm.method}", "${elm.uri}", "${elm.category}", ${elm.fat}, ${elm.protein}, ${elm.carbohydrates}, ${elm.sugars}, 1);
             `,
             [],
             (tx, ResultSet) => {
@@ -152,9 +163,28 @@ export function createDefaultTables() {
         (error) => {
             console.log(error);
         });
+
+        // Insert ingredients of recipe into recipe_ingredients table
+        elm.ingredients.forEach(ing => {
+            db.transaction((tx) => {
+                tx.executeSql(`
+                    INSERT INTO recipe_ingredients (title, recipe_id)
+                    VALUES ("${ing}", ${idx+1});
+                `)},
+                (tx, error) => {
+                    console.log(error);
+                }
+            ),
+            (error) => {
+                console.log(error);
+            }
+        });
     });
 }
 
+
+
+// NOTE: for testing purposes only
 export function testQuery(){
     const db = SQLite.openDatabase("pogFit");
     let result = [];
@@ -166,7 +196,6 @@ export function testQuery(){
         [],
         (tx, resultSet) => {
             for (let i = 1; i < 10; i++) {
-                
                 let tuple = resultSet.rows.item(i);
                 if (tuple){
                     console.log(tuple);
