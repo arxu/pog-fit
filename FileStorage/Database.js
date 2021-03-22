@@ -1,4 +1,4 @@
-import * as SQLite from "expo-sqlite";
+import SQLite from "react-native-sqlite-storage";
 import Elements from "../CustomProperties/Elements";
 
 export function createDefaultTables() {
@@ -7,6 +7,7 @@ export function createDefaultTables() {
     Delete any previously constructed tables 
     NOTE: Drop tables mainly for testing purposes
     */
+    
     db.transaction((tx) => { tx.executeSql("DROP TABLE IF EXISTS users"); }, (error) => { console.log(error); });
     db.transaction((tx) => { tx.executeSql("DROP TABLE IF EXISTS recipes"); }, (error) => { console.log(error); });
     db.transaction((tx) => { tx.executeSql("DROP TABLE IF EXISTS recipe_ingredients"); }, (error) => { console.log(error); });
@@ -170,24 +171,73 @@ export function createDefaultTables() {
                 tx.executeSql(`
                     INSERT INTO recipe_ingredients (title, recipe_id)
                     VALUES ("${ing}", ${idx+1});
-                `)},
+                `,
+                [],
+                (tx, resultSet) => {
+
+                },
                 (tx, error) => {
                     console.log(error);
-                }
-            ),
+                });
+            },
             (error) => {
                 console.log(error);
-            }
+            });
         });
     });
+
+    console.log("Default application tables set up.");
 }
 
+export function getAllRecipes(callback) {
+    const db = SQLite.openDatabase("pogFit");
+    db.transaction((tx) => {
+        // Get all recipes
+        tx.executeSql(`
+            SELECT * 
+            FROM recipes;
+        `, 
+        [],
+        (tx, recipeResultSet) => { 
+            // recipes is an an array of recipe objects, each of which have an ingredients property.
+            // ingredients is an array of the ingredients that the recipe consists of.
+            recipeResultSet.rows._array.forEach((tuple, idx)=>{
+                let ingredients;
+                db.transaction((tx) => {
+                    // Get the title of each ingredient belonging to the recipe
+                    tx.executeSql(`
+                        SELECT title 
+                        FROM recipe_ingredients
+                        WHERE recipe_id=${idx+1}
+                    `,
+                    [],
+                    (tx, ingredientResultSet) => {
+                        tuple.ingredients = ingredientResultSet.rows._array;
+                    },
+                    (tx, error) => {
+                        callback(error, null);
+                    });
+                },
+                (error) => {
+                    callback(error, null);
+                });
+            });
+            // return the recipes array 
+            callback(null, recipeResultSet.rows._array);
+        },
+        (tx, error) => {
+            callback(error, null);
+        });
+    },
+    (error) => {
+        callback(error, null);
+    });
+}
 
 
 // NOTE: for testing purposes only
 export function testQuery(){
     const db = SQLite.openDatabase("pogFit");
-    let result = [];
     db.transaction( (tx) => {
         tx.executeSql(`
             SELECT * 
@@ -195,15 +245,7 @@ export function testQuery(){
         `,
         [],
         (tx, resultSet) => {
-            for (let i = 1; i < 10; i++) {
-                let tuple = resultSet.rows.item(i);
-                if (tuple){
-                    console.log(tuple);
-                }
-                else {
-                    break;
-                }
-            }
+            console.log(resultSet.rows._array);
         },
         (tx, error) => {
             console.log(error);
