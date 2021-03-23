@@ -1,0 +1,107 @@
+[
+  {
+    "isDeleted": false,
+    "nextDeletedId": -1,
+    "id": 1,
+    "title": "Eggs on Toast",
+    "ingredients": ["3 Eggs", "Butter", "Toast"],
+    "method":
+      "1. Put pan on medium heat and add oil\n2. Crack open eggs into a bowl\n3. Add eggs to pan and fry until ready\n4. Toast bread\n5. Spread butter on bread and lay eggs on top.",
+    "uri": "https://picsum.photos/700",
+    "category": "Breakfast",
+    "fat": 14.9,
+    "protein": 21.2,
+    "carbohydrates": 12.5,
+    "sugars": 2
+  },
+  {
+    "isDeleted": false,
+    "nextDeletedId": -1,
+    "id": 2,
+    "title": "Eggs on Toast 2",
+    "ingredients": ["3 Eggs", "Butter", "Toast"],
+    "method":
+      "1. Put pan on medium heat and add oil\n2. Crack open eggs into a bowl\n3. Add eggs to pan and fry until ready\n4. Toast bread\n5. Spread butter on bread and lay eggs on top.",
+    "uri": "https://picsum.photos/600",
+    "category": "Breakfast",
+    "fat": 14.9,
+    "protein": 21.2,
+    "carbohydrates": 12.5,
+    "sugars": 2
+  },
+  {
+    "isDeleted": false,
+    "nextDeletedId": -1,
+    "id": 3,
+    "title": "Eggs on Toast 3",
+    "ingredients": ["3 Eggs", "Butter", "Toast"],
+    "method":
+      "1. Put pan on medium heat and add oil\n2. Crack open eggs into a bowl\n3. Add eggs to pan and fry until ready\n4. Toast bread\n5. Spread butter on bread and lay eggs on top.",
+    "uri": "https://picsum.photos/500",
+    "category": "Breakfast",
+    "fat": 14.9,
+    "protein": 21.2,
+    "carbohydrates": 12.5,
+    "sugars": 2
+  },
+  {
+    "isDeleted": false,
+    "nextDeletedId": -1,
+    "id": 4,
+    "title": "Eggs on Toast 4",
+    "ingredients": ["3 Eggs", "Butter", "Toast"],
+    "method":
+      "1. Put pan on medium heat and add oil\n2. Crack open eggs into a bowl\n3. Add eggs to pan and fry until ready\n4. Toast bread\n5. Spread butter on bread and lay eggs on top.",
+    "uri": "https://picsum.photos/400",
+    "category": "Breakfast",
+    "fat": 14.9,
+    "protein": 21.2,
+    "carbohydrates": 12.5,
+    "sugars": 2
+  },
+  {
+    "isDeleted": false,
+    "nextDeletedId": -1,
+    "id": 5,
+    "title": "Eggs on Toast 5",
+    "ingredients": ["3 Eggs", "Butter", "Toast"],
+    "method":
+      "1. Put pan on medium heat and add oil\n2. Crack open eggs into a bowl\n3. Add eggs to pan and fry until ready\n4. Toast bread\n5. Spread butter on bread and lay eggs on top.",
+    "uri": "https://picsum.photos/300",
+    "category": "Breakfast",
+    "fat": 14.9,
+    "protein": 21.2,
+    "carbohydrates": 12.5,
+    "sugars": 2
+  },
+  {
+    "isDeleted": false,
+    "nextDeletedId": -1,
+    "id": 6,
+    "title": "Eggs on Toast 6",
+    "ingredients": ["3 Eggs", "Butter", "Toast"],
+    "method":
+      "1. Put pan on medium heat and add oil\n2. Crack open eggs into a bowl\n3. Add eggs to pan and fry until ready\n4. Toast bread\n5. Spread butter on bread and lay eggs on top.",
+    "uri": "https://picsum.photos/200",
+    "category": "Breakfast",
+    "fat": 14.9,
+    "protein": 21.2,
+    "carbohydrates": 12.5,
+    "sugars": 2
+  },
+  {
+    "isDeleted": false,
+    "nextDeletedId": -1,
+    "id": 7,
+    "title": "Eggs on Toast 7",
+    "ingredients": ["3 Eggs", "Butter", "Toast"],
+    "method":
+      "1. Put pan on medium heat and add oil\n2. Crack open eggs into a bowl\n3. Add eggs to pan and fry until ready\n4. Toast bread\n5. Spread butter on bread and lay eggs on top.",
+    "uri": "https://picsum.photos/100",
+    "category": "Breakfast",
+    "fat": 14.9,
+    "protein": 21.2,
+    "carbohydrates": 12.5,
+    "sugars": 2
+  }
+]

@@ -1,28 +1,26 @@
 import * as React from "react";
-import CustomCard from "../Components/Card";
-import SearchBar from "../Components/SearchBar";
-import Elements from "../CustomProperties/Elements";
-import { ScrollView } from "react-native";
+import {createStackNavigator} from '@react-navigation/stack';
+import {Appbar} from 'react-native-paper';
 
-const RecipeScreen = () => {
+import RecipeViewRoute from '../RecipeScreenViews/RecipeView';
+import RecipeListRoute from '../RecipeScreenViews/RecipeListView';
+
+const Stack = createStackNavigator();
+
+const RecipeScreen = (props) => {
   return (
     <React.Fragment>
-      <SearchBar />
-      <ScrollView>
-        {Elements.map((e) => (
-          <CustomCard
-            key={e.id}
-            title={e.title}
-            content={e.content}
-            uri={e.uri}
-            comment={e.comment}
-            shares={e.shares}
-            views={e.views}
-            likes={e.likes}
-          />
-        ))}
-      </ScrollView>
+      <Stack.Navigator initialRouteName="Recipe List" screenOptions={{headerShown: false}}>
+        <Stack.Screen name="Recipe List">
+          {props => <RecipeListRoute {...props} />}
+        </Stack.Screen>
+        <Stack.Screen 
+          name="Recipe" 
+          component={RecipeViewRoute}
+        />
+      </Stack.Navigator>
     </React.Fragment>
+    
   );
 };
 
