@@ -25,7 +25,6 @@ export default class RecipeListRoute extends Component{
   }
   
   render() {
-    console.log(this.state.recipes);
     return (
       <React.Fragment>
         <Appbar.Header>

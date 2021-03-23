@@ -1,5 +1,6 @@
 import * as SQLite from 'expo-sqlite';
 import Elements from "../CustomProperties/Elements";
+import WorkoutElements from "../WorkoutScreenViews/WorkoutElements";
 
 export function createDefaultTables() {
     const db = SQLite.openDatabase("pogFit");
@@ -118,6 +119,7 @@ export function createDefaultTables() {
         tx.executeSql(`
             CREATE TABLE IF NOT EXISTS workout_muscle_groups (
                 id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                group TEXT,
                 workout_id INTEGER,
                 FOREIGN KEY (workout_id) REFERENCES workouts(id)
             );
@@ -186,9 +188,51 @@ export function createDefaultTables() {
         });
     });
 
+    // Insert premade workouts
+    WorkoutElements.map((elm, idx) => {
+        // Insert recipe
+        db.transaction((tx) => {         
+            tx.executeSql(`
+                INSERT INTO workouts (title, description, uri, repetitions, sets, cal_per_set, user_id)
+                VALUES ("${elm.title}", "${elm.description}", "${elm.uri}", "${elm.repetitions}", ${elm.sets}, ${elm.calPerSet}, 1);
+            `,
+            [],
+            (tx, ResultSet) => {
+                // console.log("success");
+            },
+            (tx, error) => {
+                console.log(error);
+            });
+        },
+        (error) => {
+            console.log(error);
+        });
+
+        // Insert muscle groups of each workout into workout_muscle_groups table
+        elm.muscle_groups.forEach((group) => {
+            db.transaction((tx) => {
+                tx.executeSql(`
+                    INSERT INTO workout_muscle_groups (group, workout_id)
+                    VALUES ("${group}", ${idx+1});
+                `,
+                [],
+                (tx, resultSet) => {
+                    // console.log("success");
+                },
+                (tx, error) => {
+                    console.log(error);
+                });
+            },
+            (error) => {
+                console.log(error);
+            });
+        });
+    });
+
     console.log("Default application tables set up.");
 }
 
+// Extracts all recipes from the database as an array of objects. Calls the callback function with values (error, recipeArray)
 export function getAllRecipes(callback) {
     const db = SQLite.openDatabase("pogFit");
     db.transaction((tx) => {
@@ -216,6 +260,75 @@ export function getAllRecipes(callback) {
                         tuple.ingredients = ingredientResultSet.rows._array;
                         recipes.push(tuple);
                         if (recipes.length == recipeResultSet.rows._array.length)
+                            callback(null, recipes);
+                    },
+                    (tx, error) => {
+                        callback(error, null);
+                    });
+                },
+                (error) => {
+                    callback(error, null);
+                });
+            });
+        },
+        (tx, error) => {
+            callback(error, null);
+        });
+    },
+    (error) => {
+        callback(error, null);
+    });
+}
+
+// Extracts all users from the database as an array of objects. Calls the callback function with values (error, userArray)
+export function getAllUsers(callback) {
+    const db = SQLite.openDatabase("PogFit");
+    db.transaction((tx) => {
+        tx.executeSql(`
+            SELECT * 
+            FROM users
+        `,
+        [],
+        (tx, userResultSet) => {
+            callback(null, userResultSet.rows._array);
+        },
+        (tx, error) => {
+            callback(error, null);
+        });
+    },
+    (error) => {
+        callback (error, null);
+    });
+}
+
+// Extracts all workouts from the database as an array of objects. Calls the callback function with values (error, workoutArray)
+export function getAllWorkouts(callback) {
+    const db = SQLite.openDatabase("pogFit");
+    db.transaction((tx) => {
+        // Get all recipes
+        tx.executeSql(`
+            SELECT * 
+            FROM workouts;
+        `, 
+        [],
+        (tx, workoutResultSet) => { 
+            // recipes is an an array of recipe objects, each of which have an ingredients property.
+            // ingredients is an array of the ingredients that the recipe consists of.
+            let workouts = [];
+            workoutResultSet.rows._array.forEach((tuple, idx)=>{
+                let ingredients;
+                db.transaction((tx) => {
+                    // Get the title of each ingredient belonging to the recipe
+                    tx.executeSql(`
+                        SELECT group 
+                        FROM workout_muscle_groups
+                        WHERE workout_id=${idx+1}
+                    `,
+                    [],
+                    (tx, muscleGroupResultSet) => {
+                        tuple.muscle_groups = muscleGroupResultSet.rows._array;
+                        workouts.push(tuple);
+                        if (workouts.length == workoutResultSet.rows._array.length)
                             callback(null, recipes);
                     },
                     (tx, error) => {
