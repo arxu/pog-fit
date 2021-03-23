@@ -9,12 +9,14 @@ export function createDefaultTables() {
     NOTE: Drop tables mainly for testing purposes
     */
     
+    /*
     db.transaction((tx) => { tx.executeSql("DROP TABLE IF EXISTS users"); }, (error) => { console.log(error); });
     db.transaction((tx) => { tx.executeSql("DROP TABLE IF EXISTS recipes"); }, (error) => { console.log(error); });
     db.transaction((tx) => { tx.executeSql("DROP TABLE IF EXISTS recipe_ingredients"); }, (error) => { console.log(error); });
     db.transaction((tx) => { tx.executeSql("DROP TABLE IF EXISTS workouts"); }, (error) => { console.log(error); });
     db.transaction((tx) => { tx.executeSql("DROP TABLE IF EXISTS workout_muscle_groups"); }, (error) => { console.log(error); });
-    
+    */
+
     /*
     Create tables
     */
@@ -99,7 +101,7 @@ export function createDefaultTables() {
                 uri TEXT, 
                 repetitions INTEGER, 
                 sets INTEGER,
-                calPerSet REAL,
+                cal_per_set REAL,
                 user_id INTEGER,
                 FOREIGN KEY (user_id) REFERENCES users(id)
             );
@@ -119,8 +121,8 @@ export function createDefaultTables() {
         tx.executeSql(`
             CREATE TABLE IF NOT EXISTS workout_muscle_groups (
                 id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                group TEXT,
-                workout_id INTEGER,
+                muscle_group TEXT, 
+                workout_id INTEGER, 
                 FOREIGN KEY (workout_id) REFERENCES workouts(id)
             );
         `,
@@ -209,10 +211,10 @@ export function createDefaultTables() {
         });
 
         // Insert muscle groups of each workout into workout_muscle_groups table
-        elm.muscle_groups.forEach((group) => {
+        elm.muscleGroups.forEach((group) => {
             db.transaction((tx) => {
                 tx.executeSql(`
-                    INSERT INTO workout_muscle_groups (group, workout_id)
+                    INSERT INTO workout_muscle_groups (muscle_group, workout_id)
                     VALUES ("${group}", ${idx+1});
                 `,
                 [],
@@ -320,7 +322,7 @@ export function getAllWorkouts(callback) {
                 db.transaction((tx) => {
                     // Get the title of each ingredient belonging to the recipe
                     tx.executeSql(`
-                        SELECT group 
+                        SELECT muscle_group 
                         FROM workout_muscle_groups
                         WHERE workout_id=${idx+1}
                     `,
@@ -329,7 +331,7 @@ export function getAllWorkouts(callback) {
                         tuple.muscle_groups = muscleGroupResultSet.rows._array;
                         workouts.push(tuple);
                         if (workouts.length == workoutResultSet.rows._array.length)
-                            callback(null, recipes);
+                            callback(null, workouts);
                     },
                     (tx, error) => {
                         callback(error, null);

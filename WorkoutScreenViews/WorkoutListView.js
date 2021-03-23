@@ -4,22 +4,20 @@ import { Appbar } from "react-native-paper";
 
 import CustomCard from "../Components/Card";
 import SearchBar from "../Components/SearchBar";
-import {getAllRecipes} from "../FileStorage/Database";
+import {getAllWorkouts} from "../FileStorage/Database";
 
-export default class RecipeListView extends Component{
+export default class WorkoutListView extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      recipes: []
+      workouts: []
     };
-    getAllRecipes((error, result) => {
+    getAllWorkouts((error, result) => {
       if (error) {
-        console.log(eror);
+        console.log(error);
       }
       else {
-        //this.state.recipes = result;
-        //console.log(this.state.recipes); // Expected output
-        this.setState({recipes: result})
+        this.setState({workouts: result})
       }
     });
   }
@@ -28,18 +26,18 @@ export default class RecipeListView extends Component{
     return (
       <React.Fragment>
         <Appbar.Header>
-          <Appbar.Content title="Recipes"/>
+          <Appbar.Content title="Workouts"/>
         </Appbar.Header>
         <SearchBar />
         <ScrollView>
-          {this.state.recipes.map((recipe) => {
+          {this.state.workouts.map((workout) => {
             return <CustomCard
               navigation = {this.props.navigation}
-              data = {recipe}
-              pushViewTitle = 'Recipe'
-              key={recipe.id}
-              title={recipe.title}
-              uri={recipe.uri}
+              pushViewTitle = 'Workout'
+              data = {workout}
+              key={workout.id}
+              title={workout.title}
+              uri={workout.uri}
             />
           })}
         </ScrollView>
