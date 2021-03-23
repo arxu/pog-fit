@@ -9,8 +9,8 @@ var ld = require('lodash');
 const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
 //const filePath = rnfs.DocumentDirectoryPath + '/CustomProperties/Elements.json';
 
-const RecipeViewRoute = (props) => {
-    let recipe = props.route.params.recipe;
+export default function RecipeView(props) {
+    let recipe = props.route.params.data;
     let editing = false;
     let newRecipe = undefined;
     
@@ -105,8 +105,6 @@ const RecipeViewRoute = (props) => {
         
     );
 }
-
-export default RecipeViewRoute;
 
 const styles = StyleSheet.create({
     image: {

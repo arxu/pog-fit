@@ -11,7 +11,7 @@ const CustomCard = (props) => {
       <TouchableHighlight
         activeOpacity={0.85}
         underlayColor='#eee'
-        onPress={() => props.navigation.push('Recipe', { recipe: props.recipe })}
+        onPress={() => props.navigation.push(props.pushViewTitle, { data: props.data })}
       >
         <Card style={styles.container}>
           <Card.Content style={{ flexDirection: "row" }}>

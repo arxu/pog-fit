@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import RecipeRoute from "./RecipeScreen";
-import WorkoutRoute from "./WorkoutScreen";
+import RecipeScreen from "./RecipeScreen";
+import WorkoutScreen from "./WorkoutScreen";
 import ProfileRoute from "./ProfileScreen";
 import CalendarRoute from "./CalendarScreen";
 import { BottomNavigation } from "react-native-paper";
-//import { baseProps } from "react-native-gesture-handler/dist/src/handlers/gestureHandlers";
 
 const Screen = (props) => {
   const [index, setIndex] = useState(0);
@@ -16,8 +15,8 @@ const Screen = (props) => {
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
-    recipes: RecipeRoute,
-    workouts: WorkoutRoute,
+    recipes: RecipeScreen,
+    workouts: WorkoutScreen,
     profile: ProfileRoute,
     calendar: CalendarRoute
   });

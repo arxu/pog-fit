@@ -1,6 +1,28 @@
 import * as React from "react";
-import { Text } from "react-native-paper";
+import {createStackNavigator} from '@react-navigation/stack';
+import {NavigationContainer} from '@react-navigation/native';
 
-const WorkoutRoute = () => <Text>Workout</Text>;
+import WorkoutView from '../WorkoutScreenViews/WorkoutView';
+import WorkoutListView from '../WorkoutScreenViews/WorkoutListView';
 
-export default WorkoutRoute;
+const Stack = createStackNavigator();
+
+export default function RecipeScreen(props) {
+  return (
+      <NavigationContainer>
+        <React.Fragment>
+            <Stack.Navigator initialRouteName="Workout List" screenOptions={{headerShown: false}}>
+                <Stack.Screen name="Workout List">
+                    {props => <WorkoutListView {...props} />}
+                </Stack.Screen>
+                <Stack.Screen 
+                    name="Workout" 
+                    component={WorkoutView}
+                />
+            </Stack.Navigator>
+        </React.Fragment>
+      </NavigationContainer>
+    
+    
+  );
+};

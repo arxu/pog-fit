@@ -1,27 +1,26 @@
 import * as React from "react";
 import {createStackNavigator} from '@react-navigation/stack';
-import {Appbar} from 'react-native-paper';
 
-import RecipeViewRoute from '../RecipeScreenViews/RecipeView';
-import RecipeListRoute from '../RecipeScreenViews/RecipeListView';
+import RecipeView from '../RecipeScreenViews/RecipeView';
+import RecipeListView from '../RecipeScreenViews/RecipeListView';
+import { NavigationContainer } from "@react-navigation/native";
 
 const Stack = createStackNavigator();
 
-const RecipeScreen = (props) => {
+export default function RecipeScreen(props) {
   return (
-    <React.Fragment>
-      <Stack.Navigator initialRouteName="Recipe List" screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Recipe List">
-          {props => <RecipeListRoute {...props} />}
-        </Stack.Screen>
-        <Stack.Screen 
-          name="Recipe" 
-          component={RecipeViewRoute}
-        />
-      </Stack.Navigator>
-    </React.Fragment>
-    
+    <NavigationContainer>
+      <React.Fragment>
+        <Stack.Navigator initialRouteName="Recipe List" screenOptions={{headerShown: false}}>
+          <Stack.Screen name="Recipe List">
+            {props => <RecipeListView {...props} />}
+          </Stack.Screen>
+          <Stack.Screen 
+            name="Recipe" 
+            component={RecipeView}
+          />
+        </Stack.Navigator>
+      </React.Fragment>
+    </NavigationContainer>
   );
 };
-
-export default RecipeScreen;
