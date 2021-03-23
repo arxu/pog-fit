@@ -1,4 +1,4 @@
-import SQLite from "react-native-sqlite-storage";
+import * as SQLite from 'expo-sqlite';
 import Elements from "../CustomProperties/Elements";
 
 export function createDefaultTables() {
@@ -201,6 +201,7 @@ export function getAllRecipes(callback) {
         (tx, recipeResultSet) => { 
             // recipes is an an array of recipe objects, each of which have an ingredients property.
             // ingredients is an array of the ingredients that the recipe consists of.
+            let recipes = [];
             recipeResultSet.rows._array.forEach((tuple, idx)=>{
                 let ingredients;
                 db.transaction((tx) => {
@@ -213,6 +214,9 @@ export function getAllRecipes(callback) {
                     [],
                     (tx, ingredientResultSet) => {
                         tuple.ingredients = ingredientResultSet.rows._array;
+                        recipes.push(tuple);
+                        if (recipes.length == recipeResultSet.rows._array.length)
+                            callback(null, recipes);
                     },
                     (tx, error) => {
                         callback(error, null);
@@ -222,8 +226,6 @@ export function getAllRecipes(callback) {
                     callback(error, null);
                 });
             });
-            // return the recipes array 
-            callback(null, recipeResultSet.rows._array);
         },
         (tx, error) => {
             callback(error, null);

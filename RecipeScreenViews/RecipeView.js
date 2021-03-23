@@ -54,7 +54,7 @@ const RecipeViewRoute = (props) => {
                     {/* Ingredient list */}
                     <List.Section>
                         <List.Accordion title="Ingredients" description="Tap to see the list of ingredients">
-                            {recipe.ingredients.map((ingredient, index) => <List.Item key={index} title={ingredient}/>)}
+                            {recipe.ingredients.map((ingredient, index) => <List.Item key={index} title={ingredient.title}/>)}
                         </List.Accordion>
                     </List.Section>                                    
                         
