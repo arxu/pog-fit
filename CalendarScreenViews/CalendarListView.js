@@ -5,6 +5,8 @@ import { Card, Chip, Appbar, Dialog, Portal, Button, Paragraph} from "react-nati
 
 // testing
 import Elements from '../CustomProperties/Elements.json';
+import {getAllRecipes} from '../FileStorage/Database';
+import {getAllWorkouts} from '../FileStorage/Database';
 
 export default class CalendarListView extends Component {
     constructor(props){
@@ -13,28 +15,66 @@ export default class CalendarListView extends Component {
         this.colours = ['red', '#66CCFF', '#FFCC00', '#1C9379', '#8A7BA7'];
         this.daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         this.days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        
 
         // For testing. This value should be set by the user. Number of days to show on the calendar.
         let nDays = 7;
 
-        let nextNDays = this.setUpDynamicCalendar(nDays);
+        
 
         this.state = {
             dialogVisible: false,
             nDaysToShow: nDays, // number of days to show on the calendar
-            dynamicCalendar: nextNDays
+            dynamicCalendar: [],
+            workouts: [],
+            recipes: [],
+            nReady: 0 
         };
-
-        console.log(this.state.dynamicCalendar);
         
+        getAllWorkouts((error, result) => {
+            if (error) {
+              console.log(error);
+            }
+            else {
+              this.setState({workouts: result});
+              this.setState({nReady: this.state.nReady + 1});
+              this.updateCalendar();
+            }
+        });
+
+        getAllRecipes((error, result) => {
+            if (error) {
+              console.log(error);
+            }
+            else {
+              this.setState({recipes: result});
+              this.setState({nReady: this.state.nReady + 1});
+              this.updateCalendar();
+            }
+        });
+
+        //this.state.dynamicCalendar = this.setUpDynamicCalendar(nDays);
+
         this.showDialog = () => { this.setState({dialogVisible: true}); }
         this.hideDialog = () => { this.setState({dialogVisible: false}); }
     }
 
+    // NOTE: as of now this is mainly here to get around the async behaviour getAllRecipes/Workouts returning post constructor execution
+    updateCalendar(){
+        if (this.state.nReady >= 2){
+            this.setState({dynamicCalendar: this.setUpDynamicCalendar(this.state.nDaysToShow)});
+        }
+    }
+
     setUpDynamicCalendar(nDays) {
+
         let cal = new Date();
         let nextNDays = new Array(nDays);
-        
+
+        // for testing
+        let selectedReicpes = [null, null, null].map(() => this.state.recipes[Math.floor(Math.random() * this.state.recipes.length)]);
+        let selectedWorkouts = [null, null].map(() => this.state.workouts[Math.floor(Math.random() * this.state.workouts.length)]);
+
         for (let i = 0; i < nextNDays.length; i++){
 
             let date_ext;
@@ -55,7 +95,9 @@ export default class CalendarListView extends Component {
             nextNDays[i] = {
                 day: this.days[(cal.getDay() + i - 1) % 7],
                 date: (cal.getDate() + i) % this.daysInMonth[cal.getMonth()], 
-                date_ext: date_ext
+                date_ext: date_ext,
+                selectedReicpes: selectedReicpes,
+                selectedWorkouts: selectedWorkouts
             }
         }
 
@@ -78,11 +120,24 @@ export default class CalendarListView extends Component {
                                 <Card.Title title={dayOfWeek.day + " " + dayOfWeek.date + dayOfWeek.date_ext}/>
                                 <Card.Content>
                                     <View style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start'}}>
-                                        {Elements.map((e) => {
+                                        {dayOfWeek.selectedReicpes.map((e) => {
                                             return (
                                             <View style={{margin: 1}} key={e.id}>
                                                 <Chip 
-                                                    mode="outlined" 
+                                                    mode="flat" 
+                                                    style={{backgroundColor: this.randomColour()}}
+                                                    textStyle={{color:'white'}}
+                                                    onPress={this.showDialog}
+                                                >
+                                                    {e.title}
+                                                </Chip>
+                                            </View>);
+                                        })}
+                                        {dayOfWeek.selectedWorkouts.map((e) => {
+                                            return (
+                                            <View style={{margin: 1}} key={e.id}>
+                                                <Chip 
+                                                    mode="flat" 
                                                     style={{backgroundColor: this.randomColour()}}
                                                     textStyle={{color:'white'}}
                                                     onPress={this.showDialog}
