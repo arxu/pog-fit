@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
-import {Image, View, Avatar} from 'react-native';
+import {Image, View, StyleSheet} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Card, Chip, Appbar, Dialog, Portal, Button, Paragraph} from "react-native-paper";
+import { Card, Chip, Appbar, Dialog, Portal, Button, Subheading, Paragraph, List, DataTable, Headline} from "react-native-paper";
 
-// testing
-import Elements from '../CustomProperties/Elements.json';
 import {getAllRecipes} from '../FileStorage/Database';
 import {getAllWorkouts} from '../FileStorage/Database';
+import RecipeDataTable from '../Components/RecipeDataTable';
 
 const ld = require('lodash');
 
@@ -14,7 +13,7 @@ export default class CalendarListView extends Component {
     constructor(props){
         super(props);
         // colours of chips to select from randomly
-        this.colours = ['red', '#66CCFF', '#FFCC00', '#1C9379', '#8A7BA7'];
+        this.colours = ['#7a871e', '#104210', '#e55b13', '#f6a21e', '#655010'];
         this.daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         this.days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
         
@@ -28,7 +27,8 @@ export default class CalendarListView extends Component {
             dynamicCalendar: [],
             workouts: [],
             recipes: [],
-            nReady: 0 
+            nReady: 0,
+            dialogData: null
         };
         
         getAllWorkouts((error, result) => {
@@ -55,7 +55,9 @@ export default class CalendarListView extends Component {
 
         //this.state.dynamicCalendar = this.setUpDynamicCalendar(nDays);
 
-        this.showDialog = () => { this.setState({dialogVisible: true}); }
+        this.showDialog = (data) => { 
+            this.setState({dialogVisible: true, dialogData: data}); 
+        }
         this.hideDialog = () => { this.setState({dialogVisible: false}); }
     }
 
@@ -140,8 +142,8 @@ export default class CalendarListView extends Component {
         for (let i = 0; i < this.state.nDaysToShow; i++){
             let dayMealPlan = {};
             dayMealPlan.breakfast = selectedBreakfasts[i];
-            dayMealPlan.lunch = null//selectedLunches[i];
-            dayMealPlan.dinner = null//selectedDinners[i];
+            dayMealPlan.lunch = selectedLunches[i];
+            dayMealPlan.dinner = selectedDinners[i];
             mealTable.push(dayMealPlan);
         }
         //console.log(mealTable.map((e) => e.breakfast.title + ", " + e.lunch.title + ", " + e.dinner.title));
@@ -196,10 +198,6 @@ export default class CalendarListView extends Component {
         return nextNDays;
     }
 
-    randomColour(){
-        return this.colours[Math.floor(Math.random() * this.colours.length)];
-    }
-
     render() {
         return (
             <React.Fragment>
@@ -208,26 +206,48 @@ export default class CalendarListView extends Component {
                 </Appbar.Header>
                     <ScrollView>
                         {this.state.dynamicCalendar.map((dayOfWeek, idx) =>
-                            <Card key={idx}>
+                            <Card key={idx} style={{margin: 3}}>
                                 <Card.Title title={dayOfWeek.day + " " + dayOfWeek.date + dayOfWeek.date_ext}/>
                                 <Card.Content>
                                     <View style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start'}}>
                                         { dayOfWeek.selectedRecipes ? 
                                             <CustomChip
                                                 title={dayOfWeek.selectedRecipes.breakfast.title}
-                                                onPress={this.showDialog}
-                                                style={{backgroundColor: this.randomColour()}}
+                                                onPress={() => {this.showDialog({type: "recipe", data: dayOfWeek.selectedRecipes.dinner})}}
+                                                icon='food-croissant'
+                                                style={{backgroundColor: '#f6a21e'}}
                                             />
                                             :
                                             null
-                                        }                      
+                                        }
+                                        { dayOfWeek.selectedRecipes ? 
+                                            <CustomChip
+                                                title={dayOfWeek.selectedRecipes.lunch.title}
+                                                onPress={() => {this.showDialog({type: "recipe", data: dayOfWeek.selectedRecipes.lunch})}}
+                                                icon='food-apple'
+                                                style={{backgroundColor: '#7a871e'}}
+                                            />
+                                            :
+                                            null
+                                        }        
+                                        { dayOfWeek.selectedRecipes ? 
+                                            <CustomChip
+                                                title={dayOfWeek.selectedRecipes.dinner.title}
+                                                onPress={() => {this.showDialog({type: "recipe", data: dayOfWeek.selectedRecipes.dinner})}}
+                                                icon='food-steak'
+                                                style={{backgroundColor: '#655010'}}
+                                            />
+                                            :
+                                            null
+                                        }             
                                         {dayOfWeek.selectedWorkouts.map((e) => {
                                             return (
                                                 <CustomChip 
                                                     title={e.title} 
                                                     onPress={this.showDialog} 
                                                     key={e.id}
-                                                    style={{backgroundColor: this.randomColour()}}
+                                                    style={{backgroundColor: '#e55b13'}}
+                                                    icon='dumbbell'
                                                 />
                                             );
                                         })}
@@ -238,9 +258,14 @@ export default class CalendarListView extends Component {
                     </ScrollView>
                     <Portal>
                         <Dialog visible={this.state.dialogVisible} onDismiss={this.hideDialog}>
-                            <Dialog.Title>Alert</Dialog.Title>
+                            {/*<Dialog.Title>Alert</Dialog.Title>*/}
                             <Dialog.Content>
-                                <Paragraph>This is simple dialog</Paragraph>
+                                {/* {<Paragraph>This is simple dialog</Paragraph>} */}
+                                {this.state.dialogData ?
+                                    <RecipeDialogContent recipe={this.state.dialogData.data}/>
+                                    :
+                                    null
+                                }
                             </Dialog.Content>
                             <Dialog.Actions>
                                 <Button onPress={this.hideDialog}>Done</Button>
@@ -260,9 +285,39 @@ function CustomChip(props) {
                 style={props.style}
                 textStyle={{color:'white'}}
                 onPress={props.onPress}
+                icon={props.icon}
             >
                 {props.title}
             </Chip>
         </View>
     );
 }
+
+function RecipeDialogContent(props) {
+    let recipe = props.recipe;
+    return (
+        <ScrollView>
+            <Headline>{recipe.title}</Headline>
+            <React.Fragment>
+                <Image source={{ uri: recipe.uri }} style={{flexDirection: 'row', height: 150}}/>
+                
+                {/* Ingredient list */}
+                <List.Section>
+                    <List.Accordion title="Ingredients" description="Tap to see the list of ingredients">
+                        {recipe.ingredients.map((ingredient, index) => <List.Item key={index} title={ingredient.title}/>)}
+                    </List.Accordion>
+                </List.Section>                                    
+                    
+                <Subheading>Method</Subheading>
+                <Paragraph>{recipe.method}</Paragraph>
+
+                <List.Section>
+                    <List.Accordion title="Nutritional Information" description="Tab to see a table of nutritional information">
+                        <RecipeDataTable recipe={recipe}/>
+                    </List.Accordion>
+                </List.Section>
+            </React.Fragment>
+        </ScrollView>
+    );
+}
+
