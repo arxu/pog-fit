@@ -186,15 +186,31 @@ export default class CalendarListView extends Component {
                     date_ext = "th";
             }
 
-            //console.log(meals);
+            let totalCal = 0;
+            totalCal += mealTable[i].breakfast.fat * 9 + mealTable[i].breakfast.carbohydrates * 4 + mealTable[i].breakfast.protein * 4;
+            totalCal += mealTable[i].lunch.fat * 9 + mealTable[i].lunch.carbohydrates * 4 + mealTable[i].lunch.protein * 4;
+            totalCal += mealTable[i].dinner.fat * 9 + mealTable[i].dinner.carbohydrates * 4 + mealTable[i].dinner.protein * 4;
+
+            let fatPercent = Math.round(100 * (mealTable[i].breakfast.fat + mealTable[i].lunch.fat + mealTable[i].dinner.fat) * 9/ totalCal);
+            let carbPercent = Math.round(100 * (mealTable[i].breakfast.carbohydrates + mealTable[i].lunch.carbohydrates + mealTable[i].dinner.carbohydrates) * 4 / totalCal);
+            let proteinPercent = Math.round(100 * (mealTable[i].breakfast.protein + mealTable[i].lunch.protein + mealTable[i].dinner.protein) * 4 / totalCal);
+
+            
             nextNDays[i] = {
                 day: this.days[(cal.getDay() + i - 1) % 7],
                 date: date, 
                 date_ext: date_ext,
                 selectedRecipes: mealTable[i],
-                selectedWorkouts: selectedWorkouts
+                selectedWorkouts: selectedWorkouts,
+                totalCal: Math.round(totalCal),
+                fatPercent: fatPercent,
+                proteinPercent: proteinPercent,
+                carbPercent: carbPercent
             }
         }
+
+        console.log(mealTable[1]);
+
         return nextNDays;
     }
 
@@ -207,7 +223,13 @@ export default class CalendarListView extends Component {
                     <ScrollView>
                         {this.state.dynamicCalendar.map((dayOfWeek, idx) =>
                             <Card key={idx} style={{margin: 3}}>
-                                <Card.Title title={dayOfWeek.day + " " + dayOfWeek.date + dayOfWeek.date_ext}/>
+                                <Card.Title 
+                                    title={dayOfWeek.day + " " + dayOfWeek.date + dayOfWeek.date_ext} 
+                                    subtitle={
+                                        dayOfWeek.totalCal + " Calories: " 
+                                        + dayOfWeek.fatPercent + "% fat, " 
+                                        + dayOfWeek.proteinPercent + "% protein, "
+                                        + dayOfWeek.carbPercent + "% carbohydrates"}/>
                                 <Card.Content>
                                     <View style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start'}}>
                                         { dayOfWeek.selectedRecipes ? 
