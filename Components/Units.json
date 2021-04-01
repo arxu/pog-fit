@@ -1,0 +1,19 @@
+{
+    "tsp": "tsp",
+    "tbsp": "tbsp",
+    "cup": "cup",
+    "ml": "ml",
+    "l": "l",
+
+    "mg": "mg",
+    "g": "g",
+    "kg": "kg",
+
+    "none": "none",
+
+    "slice": "slice",
+
+    "can": "can",
+
+    "pinch": "pinch"
+}
