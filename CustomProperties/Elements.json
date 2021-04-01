@@ -1,13 +1,10 @@
 [
   {
-    "isDeleted": false,
-    "nextDeletedId": -1,
-    "id": 1,
     "title": "Eggs on Toast",
-    "ingredients": ["3 Eggs", "Butter", "Toast"],
+    "ingredients": [{"item": "Egg", "quantity": 3, "measurement": "none"}, {"item":"Butter", "quantity": 1, "measurement": "tbsp"}, {"item": "Bread", "quantity": 1, "measurement": "slice"}],
     "method":
       "1. Put pan on medium heat and add oil\n2. Crack open eggs into a bowl\n3. Add eggs to pan and fry until ready\n4. Toast bread\n5. Spread butter on bread and lay eggs on top.",
-    "uri": "https://picsum.photos/700",
+    "uri": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.eatthismuch.com%2Fsite_media%2Fimg%2F905725_tabitharwheeler_c7456826-a82c-4c2a-be36-de09b018b776.jpg&f=1&nofb=1",
     "category": "Breakfast",
     "fat": 14.9,
     "protein": 21.2,
@@ -15,93 +12,200 @@
     "sugars": 2
   },
   {
-    "isDeleted": false,
-    "nextDeletedId": -1,
-    "id": 2,
-    "title": "Eggs on Toast 2",
-    "ingredients": ["3 Eggs", "Butter", "Toast"],
+    "title": "Mackerel Salad",
+    "ingredients": [{"item": "Mackerel", "quantity": 1, "measurement": "can"}, {"item": "Salad Leaves", "quantity": 0.5, "measurement": "g"}],
     "method":
-      "1. Put pan on medium heat and add oil\n2. Crack open eggs into a bowl\n3. Add eggs to pan and fry until ready\n4. Toast bread\n5. Spread butter on bread and lay eggs on top.",
-    "uri": "https://picsum.photos/600",
+      "Mix mackerel with salad leaves",
+    "uri": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.krumpli.co.uk%2Fwp-content%2Fuploads%2F2018%2F06%2FSmoked-Mackerel-Salad-with-Mango-1-2.jpg&f=1&nofb=1",
     "category": "Breakfast",
-    "fat": 14.9,
-    "protein": 21.2,
-    "carbohydrates": 12.5,
+    "fat": 21.7,
+    "protein": 21,
+    "carbohydrates": 0.5,
+    "sugars": 0.5
+  },
+  {
+    "title": "Cheddar Omelette",
+    "ingredients": [{"item": "Egg", "quantity": 3, "measurement": "none"}, {"item": "Cheddar", "quantity": 3, "measurement": "slice"}],
+    "method":
+      "fry mixed eggs",
+    "uri": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi0.wp.com%2Fthefoodxp.com%2Fwp-content%2Fuploads%2F2020%2F07%2FOmelette-au-Fromage.jpg&f=1&nofb=1",
+    "category": "Breakfast",
+    "fat": 13.8,
+    "protein": 15,
+    "carbohydrates": 6,
+    "sugars": 0.5
+  },
+  {
+    "title": "Salmon and Egg Wrap",
+    "ingredients": [{"item": "Egg", "quantity": 3, "measurement": "none"}, {"item": "Smoked Salmon", "quantity": 1, "measurement": "slice"}, {"item": "Greek Yogurt", "quantity": 2, "measurement": "tbsp"}],
+    "method":
+      "Mix eggs and fry. Fry salmon and wrap in eggs with greek yogurt",
+    "uri": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.eggrecipes.co.uk%2Fsites%2Fdefault%2Ffiles%2Fstyles%2Flarge_main_image%2Fpublic%2F2017%2F04%2Fsalmon-egg-wraps.jpg%3Fitok%3DAUb1hMRS&f=1&nofb=1",
+    "category": "Breakfast",
+    "fat": 15.9,
+    "protein": 27.5,
+    "carbohydrates": 2.7,
+    "sugars": 1
+  },
+  {
+    "title": "Porridge",
+    "ingredients": [{"item": "Porridge", "quantity": 50, "measurement": "g"}, {"item": "Milk", "quantity": 350, "measurement": "ml"}, {"item": "Greek Yogurt", "quantity": 2, "measurement": "tbsp"}, {"item": "Honey", "quantity": 1, "measurement": "tbsp"}],
+    "method":
+      "bang and the dirt is gone",
+    "uri": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.ozy.com%2Fwp-content%2Fuploads%2F2019%2F11%2Foat-porridge-grod.jpg%3Fw%3D6870&f=1&nofb=1",
+    "category": "Breakfast",
+    "fat": 5,
+    "protein": 10,
+    "carbohydrates": 25,
     "sugars": 2
   },
   {
-    "isDeleted": false,
-    "nextDeletedId": -1,
-    "id": 3,
-    "title": "Eggs on Toast 3",
-    "ingredients": ["3 Eggs", "Butter", "Toast"],
+    "title": "Boiled eggs and Roasted Potato",
+    "ingredients": [{"item": "Egg", "quantity": 4, "measurement": "none"}, {"item": "Bell Pepper", "quantity": 450, "measurement": "g"}, {"item": "Potato", "quantity": 450, "measurement": "g"}],
     "method":
-      "1. Put pan on medium heat and add oil\n2. Crack open eggs into a bowl\n3. Add eggs to pan and fry until ready\n4. Toast bread\n5. Spread butter on bread and lay eggs on top.",
-    "uri": "https://picsum.photos/500",
+      "Roast potatos and peppers in oven. Hard boil eggs. Season.",
+    "uri": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.OW96a2dr_EfNlYrN7JdVJAHaKb%26pid%3DApi&f=1",
     "category": "Breakfast",
-    "fat": 14.9,
-    "protein": 21.2,
-    "carbohydrates": 12.5,
-    "sugars": 2
+    "fat": 27.1,
+    "protein": 19.6,
+    "carbohydrates": 46.2,
+    "sugars": 14
   },
   {
-    "isDeleted": false,
-    "nextDeletedId": -1,
-    "id": 4,
-    "title": "Eggs on Toast 4",
-    "ingredients": ["3 Eggs", "Butter", "Toast"],
+    "title": "Avocado on Toast",
+    "ingredients": [{"item": "Avocado", "quantity": 0.5, "measurement": "none"}, {"item": "Bread", "quantity": 2, "measurement": "slice"}],
     "method":
-      "1. Put pan on medium heat and add oil\n2. Crack open eggs into a bowl\n3. Add eggs to pan and fry until ready\n4. Toast bread\n5. Spread butter on bread and lay eggs on top.",
-    "uri": "https://picsum.photos/400",
+      "Spread avocado over toast",
+    "uri": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.-q615qc287_OGGgL5FKGIQHaFP%26pid%3DApi&f=1",
     "category": "Breakfast",
-    "fat": 14.9,
-    "protein": 21.2,
-    "carbohydrates": 12.5,
-    "sugars": 2
+    "fat": 17,
+    "protein": 5,
+    "carbohydrates": 19,
+    "sugars": 0.7
   },
   {
-    "isDeleted": false,
-    "nextDeletedId": -1,
-    "id": 5,
-    "title": "Eggs on Toast 5",
-    "ingredients": ["3 Eggs", "Butter", "Toast"],
+    "title": "Beans on Toast",
+    "ingredients": [{"item": "Baked Beans", "quantity": 0.5, "measurement": "can"}, {"item": "Bread", "quantity": 2, "measurement": "slice"}],
     "method":
-      "1. Put pan on medium heat and add oil\n2. Crack open eggs into a bowl\n3. Add eggs to pan and fry until ready\n4. Toast bread\n5. Spread butter on bread and lay eggs on top.",
-    "uri": "https://picsum.photos/300",
+      "Spread beans over toast",
+    "uri": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.8dyGiZYpYKUqzquneO9AvQHaE8%26pid%3DApi&f=1",
     "category": "Breakfast",
-    "fat": 14.9,
-    "protein": 21.2,
-    "carbohydrates": 12.5,
-    "sugars": 2
+    "fat": 6.07,
+    "protein": 11.1,
+    "carbohydrates": 47,
+    "sugars": 2.24
   },
   {
-    "isDeleted": false,
-    "nextDeletedId": -1,
-    "id": 6,
-    "title": "Eggs on Toast 6",
-    "ingredients": ["3 Eggs", "Butter", "Toast"],
+    "title": "English Breakfast",
+    "ingredients": [{"item": "Egg", "quantity": 1, "measurement": "none"}, {"item": "Bread", "quantity": 1, "measurement": "slice"}, {"item": "Bacon", "quantity": 1, "measurement": "slice"}, {"item": "Sausage", "quantity": 1, "measurement": "none"}, {"item": "Baked Beans", "quantity": 0.5, "measurement": "can"}],
     "method":
-      "1. Put pan on medium heat and add oil\n2. Crack open eggs into a bowl\n3. Add eggs to pan and fry until ready\n4. Toast bread\n5. Spread butter on bread and lay eggs on top.",
-    "uri": "https://picsum.photos/200",
+      "make english breakfast",
+    "uri": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.tasteatlas.com%2Fimages%2Fdishes%2Fb92a3d74b4cf48c28abba34197798049.jpg&f=1&nofb=1",
     "category": "Breakfast",
-    "fat": 14.9,
-    "protein": 21.2,
-    "carbohydrates": 12.5,
-    "sugars": 2
+    "fat": 33,
+    "protein": 22,
+    "carbohydrates": 17,
+    "sugars": 7.5
   },
   {
-    "isDeleted": false,
-    "nextDeletedId": -1,
-    "id": 7,
-    "title": "Eggs on Toast 7",
-    "ingredients": ["3 Eggs", "Butter", "Toast"],
+    "title": "Burger",
+    "ingredients": [{"item": "Buns", "quantity": 1, "measurement": "none"}, {"item": "Beef Patty", "quantity": 1, "measurement": "none"}, {"item": "Lettuce", "quantity": 2, "measurement": "leaf"} ],
     "method":
-      "1. Put pan on medium heat and add oil\n2. Crack open eggs into a bowl\n3. Add eggs to pan and fry until ready\n4. Toast bread\n5. Spread butter on bread and lay eggs on top.",
-    "uri": "https://picsum.photos/100",
+      "order from McDonalds",
+    "uri": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.9JRxun8mxBLEZG6KLn70-gHaEK%26pid%3DApi&f=1",
     "category": "Breakfast",
-    "fat": 14.9,
-    "protein": 21.2,
-    "carbohydrates": 12.5,
-    "sugars": 2
+    "fat": 27,
+    "protein": 13.3,
+    "carbohydrates": 30,
+    "sugars": 5
+  },
+  {
+    "title": "Apple Curry Turkey Pita",
+    "ingredients": [{"item": "Olive Oil", "quantity": 2, "measurement": "tbsp"}, {"item": "Onion", "quantity": 0.5, "measurement": "none"}, {"item": "Lemon Juice", "quantity": 2, "measurement": "tbsp"}, {"item": "Turkey", "quantity": 250, "measurement": "g"}, {"item": "Curry Powder", "quantity": 1, "measurement": "tbsp"}, {"item": "Apple", "quantity": 1, "measurement": "none"}, {"item": "Pita Bread", "quantity": 3, "measurement": "none"}, {"item": "Plain Yogurt", "quantity": 0.5, "measurement": "cup"}],
+    "method": "Heat oil in a skillet over medium-high heat. Stir in onion and lemon juice. Cook until onion is tender. Mix in turkey, season with curry powder and continue cooking until heated through. Remove from heat. Stir in apple. Stuff pitas with the mixture. Drizzle with yogurt to serve.",
+    "uri": "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fimages.media-allrecipes.com%2Fuserphotos%2F3087557.jpg&w=596&h=596&c=sc&poi=face&q=85",
+    "category": "Lunch",
+    "fat": 11.3,
+    "protein": 31.4,
+    "carbohydrates": 49.9,
+    "sugars": 11.1
+  },
+  {
+    "title": "Greek Farro Salad",
+    "ingredients": [{"item": "Farro", "quantity": 2, "measurement": "tsp"}, {"item": "Chicken Broth", "quantity": 1.5, "measurement": "tbsp"}, {"item": "Olive Oil", "quantity": 3, "measurement": "tsp"}, {"item": "Salt", "quantity": 0.25, "measurement": "tsp"}, {"item": "Egg", "quantity": 0.5, "measurement": "tsp"}, {"item": "Garlic", "quantity": 0.5, "measurement": "none"}, {"item": "Tomato", "quantity": 1, "measurement": "none"}, {"item": "Cucumber", "quantity": 0.5, "measurement": "none"}, {"item": "Bell Pepper", "quantity": 0.5, "measurement": "none"}, {"item": "Red Onion", "quantity": 0.5, "measurement": "none"}, {"item": "Feta Cheese", "quantity": 2, "measurement": "slice"}],
+    "method": "Rinse farro with water; drain. Place farro in a pot; pour in chicken broth to cover farro by at least one inch, adding water if needed. Stir in 1 teaspoon olive oil and sea salt. Bring liquid to a boil; reduce heat to medium and simmer, uncovered, stirring frequently, until tender, about 35 minutes for whole grain farro or about 20 minutes for pearled farro. Drain farro, rinse with cold water, and set aside to cool completely, about 15 minutes. Whisk 1/4 cup extra-virgin olive oil, lemon juice, Greek seasoning, and garlic together in a large bowl. Stir in tomato, cucumber, red pepper, red onion, and feta cheese. Stir farro into tomato mixture until completely coated with dressing; season with salt and pepper. Refrigerate salad for about 2 hours before serving.",
+    "uri": "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fimages.media-allrecipes.com%2Fuserphotos%2F2406847.jpg&w=596&h=399&c=sc&poi=face&q=85",
+    "category": "Lunch",
+    "fat": 17.3,
+    "protein": 10.3,
+    "carbohydrates": 42.4,
+    "sugars": 4.9
+  },
+  {
+    "title": "California Melt",
+    "ingredients": [{"item": "Bread", "quantity": 2, "measurement": "slice"}, {"item": "Avocado", "quantity": 0.5, "measurement": "none"}, {"item": "Mushroom", "quantity": 4, "measurement": "none"}, {"item": "Toasted Almonds", "quantity": 0.33, "measurement": "cup"}, {"item": "Tomato", "quantity": 1, "measurement": "none"}, {"item": "Swiss Cheese", "quantity": 4, "measurement": "slice"}],
+    "method": "Preheat the oven broiler. Lay the toasted bread out on a baking sheet. Top each slice of bread with 1/4 of the avocado, mushrooms, almonds, and tomato slices. Top each with a slice of Swiss cheese. Broil the open-face sandwiches until the cheese melts and begins to bubble, about 2 minutes. Serve the sandwiches warm.",
+    "uri": "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fimages.media-allrecipes.com%2Fuserphotos%2F6480775.jpg&q=85",
+    "category": "Lunch",
+    "fat": 22.5,
+    "protein": 15.6,
+    "carbohydrates": 21.1,
+    "sugars": 3.9
+  },
+  {
+    "title": "Green Bean and Potato Salad",
+    "ingredients": [{"item": "Red Potato", "quantity": 1.25, "measurement": "Kg"}, {"item": "Green Beans", "quantity": 750, "measurement": "g"}, {"item": "Fresh Basil", "quantity": 0.5, "measurement": "cup"}, {"item": "Red Onion", "quantity": 0.5, "measurement": "none"}, {"item": "Salt", "quantity": 0.25, "measurement": "tsp"}, {"item": "Pepper", "quantity": 0.25, "measurement": "tsp"}, {"item": "Balsamic Vinegar", "quantity": 0.25, "measurement": "cup"}, {"item": "Dijon Mustard", "quantity": 4, "measurement": "tbsp"}, {"item": "Lemon Juice", "quantity": 4, "measurement": "tbsp"}, {"item": "Garlic", "quantity": 2, "measurement": "none"}, {"item": "Worcestershire Sauce", "quantity": 1, "measurement": "tbsp"}, {"item": "Olive Oil", "quantity": 0.25, "measurement": "cup"}],
+    "method": "Place the potatoes in a large pot, and fill with about 1 inch of water. Bring to a boil, and cook for about 15 minutes, or until potatoes are tender. Throw in the green beans to steam after the first 10 minutes. Drain, cool, and cut potatoes into quarters. Transfer to a large bowl, and toss with fresh basil, red onion, salt and pepper. Set aside. In a medium bowl, whisk together the balsamic vinegar, mustard, lemon juice, garlic, Worcestershire sauce and olive oil. Pour over the salad, and stir to coat. Taste and season with additional salt and pepper if needed.",
+    "uri": "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fimages.media-allrecipes.com%2Fuserphotos%2F232315.jpg&w=596&h=399&c=sc&poi=face&q=85",
+    "category": "Lunch",
+    "fat": 22.6,
+    "protein": 3.8,
+    "carbohydrates": 34.3,
+    "sugars": 4.8
+  },
+  {
+    "title": "Black Bean Bowl",
+    "ingredients": [{"item": "Olive Oil", "quantity": 2, "measurement": "tbsp"}, {"item": "Egg", "quantity": 2, "measurement": "none"}, {"item": "Black Beans", "quantity": 225, "measurement": "g"}, {"item": "Avocado", "quantity": 0.5, "measurement": "none"}, {"item": "Salsa", "quantity": 0.125, "measurement": "cup"}, {"item": "Salt", "quantity": 0.25, "measurement": "tsp"}, {"item": "Pepper", "quantity": 0.25, "measurement": "tsp"}],
+    "method": "Heat olive oil in a small pan over medium heat. Cook and stir eggs until eggs are set, 3 to 5 minutes. Place black beans in a microwave-safe bowl. Heat on High in the microwave until warm, about 1 minute. Divide warmed black beans between two bowls. Top each bowl with scrambled eggs, avocado, and salsa. Season with salt and black pepper.",
+    "uri": "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fimages.media-allrecipes.com%2Fuserphotos%2F6469634.jpg&w=596&h=596&c=sc&poi=face&q=85",
+    "category": "Lunch",
+    "fat": 38.8,
+    "protein": 27.9,
+    "carbohydrates": 46.6,
+    "sugars": 2.4
+  },
+  {
+    "title": "Egg Salad",
+    "ingredients": [{"item": "Egg", "quantity": 2, "measurement": "none"}, {"item": "Mayonnaise", "quantity": 2 , "measurement": "tbsp"}, {"item": "Yellow Mustard", "quantity": 2, "measurement": "tsp"}, {"item": "Spring Onion", "quantity": 1, "measurement": "none"}, {"item": "Salt", "quantity": 0.25, "measurement": "tsp"}, {"item": "Pepper", "quantity": 0.25, "measurement": "tsp"}, {"item": "Pepper", "quantity": 0.5, "measurement": "tsp"}],
+    "method": "Place egg in a saucepan and cover with cold water. Bring water to a boil and immediately remove from heat. Cover and let eggs stand in hot water for 10 to 12 minutes. Remove from hot water, cool, peel and chop. Place the chopped eggs in a bowl, and stir in the mayonnaise, mustard and green onion. Season with salt, pepper and paprika. Stir and serve on your favorite bread or crackers.",
+    "uri": "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fimages.media-allrecipes.com%2Fuserphotos%2F8274668.jpg&q=85",
+    "category": "Lunch",
+    "fat": 31.9,
+    "protein": 13,
+    "carbohydrates": 2.3,
+    "sugars": 1.2
+  },
+  {
+    "title": "Bacon, Lettuce, Tomato Sandwich",
+    "ingredients": [{"item": "Bacon", "quantity": 4, "measurement": "slice"}, {"item": "Lettuce", "quantity": 2, "measurement": "leaf"}, {"item": "Tomato", "quantity": 1, "measurement": "none"}, {"item": "Bread", "quantity": 0.25, "measurement": "tsp"}, {"item": "Mayonnaise", "quantity": 1, "measurement": "tbsp"}],
+    "method": "Cook the bacon in a large, deep skillet over medium-high heat until evenly browned, about 10 minutes. Drain the bacon slices on a paper towel-lined plate. Arrange the cooked bacon, lettuce, and tomato slices on one slice of bread. Spread one side of remaining bread slice with the mayonnaise. Bring the two pieces together to make a sandwich.",
+    "uri": "https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fimages.media-allrecipes.com%2Fuserphotos%2F4543157.jpg",
+    "category": "Lunch",
+    "fat": 27.8,
+    "protein": 17.9,
+    "carbohydrates": 28.8,
+    "sugars": 4
+  },
+  {
+    "title": "Chorizo and Mozzarella Gnocchi Bake",
+    "ingredients": [{"item": "Olive Oil", "quantity": 1, "measurement": "tbsp"}, {"item": "Onion", "quantity": 0.25, "measurement": "none"}, {"item": "Garlic", "quantity": 0.5, "measurement": "none"}, {"item": "Chorizo", "quantity": 0.3, "measurement": "g"}, {"item": "Chopped Tomatoes", "quantity": 0.5, "measurement": "can"}, {"item": "Sugar", "quantity": 0.25, "measurement": "tsp"}, {"item": "Gnocchi", "quantity": 150, "measurement": "g"}, {"item": "Mozarella", "quantity": 60, "measurement": "g"}, {"item": "Fresh Basil", "quantity": 1, "measurement": "none"}],
+    "method": "Heat the oil in a medium pan over a medium heat. Fry the onion and garlic for 8-10 mins until soft. Add the chorizo and fry for 5 mins more. Tip in the tomatoes and sugar, and season. Bring to a simmer, then add the gnocchi and cook for 8 mins, stirring often, until soft. Heat the grill to high. Stir ¾ of the mozzarella and most of the basil through the gnocchi. Divide the mixture between six ovenproof ramekins, or put in one baking dish. Top with the remaining mozzarella, then grill for 3 mins, or until the cheese is melted and golden. Season, scatter over the remaining basil and serve with green salad.",
+    "uri": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/gnocchi-1d16725.jpg?quality=90&webp=true&resize=300,272",
+    "category": "Dinner",
+    "fat": 15,
+    "protein": 15,
+    "carbohydrates": 45,
+    "sugars": 10
   }
+
 ]

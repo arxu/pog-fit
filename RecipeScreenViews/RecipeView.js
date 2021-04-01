@@ -1,7 +1,8 @@
 import React, {useEffect} from 'react';
-import {Headline, Subheading, Paragraph, List, DataTable, Appbar, TextInput} from 'react-native-paper';
-import {Image, StyleSheet, ScrollView} from "react-native";
-import {removeOne} from "../FileStorage/DBManager";
+import {Headline, Subheading, Paragraph, List, Appbar, TextInput} from 'react-native-paper';
+import {Image, StyleSheet, ScrollView, View} from "react-native";
+
+import RecipeDataTable from '../Components/RecipeDataTable';
 
 var ld = require('lodash');
 //var rnfs = require('react-native-fs');
@@ -47,58 +48,28 @@ export default function RecipeView(props) {
             </Appbar.Header>
             <ScrollView>
                 <React.Fragment>
-                    
-
                     <Image source={{ uri: recipe.uri }} style={styles.image}/>
                     
                     {/* Ingredient list */}
                     <List.Section>
                         <List.Accordion title="Ingredients" description="Tap to see the list of ingredients">
-                            {recipe.ingredients.map((ingredient, index) => <List.Item key={index} title={ingredient.title}/>)}
+                            {recipe.ingredients.map((ingredient, index) => {
+                                return (
+                                    <List.Item key={index} title={ingredient.item}/>
+                                );
+                            })}
                         </List.Accordion>
                     </List.Section>                                    
+
+                    <View style={{paddingLeft: 17, paddingRight: 17}}>   
+                        <Subheading>Method</Subheading>
+                        <Paragraph>{recipe.method}</Paragraph>
                         
-                    <Subheading>Method</Subheading>
-                    <Paragraph>{recipe.method}</Paragraph>
-
-                    <DataTable>
-                        <DataTable.Header>
-                            <DataTable.Title>Nutritients</DataTable.Title>
-                            <DataTable.Title numeric>Grams</DataTable.Title>
-                            <DataTable.Title numeric>Calories</DataTable.Title>
-                        </DataTable.Header>
-
-                        <DataTable.Row>
-                            <DataTable.Cell>Fat</DataTable.Cell>
-                            <DataTable.Cell numeric>{recipe.fat}</DataTable.Cell>
-                            <DataTable.Cell numeric>{recipe.fat * 9}</DataTable.Cell>
-                        </DataTable.Row>
-
-                        <DataTable.Row>
-                            <DataTable.Cell>Protein</DataTable.Cell>
-                            <DataTable.Cell numeric>{recipe.protein}</DataTable.Cell>
-                            <DataTable.Cell numeric>{recipe.protein * 4}</DataTable.Cell>
-                        </DataTable.Row>
-                        
-                        <DataTable.Row>
-                            <DataTable.Cell>Carbohydrates</DataTable.Cell>
-                            <DataTable.Cell numeric>{recipe.carbohydrates}</DataTable.Cell>
-                            <DataTable.Cell numeric>{recipe.carbohydrates * 4}</DataTable.Cell>
-                        </DataTable.Row>
-
-                        <DataTable.Row>
-                            <DataTable.Cell>Sugars</DataTable.Cell>
-                            <DataTable.Cell numeric>{recipe.sugars}</DataTable.Cell>
-                            <DataTable.Cell numeric>{recipe.sugars * 4}</DataTable.Cell>
-                        </DataTable.Row>             
-
-                        <DataTable.Row>
-                            <DataTable.Cell>Total</DataTable.Cell>
-                            <DataTable.Cell numeric>{recipe.protein + recipe.fat + recipe.carbohydrates}</DataTable.Cell>
-                            <DataTable.Cell numeric>{(recipe.protein * 4 + recipe.fat * 9 + recipe.carbohydrates * 4)}</DataTable.Cell>
-                        </DataTable.Row>
-                    </DataTable>
-
+                    </View>
+                    
+                    <View style={{paddingLeft: 17, paddingRight: 17}}>
+                        <RecipeDataTable recipe={recipe}/>
+                    </View>
                 </React.Fragment>
             </ScrollView>
         </React.Fragment>

@@ -1,6 +1,31 @@
 import * as React from "react";
-import { Text } from "react-native-paper";
+import { NavigationContainer } from "@react-navigation/native";
+import {createStackNavigator} from '@react-navigation/stack';
 
-const CalendarRoute = () => <Text>Calendar</Text>;
+import CalendarListView from '../CalendarScreenViews/CalendarListView';
+import WorkoutView from '../WorkoutScreenViews/WorkoutView';
+import RecipeView from '../RecipeScreenViews/RecipeView';
 
-export default CalendarRoute;
+const Stack = createStackNavigator();
+
+export default function CalendarRoute(props) {
+    return (
+        <NavigationContainer>
+            <React.Fragment>
+                <Stack.Navigator initialRouteName="Calendar List" screenOptions={{headerShown: false}}>
+                    <Stack.Screen name="Calendar List">
+                        {(props) => <CalendarListView {...props}/>}
+                    </Stack.Screen>
+                    <Stack.Screen
+                        name="Workout" 
+                        component={WorkoutView}
+                    />
+                    <Stack.Screen
+                        name="Recipe" 
+                        component={RecipeView}
+                    />
+                </Stack.Navigator>
+            </React.Fragment>
+        </NavigationContainer>
+    );
+};

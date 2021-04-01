@@ -14,7 +14,7 @@ export default class RecipeListView extends Component{
     };
     getAllRecipes((error, result) => {
       if (error) {
-        console.log(eror);
+        console.log(error);
       }
       else {
         //this.state.recipes = result;

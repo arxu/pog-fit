@@ -2,6 +2,8 @@ import * as SQLite from 'expo-sqlite';
 import Elements from "../CustomProperties/Elements";
 import WorkoutElements from "../WorkoutScreenViews/WorkoutElements";
 
+let ld = require('lodash');
+
 export function createDefaultTables() {
     const db = SQLite.openDatabase("pogFit");
     /*
@@ -172,9 +174,11 @@ export function createDefaultTables() {
         // Insert ingredients of recipe into recipe_ingredients table
         elm.ingredients.forEach(ing => {
             db.transaction((tx) => {
+                let str = JSON.stringify(ing);
+                console.log(str);
                 tx.executeSql(`
                     INSERT INTO recipe_ingredients (title, recipe_id)
-                    VALUES ("${ing}", ${idx+1});
+                    VALUES ('${str}', ${idx+1});
                 `,
                 [],
                 (tx, resultSet) => {
@@ -259,7 +263,8 @@ export function getAllRecipes(callback) {
                     `,
                     [],
                     (tx, ingredientResultSet) => {
-                        tuple.ingredients = ingredientResultSet.rows._array;
+                        let ingredients = ld.cloneDeep(ingredientResultSet.rows._array.map((e)=>e.title));
+                        tuple.ingredients = ingredients.map((ing) => JSON.parse(ing));
                         recipes.push(tuple);
                         if (recipes.length == recipeResultSet.rows._array.length)
                             callback(null, recipes);
@@ -329,6 +334,7 @@ export function getAllWorkouts(callback) {
                     [],
                     (tx, muscleGroupResultSet) => {
                         tuple.muscle_groups = muscleGroupResultSet.rows._array;
+
                         workouts.push(tuple);
                         if (workouts.length == workoutResultSet.rows._array.length)
                             callback(null, workouts);
