@@ -22,25 +22,6 @@ const CustomCard = (props) => {
           </Card.Content>
           
           <Card.Cover source={{ uri: props.uri }} />
-
-          {/*
-          <Card.Actions>
-            <Card.Content>
-              <Paragraph>{props.content.substring(0, 100)}</Paragraph>
-            </Card.Content>
-          </Card.Actions>
-          
-          <Card.Content style={styles.horizontalLine} />
-
-          <Card.Content style={styles.action}>
-            <CardAction name="thumb-up-outline" text="Plan" />
-            <CardAction 
-              name="message-outline" text="Edit" 
-              navigation={props.navigation}
-              recipe={props.recipe}/>
-            <CardAction name="share-outline" text="Delete" />
-          </Card.Content>
-          */}
         </Card>
       </TouchableHighlight>
     </React.Fragment>
