@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { ScrollView } from "react-native";
-import { TouchableHighlight, TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { Appbar, Card, List, Button} from "react-native-paper";
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { Appbar, Card } from "react-native-paper";
 
 import CustomCard from "../Components/Card";
 import SearchBar from "../Components/SearchBar";
