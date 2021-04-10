@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Image, View, StyleSheet} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Card, Chip, Appbar, Dialog, Portal, Button, Subheading, Paragraph, List, Headline, DataTable} from "react-native-paper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {getAllRecipes} from '../FileStorage/Database';
 import {getAllWorkouts} from '../FileStorage/Database';
@@ -303,6 +304,18 @@ export default class CalendarListView extends Component {
                 colour: 'white'
             }
         }
+
+        let dynamicCalendar = JSON.stringify(nextNDays);
+        AsyncStorage.setItem("dynamicCalendar", dynamicCalendar, (error, result) => {
+            AsyncStorage.getItem("dynamicCalendar", (error, result) => {
+                if (error) {
+                    throw error;
+                }
+                let dynamicCalendar = JSON.parse(result);
+                console.log(dynamicCalendar[0]);
+            });
+        });
+        
 
         return nextNDays;
     }
@@ -637,7 +650,7 @@ export default class CalendarListView extends Component {
                                                 :
                                                 null
                                             }   
-                                            { dayOfWeek.selectedRecipes ? 
+                                            { dayOfWeek.selectedRecipes ?   
                                                 <CustomChip
                                                     title={dayOfWeek.selectedRecipes.snack3.title}
                                                     onPress={() => {this.showDialog({type: "recipe", data: dayOfWeek.selectedRecipes.snack3})}}
