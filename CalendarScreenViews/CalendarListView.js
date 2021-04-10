@@ -76,9 +76,7 @@ export default class CalendarListView extends Component {
 
         this.updateCalendar = () => {
             if (this.state.nReady >= 2){
-                
                 this.setState({dynamicCalendar: this.setUpDynamicCalendar(this.state.nDaysToShow)});
-                
             }
         }
 
@@ -145,6 +143,11 @@ export default class CalendarListView extends Component {
         let breakfasts = [];
         let lunches = [];
         let dinners = [];
+        let snacks1 = [];
+        let snacks2 = [];
+        let snacks3 = [];
+
+        // Sort each recipe from the database into the categories by adding to appropriate array
         for (let i = 0; i < this.state.recipes.length; i++) {
             if (this.state.recipes[i].category == "Breakfast"){
                 breakfasts.push(this.state.recipes[i]);
@@ -152,8 +155,17 @@ export default class CalendarListView extends Component {
             else if (this.state.recipes[i].category == "Lunch"){
                 lunches.push(this.state.recipes[i]);
             }
-            else {
+            else if (this.state.recipes[i].category === "Dinner") {
                 dinners.push(this.state.recipes[i]);
+            }
+            else if (this.state.recipes[i].category === "Snack1") {
+                snacks1.push(this.state.recipes[i]);
+            }
+            else if (this.state.recipes[i].category === "Snack2") {
+                snacks2.push(this.state.recipes[i]);
+            }
+            else {
+                snacks3.push(this.state.recipes[i]);
             }
         }
 
@@ -161,28 +173,42 @@ export default class CalendarListView extends Component {
         let selectedBreakfasts = [];
         let selectedLunches = [];
         let selectedDinners = [];
+        let selectedSnacks1 = [];
+        let selectedSnacks2 = [];
+        let selectedSnacks3 = [];
         if (breakfasts.length > 0)
             selectedBreakfasts = selectMealsFromArray(breakfasts, desiredCalPerMeal, this.state.nDaysToShow, nAllowedMealRepeats);
         if (lunches.length > 0)
             selectedLunches = selectMealsFromArray(lunches, desiredCalPerMeal, this.state.nDaysToShow, nAllowedMealRepeats);
         if (dinners.length > 0)
             selectedDinners = selectMealsFromArray(dinners, desiredCalPerMeal, this.state.nDaysToShow, nAllowedMealRepeats);
-
+        if (snacks1.length  > 0)
+            selectedSnacks1 = selectMealsFromArray(snacks1, desiredCalPerMeal, this.state.nDaysToShow, nAllowedMealRepeats);
+        if (snacks2.length  > 0)
+            selectedSnacks2 = selectMealsFromArray(snacks2, desiredCalPerMeal, this.state.nDaysToShow, nAllowedMealRepeats);
+        if (snacks3.length  > 0)
+            selectedSnacks3 = selectMealsFromArray(snacks3, desiredCalPerMeal, this.state.nDaysToShow, nAllowedMealRepeats);
+        
         // Create an array where each element represents a day of meals; an object of one breakfast, one lunch and one dinner
         let mealTable = [];
         for (let i = 0; i < this.state.nDaysToShow; i++){
             let dayMealPlan = {};
-            dayMealPlan.breakfast = selectedBreakfasts[i];
-            dayMealPlan.lunch = selectedLunches[i];
-            dayMealPlan.dinner = selectedDinners[i];
+            if (selectedBreakfasts.length > 0) dayMealPlan.breakfast = selectedBreakfasts[i];
+            if (selectedLunches.length > 0) dayMealPlan.lunch = selectedLunches[i];
+            if (selectedDinners.length > 0) dayMealPlan.dinner = selectedDinners[i];
+            if (selectedSnacks1.length > 0) dayMealPlan.snack1 = selectedSnacks1[i];
+            if (selectedSnacks2.length > 0) dayMealPlan.snack2 = selectedSnacks2[i];
+            if (selectedSnacks3.length > 0) dayMealPlan.snack3 = selectedSnacks3[i];
             mealTable.push(dayMealPlan);
         }
-        //console.log(mealTable.map((e) => e.breakfast.title + ", " + e.lunch.title + ", " + e.dinner.title));
 
         return mealTable;
     }
 
     setUpDynamicCalendar() {
+        function sumCal(meal){
+            return meal.fat * 9 + meal.protein * 4 + meal.carbohydrates * 4;
+        }
 
         let cal = new Date();
         let nextNDays = new Array(this.state.nDaysToShow);
@@ -217,15 +243,52 @@ export default class CalendarListView extends Component {
                     date_ext = "th";
             }
 
+            // Get total calories from each meal for the day
             let totalCal = 0;
-            totalCal += mealTable[i].breakfast.fat * 9 + mealTable[i].breakfast.carbohydrates * 4 + mealTable[i].breakfast.protein * 4;
-            totalCal += mealTable[i].lunch.fat * 9 + mealTable[i].lunch.carbohydrates * 4 + mealTable[i].lunch.protein * 4;
-            totalCal += mealTable[i].dinner.fat * 9 + mealTable[i].dinner.carbohydrates * 4 + mealTable[i].dinner.protein * 4;
+            if (mealTable[i].breakfast != undefined) totalCal += sumCal(mealTable[i].breakfast);
+            if (mealTable[i].lunch != undefined) totalCal += sumCal(mealTable[i].lunch);
+            if (mealTable[i].dinner != undefined) totalCal += sumCal(mealTable[i].dinner);
+            if (mealTable[i].snack1 != undefined) totalCal += sumCal(mealTable[i].snack1);
+            if (mealTable[i].snack2 != undefined) totalCal += sumCal(mealTable[i].snack2);
+            if (mealTable[i].snack3 != undefined) totalCal += sumCal(mealTable[i].snack3);
 
-            let fatPercent = Math.round(100 * (mealTable[i].breakfast.fat + mealTable[i].lunch.fat + mealTable[i].dinner.fat) * 9/ totalCal);
-            let carbPercent = Math.round(100 * (mealTable[i].breakfast.carbohydrates + mealTable[i].lunch.carbohydrates + mealTable[i].dinner.carbohydrates) * 4 / totalCal);
-            let proteinPercent = Math.round(100 * (mealTable[i].breakfast.protein + mealTable[i].lunch.protein + mealTable[i].dinner.protein) * 4 / totalCal);
-
+            // Calculate percentages of fat, protein, carbs
+            let fatPercent = Math.round(
+                100 * (
+                    mealTable[i].breakfast != undefined ? mealTable[i].breakfast.fat : 0
+                    + mealTable[i].lunch != undefined ? mealTable[i].lunch.fat : 0
+                    + mealTable[i].dinner != undefined ? mealTable[i].dinner.fat : 0
+                    + mealTable[i].snack1 != undefined ? mealTable[i].snack1.fat : 0
+                    + mealTable[i].snack2 != undefined ? mealTable[i].snack2.fat : 0
+                    + mealTable[i].snack3 != undefined ? mealTable[i].snack3.fat : 0
+                ) 
+                * 9 
+                / totalCal
+            );
+            let carbPercent = Math.round(
+                100 * (
+                    mealTable[i].breakfast != undefined ? mealTable[i].breakfast.carbohydrates : 0
+                    + mealTable[i].lunch != undefined ? mealTable[i].lunch.carbohydrates : 0
+                    + mealTable[i].dinner != undefined ? mealTable[i].dinner.carbohydrates : 0
+                    + mealTable[i].snack1 != undefined ? mealTable[i].snack1.carbohydrates : 0 
+                    + mealTable[i].snack2 != undefined ? mealTable[i].snack2.carbohydrates : 0
+                    + mealTable[i].snack3 != undefined ? mealTable[i].snack3.carbohydrates : 0
+                ) 
+                * 4 
+                / totalCal
+            );
+            let proteinPercent = Math.round(
+                100 * (
+                    mealTable[i].breakfast != undefined ? mealTable[i].breakfast.protein : 0
+                    + mealTable[i].lunch != undefined ? mealTable[i].lunch.protein : 0
+                    + mealTable[i].dinner != undefined ? mealTable[i].dinner.protein : 0
+                    + mealTable[i].snack1 != undefined ? mealTable[i].snack1.protein : 0
+                    + mealTable[i].snack2 != undefined ? mealTable[i].snack2.protein : 0
+                    + mealTable[i].snack3 != undefined ? mealTable[i].snack3.protein : 0
+                ) 
+                * 4 
+                / totalCal
+            );
             
             nextNDays[i] = {
                 day: this.days[(cal.getDay() + i - 1) % 7],
@@ -553,7 +616,37 @@ export default class CalendarListView extends Component {
                                                 />
                                                 :
                                                 null
-                                            }             
+                                            }       
+                                            { dayOfWeek.selectedRecipes ? 
+                                                <CustomChip
+                                                    title={dayOfWeek.selectedRecipes.snack1.title}
+                                                    onPress={() => {this.showDialog({type: "recipe", data: dayOfWeek.selectedRecipes.snack1})}}
+                                                    icon='food-steak'
+                                                    style={{backgroundColor: '#655010'}}
+                                                />
+                                                :
+                                                null
+                                            }   
+                                            { dayOfWeek.selectedRecipes ? 
+                                                <CustomChip
+                                                    title={dayOfWeek.selectedRecipes.snack2.title}
+                                                    onPress={() => {this.showDialog({type: "recipe", data: dayOfWeek.selectedRecipes.snack2})}}
+                                                    icon='food-steak'
+                                                    style={{backgroundColor: '#655010'}}
+                                                />
+                                                :
+                                                null
+                                            }   
+                                            { dayOfWeek.selectedRecipes ? 
+                                                <CustomChip
+                                                    title={dayOfWeek.selectedRecipes.snack3.title}
+                                                    onPress={() => {this.showDialog({type: "recipe", data: dayOfWeek.selectedRecipes.snack3})}}
+                                                    icon='food-steak'
+                                                    style={{backgroundColor: '#655010'}}
+                                                />
+                                                :
+                                                null
+                                            }         
                                             {dayOfWeek.selectedWorkouts.map((e) => {
                                                 return (
                                                     <CustomChip 
@@ -685,8 +778,7 @@ function RecipeDialogContent(props) {
                 </List.Section>                                    
 
                 <List.Section>
-                    <List.Accordion>
-                        <Subheading>Method</Subheading>
+                    <List.Accordion title="Method" description="Tap to see the preparation method">
                         <Paragraph>{recipe.method}</Paragraph>
                     </List.Accordion>
                 </List.Section> 
