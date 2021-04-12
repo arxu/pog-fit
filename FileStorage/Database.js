@@ -11,13 +11,13 @@ export function createDefaultTables() {
     NOTE: Drop tables mainly for testing purposes
     */
     
-    /*
+    
     db.transaction((tx) => { tx.executeSql("DROP TABLE IF EXISTS users"); }, (error) => { console.log(error); });
     db.transaction((tx) => { tx.executeSql("DROP TABLE IF EXISTS recipes"); }, (error) => { console.log(error); });
     db.transaction((tx) => { tx.executeSql("DROP TABLE IF EXISTS recipe_ingredients"); }, (error) => { console.log(error); });
     db.transaction((tx) => { tx.executeSql("DROP TABLE IF EXISTS workouts"); }, (error) => { console.log(error); });
     db.transaction((tx) => { tx.executeSql("DROP TABLE IF EXISTS workout_muscle_groups"); }, (error) => { console.log(error); });
-    */
+    
 
     /*
     Create tables
@@ -359,7 +359,7 @@ export function getAllWorkouts(callback) {
 
 
 // NOTE: for testing purposes only
-export function testQuery(){
+export function testQuery(callback){
     const db = SQLite.openDatabase("pogFit");
     db.transaction( (tx) => {
         tx.executeSql(`
@@ -368,7 +368,7 @@ export function testQuery(){
         `,
         [],
         (tx, resultSet) => {
-            console.log(resultSet.rows._array);
+            callback(resultSet.rows._array);
         },
         (tx, error) => {
             console.log(error);

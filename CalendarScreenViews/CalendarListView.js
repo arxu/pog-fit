@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {Image, View, StyleSheet} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Card, Chip, Appbar, Dialog, Portal, Button, Subheading, Paragraph, List, Headline, DataTable} from "react-native-paper";
+import { Card, Chip, Appbar, Dialog, Portal, Button, Subheading, Paragraph, List, Headline, DataTable, ProgressBar} from "react-native-paper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {getAllRecipes} from '../FileStorage/Database';
 import {getAllWorkouts} from '../FileStorage/Database';
@@ -19,7 +20,7 @@ export default class CalendarListView extends Component {
         this.days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
         
         // For testing. This value should be set by the user. Number of days to show on the calendar.
-        let nDays = 14;
+        let nDays = 7;
 
         this.state = {
             recipeDialogVisible: false,
@@ -31,7 +32,9 @@ export default class CalendarListView extends Component {
             recipeDialogData: null,
             selectedCards: [],
             shoppingListDialogVisible: false,
-            shoppingList: null
+            shoppingList: null,
+            isLoadingCalendar: true,
+            calendarLoadProgress: 0
         };
         
         getAllWorkouts((error, result) => {
@@ -52,7 +55,7 @@ export default class CalendarListView extends Component {
             else {
               this.setState({recipes: result});
               this.setState({nReady: this.state.nReady + 1});
-              this.updateCalendar();
+              this.updateCalendar(false);
             }
         });
 
@@ -74,10 +77,82 @@ export default class CalendarListView extends Component {
             this.setState({shoppingListDialogVisible: false});
         }
 
-        this.updateCalendar = () => {
-            if (this.state.nReady >= 2){
-                
-                this.setState({dynamicCalendar: this.setUpDynamicCalendar(this.state.nDaysToShow)});
+        this.updateCalendar = (createNew) => {
+            if (this.state.nReady >= 2) {
+                this.setState({isLoadingCalendar: true});
+                // load calendar from database
+                if (!createNew) {
+                    AsyncStorage.getItem("dynamicCalendarDetails", (error, result) => {
+                        if (error) {
+                            // generate new calendar
+                        }
+                        // Calculate how many days have passed since calendar was last opened
+                        let dynamicCalendarDetails = JSON.parse(result);
+                        let cal = new Date();
+                        let nPastDays = cal.getDate() < dynamicCalendarDetails.saveDate ? 
+                            cal.getDate() + this.daysInMonth[cal.getMonth() + 1] - dynamicCalendarDetails.saveDate
+                            :
+                            cal.getDate() - dynamicCalendarDetails.saveDate;
+                        nPastDays = Math.min(nPastDays, this.state.nDaysToShow);
+
+                        // Get the calendar
+                        let dynamicCalendar = dynamicCalendarDetails.calendar;
+
+                        // Adjust the calendar, removing passed days and adding new ones
+                        dynamicCalendar.splice(0, nPastDays);
+                        let newDays = this.setUpDynamicCalendar(nPastDays, dynamicCalendar);
+                        newDays.forEach((day) => {dynamicCalendar.push(day);});
+
+                        // Adjust the dates for each day
+                        for (let i = 0; i < dynamicCalendar.length; i++) {
+                            let date = (cal.getDate() + i) % this.daysInMonth[cal.getMonth()];
+                            if (date < cal.getDate()){
+                                date +=1;
+                            }
+
+                            let date_ext;
+                            switch (date % 10) {
+                                case 1:
+                                    date_ext = "st";
+                                    break;
+                                case 2:
+                                    date_ext = "nd";
+                                    break;
+                                case 3:
+                                    date_ext = "rd";
+                                    break;
+                                default:
+                                    date_ext = "th";
+                            }
+                            if (date === 12 || date === 11 || date === 13) 
+                                date_ext = "th";
+
+                            dynamicCalendar[i].day = this.days[(cal.getDay() + i - 1) % 7];
+                            dynamicCalendar[i].date_ext = date_ext;
+                            dynamicCalendar[i].date = date;
+                        }
+
+                        // Save to Database
+                        this.setState({dynamicCalendar: dynamicCalendar});
+                        AsyncStorage.setItem(
+                            "dynamicCalendarDetails", 
+                            JSON.stringify({saveDate: cal.getDate(), calendar: dynamicCalendar}), 
+                            (error, result) => {this.setState({isLoadingCalendar: false})}
+                        );
+                       
+                    });
+                }
+                else {
+                    // Generate a new calendar and save to database
+                    let cal = new Date();
+                    let dynamicCalendar = this.setUpDynamicCalendar(this.state.nDaysToShow);
+                    this.setState({dynamicCalendar: dynamicCalendar});
+                    AsyncStorage.setItem(
+                        "dynamicCalendarDetails", 
+                        JSON.stringify({saveDate: cal.getDate(), calendar: dynamicCalendar}), 
+                        (error, result) => {this.setState({isLoadingCalendar: false})}
+                    );
+                }
                 
             }
         }
@@ -95,17 +170,22 @@ export default class CalendarListView extends Component {
                 selected.splice(idx, 1);
             }
             this.setState({dynamicCalendar: cal, selectedCards: selected});
-            //console.log(this.state.selectedCards.map((c) => c.selectedRecipes.breakfast.title));
         }
     }
 
-    generateMeals(desiredCalPerMeal, nAllowedMealRepeats){
-        function selectMealsFromArray(mealArr, desiredCalPerMeal, nDays, nRepeats){
+    generateMeals(desiredCalPerMeal, nAllowedMealRepeats, savedCalendar){
+        function selectMealsFromArray(mealArr, desiredCalPerMeal, nDays, nRepeats, savedMeals){
             // Add property: "difference from desired cals per meal", to each meal.
             mealArr = mealArr.map((b) => {
                 let cals = b.fat * 9 + b.protein * 4 + b.carbohydrates * 4;
                 b.deltaFromDesired = Math.abs((cals - desiredCalPerMeal));
                 b.timesRepeated = 0;
+                //if (b.title === "Burger") console.log
+                savedMeals.forEach((meal) => {
+                    if (meal.title === b.title) {
+                        b.timesRepeated++;
+                    }
+                });
                 return b;
             });
             
@@ -138,6 +218,9 @@ export default class CalendarListView extends Component {
                 selectedMeals[randIndex] = selectedMeals[i];
                 selectedMeals[i] = temp;
             }
+
+            
+
             return selectedMeals;
         }
 
@@ -145,6 +228,11 @@ export default class CalendarListView extends Component {
         let breakfasts = [];
         let lunches = [];
         let dinners = [];
+        let snacks1 = [];
+        let snacks2 = [];
+        let snacks3 = [];
+
+        // Sort each recipe from the database into the categories by adding to appropriate array
         for (let i = 0; i < this.state.recipes.length; i++) {
             if (this.state.recipes[i].category == "Breakfast"){
                 breakfasts.push(this.state.recipes[i]);
@@ -152,46 +240,121 @@ export default class CalendarListView extends Component {
             else if (this.state.recipes[i].category == "Lunch"){
                 lunches.push(this.state.recipes[i]);
             }
-            else {
+            else if (this.state.recipes[i].category === "Dinner") {
                 dinners.push(this.state.recipes[i]);
             }
+            else if (this.state.recipes[i].category === "Snack1") {
+                snacks1.push(this.state.recipes[i]);
+            }
+            else if (this.state.recipes[i].category === "Snack2") {
+                snacks2.push(this.state.recipes[i]);
+            }
+            else {
+                snacks3.push(this.state.recipes[i]);
+            }
         }
+
+        // Get the number of meals per day
+        let nMeals = 0;
+        if (breakfasts.length > 0) nMeals += 1;
+        if (lunches.length > 0) nMeals += 1;
+        if (dinners.length > 0) nMeals += 1;
+        if (snacks1.length > 0) nMeals += 1;
+        if (snacks2.length > 0) nMeals += 1; 
+        if (snacks3.length > 0) nMeals += 1;
 
         // Generate array of optimal meals for each category, with specified max meal repeats in given time period (nDaysToShow)
         let selectedBreakfasts = [];
         let selectedLunches = [];
         let selectedDinners = [];
-        if (breakfasts.length > 0)
-            selectedBreakfasts = selectMealsFromArray(breakfasts, desiredCalPerMeal, this.state.nDaysToShow, nAllowedMealRepeats);
-        if (lunches.length > 0)
-            selectedLunches = selectMealsFromArray(lunches, desiredCalPerMeal, this.state.nDaysToShow, nAllowedMealRepeats);
-        if (dinners.length > 0)
-            selectedDinners = selectMealsFromArray(dinners, desiredCalPerMeal, this.state.nDaysToShow, nAllowedMealRepeats);
-
+        let selectedSnacks1 = [];
+        let selectedSnacks2 = [];
+        let selectedSnacks3 = [];
+        let avgCal;
+        if (breakfasts.length > 0){
+            selectedBreakfasts = selectMealsFromArray(
+                breakfasts, 
+                desiredCalPerMeal, 
+                this.state.nDaysToShow, 
+                nAllowedMealRepeats,
+                savedCalendar != null ? savedCalendar.map((day) => day.selectedRecipes.breakfast) : []
+            );
+        }
+        if (lunches.length > 0) {
+            selectedLunches = selectMealsFromArray(
+                lunches, 
+                desiredCalPerMeal, 
+                this.state.nDaysToShow, 
+                nAllowedMealRepeats,
+                savedCalendar != null ? savedCalendar.map((day) => day.selectedRecipes.lunch) : []
+            );
+        }
+        if (dinners.length > 0) {
+            selectedDinners = selectMealsFromArray(
+                dinners, 
+                desiredCalPerMeal, 
+                this.state.nDaysToShow, 
+                nAllowedMealRepeats,
+                savedCalendar != null ? savedCalendar.map((day) => day.selectedRecipes.dinner) : []
+            );
+        }
+        if (snacks1.length  > 0) {
+            selectedSnacks1 = selectMealsFromArray(
+                snacks1, 
+                desiredCalPerMeal, 
+                this.state.nDaysToShow, 
+                nAllowedMealRepeats,
+                savedCalendar != null ? savedCalendar.map((day) => day.selectedRecipes.snack1) : []
+            );
+        }
+        if (snacks2.length  > 0) {
+            selectedSnacks2 = selectMealsFromArray(
+                snacks2, 
+                desiredCalPerMeal, 
+                this.state.nDaysToShow, 
+                nAllowedMealRepeats,
+                savedCalendar != null ? savedCalendar.map((day) => day.selectedRecipes.snack2) : []
+            );
+        }
+        if (snacks3.length  > 0) {
+            selectedSnacks3 = selectMealsFromArray(
+                snacks3, 
+                desiredCalPerMeal, 
+                this.state.nDaysToShow, 
+                nAllowedMealRepeats,
+                savedCalendar != null ? savedCalendar.map((day) => day.selectedRecipes.snack3) : []
+            );
+        }
+        
         // Create an array where each element represents a day of meals; an object of one breakfast, one lunch and one dinner
         let mealTable = [];
         for (let i = 0; i < this.state.nDaysToShow; i++){
             let dayMealPlan = {};
-            dayMealPlan.breakfast = selectedBreakfasts[i];
-            dayMealPlan.lunch = selectedLunches[i];
-            dayMealPlan.dinner = selectedDinners[i];
+            if (selectedBreakfasts.length > 0) dayMealPlan.breakfast = selectedBreakfasts[i];
+            if (selectedLunches.length > 0) dayMealPlan.lunch = selectedLunches[i];
+            if (selectedDinners.length > 0) dayMealPlan.dinner = selectedDinners[i];
+            if (selectedSnacks1.length > 0) dayMealPlan.snack1 = selectedSnacks1[i];
+            if (selectedSnacks2.length > 0) dayMealPlan.snack2 = selectedSnacks2[i];
+            if (selectedSnacks3.length > 0) dayMealPlan.snack3 = selectedSnacks3[i];
             mealTable.push(dayMealPlan);
         }
-        //console.log(mealTable.map((e) => e.breakfast.title + ", " + e.lunch.title + ", " + e.dinner.title));
 
         return mealTable;
     }
 
-    setUpDynamicCalendar() {
+    setUpDynamicCalendar(nDays, savedCalendar) {
+        function sumCal(meal){
+            return meal.fat * 9 + meal.protein * 4 + meal.carbohydrates * 4;
+        }
 
         let cal = new Date();
-        let nextNDays = new Array(this.state.nDaysToShow);
+        let nextNDays = new Array(nDays);
 
         // temporary numbers for testing. this should be based on users needs
-        let desiredCalPerMeal = 500; 
+        let desiredCalPerMeal = 400; 
         let nAllowedMealRepeats = 2;
         
-        let mealTable = this.generateMeals(desiredCalPerMeal, nAllowedMealRepeats);
+        let mealTable = this.generateMeals(desiredCalPerMeal, nAllowedMealRepeats, savedCalendar);
         let selectedWorkouts = this.state.workouts.slice(0, 3);
 
         // Append appropriate data to each day
@@ -203,7 +366,7 @@ export default class CalendarListView extends Component {
             }
 
             let date_ext;
-            switch (date) {
+            switch (date % 10) {
                 case 1:
                     date_ext = "st";
                     break;
@@ -216,17 +379,55 @@ export default class CalendarListView extends Component {
                 default:
                     date_ext = "th";
             }
+            if (date === 12 || date === 11 || date === 13) 
+                date_ext = "th";
 
+            // Get total calories from each meal for the day
             let totalCal = 0;
-            totalCal += mealTable[i].breakfast.fat * 9 + mealTable[i].breakfast.carbohydrates * 4 + mealTable[i].breakfast.protein * 4;
-            totalCal += mealTable[i].lunch.fat * 9 + mealTable[i].lunch.carbohydrates * 4 + mealTable[i].lunch.protein * 4;
-            totalCal += mealTable[i].dinner.fat * 9 + mealTable[i].dinner.carbohydrates * 4 + mealTable[i].dinner.protein * 4;
+            if (mealTable[i].breakfast != undefined) totalCal += sumCal(mealTable[i].breakfast);
+            if (mealTable[i].lunch != undefined) totalCal += sumCal(mealTable[i].lunch);
+            if (mealTable[i].dinner != undefined) totalCal += sumCal(mealTable[i].dinner);
+            if (mealTable[i].snack1 != undefined) totalCal += sumCal(mealTable[i].snack1);
+            if (mealTable[i].snack2 != undefined) totalCal += sumCal(mealTable[i].snack2);
+            if (mealTable[i].snack3 != undefined) totalCal += sumCal(mealTable[i].snack3);
 
-            let fatPercent = Math.round(100 * (mealTable[i].breakfast.fat + mealTable[i].lunch.fat + mealTable[i].dinner.fat) * 9/ totalCal);
-            let carbPercent = Math.round(100 * (mealTable[i].breakfast.carbohydrates + mealTable[i].lunch.carbohydrates + mealTable[i].dinner.carbohydrates) * 4 / totalCal);
-            let proteinPercent = Math.round(100 * (mealTable[i].breakfast.protein + mealTable[i].lunch.protein + mealTable[i].dinner.protein) * 4 / totalCal);
+            // Calculate percentages of fat, protein, carbs
+            let totalFat = 0, totalCarbs = 0, totalProtein = 0;
+            if (mealTable[i].breakfast != undefined) { 
+                totalFat += mealTable[i].breakfast.fat;
+                totalCarbs += mealTable[i].breakfast.carbohydrates;
+                totalProtein += mealTable[i].breakfast.protein; 
+            }
+            if (mealTable[i].lunch != undefined) {
+                totalFat += mealTable[i].lunch.fat;
+                totalCarbs += mealTable[i].lunch.carbohydrates;
+                totalProtein += mealTable[i].lunch.protein; 
+            }
+            if (mealTable[i].dinner != undefined) { 
+                totalFat += mealTable[i].dinner.fat; 
+                totalCarbs += mealTable[i].dinner.carbohydrates;
+                totalProtein += mealTable[i].dinner.protein; 
+            }
+            if (mealTable[i].snack1 != undefined) {
+                totalFat += mealTable[i].snack1.fat;
+                totalCarbs += mealTable[i].snack1.carbohydrates;
+                totalProtein += mealTable[i].snack1.protein; 
+            }
+            if (mealTable[i].snack2 != undefined) {
+                totalFat += mealTable[i].snack2.fat;
+                totalCarbs += mealTable[i].snack2.carbohydrates;
+                totalProtein += mealTable[i].snack2.protein; 
+            }
+            if (mealTable[i].snack3 != undefined) { 
+                totalCal += mealTable[i].snack3.fat;
+                totalCarbs += mealTable[i].snack3.carbohydrates;
+                totalProtein += mealTable[i].snack3.protein; 
+            }
 
-            
+            let fatPercent = Math.round(100 * totalFat * 9 / totalCal);
+            let carbPercent = Math.round(100 * totalProtein * 4 / totalCal);
+            let proteinPercent = Math.round(100 * totalCarbs * 4 / totalCal);
+
             nextNDays[i] = {
                 day: this.days[(cal.getDay() + i - 1) % 7],
                 date: date, 
@@ -240,7 +441,7 @@ export default class CalendarListView extends Component {
                 colour: 'white'
             }
         }
-
+        
         return nextNDays;
     }
 
@@ -445,8 +646,6 @@ export default class CalendarListView extends Component {
             addToHashTable(ingredients[i], ingredientHashTable, modulus);
         }
 
-        //console.log(ingredientHashTable);
-
         // Sum quantities of items and add them to the shopping list.
         let shoppingList = [];
         let startIdx = 0, endIdx = 1;
@@ -512,6 +711,7 @@ export default class CalendarListView extends Component {
                     <Appbar.Content title="Calendar"/>
                 </Appbar.Header>
                     <View style={{height: '80%', marginLeft: 5, marginRight: 5}}>
+                        <ProgressBar progress={this.state.calendarLoadProgress} />
                         <ScrollView>
                             {this.state.dynamicCalendar.map((dayOfWeek, idx) =>
                                 <Card key={idx} style={{margin: 3, backgroundColor: dayOfWeek.colour}} onLongPress={() =>{this.highlightSelectedCard(idx)}}>
@@ -553,7 +753,37 @@ export default class CalendarListView extends Component {
                                                 />
                                                 :
                                                 null
-                                            }             
+                                            }       
+                                            { dayOfWeek.selectedRecipes ? 
+                                                <CustomChip
+                                                    title={dayOfWeek.selectedRecipes.snack1.title}
+                                                    onPress={() => {this.showDialog({type: "recipe", data: dayOfWeek.selectedRecipes.snack1})}}
+                                                    icon='food-steak'
+                                                    style={{backgroundColor: '#f6a21e'}}
+                                                />
+                                                :
+                                                null
+                                            }   
+                                            { dayOfWeek.selectedRecipes ? 
+                                                <CustomChip
+                                                    title={dayOfWeek.selectedRecipes.snack2.title}
+                                                    onPress={() => {this.showDialog({type: "recipe", data: dayOfWeek.selectedRecipes.snack2})}}
+                                                    icon='food-steak'
+                                                    style={{backgroundColor: '#7a871e'}}
+                                                />
+                                                :
+                                                null
+                                            }   
+                                            { dayOfWeek.selectedRecipes ?   
+                                                <CustomChip
+                                                    title={dayOfWeek.selectedRecipes.snack3.title}
+                                                    onPress={() => {this.showDialog({type: "recipe", data: dayOfWeek.selectedRecipes.snack3})}}
+                                                    icon='food-steak'
+                                                    style={{backgroundColor: '#655010'}}
+                                                />
+                                                :
+                                                null
+                                            }         
                                             {dayOfWeek.selectedWorkouts.map((e) => {
                                                 return (
                                                     <CustomChip 
@@ -574,7 +804,7 @@ export default class CalendarListView extends Component {
                     <View style={{margin: 5, flex: 1, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', height: '20%'}}>
                         <Button 
                             mode="contained" 
-                            onPress={this.updateCalendar} 
+                            onPress={() => {this.updateCalendar(true);}} 
                             style={{margin: 2}}
                         >
                             NEW PLAN
@@ -685,8 +915,7 @@ function RecipeDialogContent(props) {
                 </List.Section>                                    
 
                 <List.Section>
-                    <List.Accordion>
-                        <Subheading>Method</Subheading>
+                    <List.Accordion title="Method" description="Tap to see the preparation method">
                         <Paragraph>{recipe.method}</Paragraph>
                     </List.Accordion>
                 </List.Section> 
