@@ -1,7 +1,10 @@
 import React, {Component} from 'react';
 import {Image, View, StyleSheet} from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import { Card, Chip, Appbar, Dialog, Portal, Button, Subheading, Paragraph, List, Headline, DataTable, ProgressBar, Menu, Checkbox, Title} from "react-native-paper";
+import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
+import { 
+    Card, Chip, Appbar, Dialog, Portal, Button, Subheading, Paragraph, 
+    List, Headline, DataTable, ProgressBar, Menu, Checkbox, Switch, TextInput
+} from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {getAllRecipes} from '../FileStorage/Database';
@@ -22,30 +25,26 @@ export default class CalendarListView extends Component {
         this.days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
         
         // For testing. This value should be set by the user. Number of days to show on the calendar.
-        let nDays = 7;
-        let desiredCalPerMeal = 400;
-        let nAllowedMealRepeats = 2;
 
         this.state = {
+            // Recipe dialog
             recipeDialogVisible: false,
             recipeDialogData: null,
-
+            // Shopping list dialog
             shoppingListDialogVisible: false, 
-
-            nDaysToShow: nDays, 
-            desiredCalPerMeal: desiredCalPerMeal,
-            nAllowedMealRepeats: nAllowedMealRepeats,
+            // Dunamic calendar
+            desiredCalPerMeal: 400,
             dynamicCalendar: [],
             workouts: [],
             recipes: [],
             nReady: 0,
-            
+            // Shopping list
             selectedCards: [],
             shoppingList: null,
-
+            // Loading screen (not implemented)
             isLoadingCalendar: true,
             calendarLoadProgress: 0,
-
+            // Preferences
             menuVisible: false,
             preferencesDialogVisible: false,
             usingBreakfast: true,
@@ -53,30 +52,12 @@ export default class CalendarListView extends Component {
             usingDinner: true,
             usingSnack1: true,
             usingSnack2: true,
-            usingSnack3: true
+            usingSnack3: true,
+            nAllowedMealRepeats: 2,
+            mealRepeatMenuVisible: false,
+            nDaysToShow: 7,
+            daysToShowMenuVisible: false
         };
-        
-        getAllWorkouts((error, result) => {
-            if (error) {
-              console.log(error);
-            }
-            else {
-              this.setState({workouts: result});
-              this.setState({nReady: this.state.nReady + 1});
-              this.updateCalendar(false, this.state.desiredCalPerMeal, this.state.nAllowedMealRepeats);
-            }
-        });
-
-        getAllRecipes((error, result) => {
-            if (error) {
-              console.log(error);
-            }
-            else {
-              this.setState({recipes: result});
-              this.setState({nReady: this.state.nReady + 1});
-              this.updateCalendar(false, this.state.desiredCalPerMeal, this.state.nAllowedMealRepeats);
-            }
-        });
 
         this.showDialog = (data) => { 
             this.setState({recipeDialogVisible: true, recipeDialogData: data}); 
@@ -188,6 +169,67 @@ export default class CalendarListView extends Component {
             }
             this.setState({dynamicCalendar: cal, selectedCards: selected});
         }
+
+        this.savePreferences = () => {
+            this.setState({preferencesDialogVisible: false});
+            let preferences = {
+                nAllowedMealRepeats: this.state.nAllowedMealRepeats,
+                nDaysToShow: this.state.nDaysToShow,
+                usingBreakfast: this.state.usingBreakfast,
+                usingLunch: this.state.usingLunch,
+                usingDinner: this.state.usingDinner,
+                usingSnack1: this.state.usingSnack1,
+                usingSnack2: this.state.usingSnack2,
+                usingSnack3: this.state.usingSnack3
+            }
+            AsyncStorage.setItem("calendarPreferences", JSON.stringify(preferences), error => {if (error) throw error;});
+            this.updateCalendar(true, this.state.desiredCalPerMeal, this.state.nAllowedMealRepeats, null);
+        }
+
+        this.loadPreferences = () => {
+            AsyncStorage.getItem("calendarPreferences", (error, result) => {
+                if (error) {
+                    throw error;
+                }
+                let preferences = JSON.parse(result);
+                this.setState({
+                    preferencesDialogVisible: false,
+                    nAllowedMealRepeats: preferences.nAllowedMealRepeats,
+                    nDaysToShow: preferences.nDaysToShow,
+                    usingBreakfast: preferences.usingBreakfast,
+                    usingLunch: preferences.usingLunch,
+                    usingDinner: preferences.usingDinner,
+                    usingSnack1: preferences.usingSnack1,
+                    usingSnack2: preferences.usingSnack2,
+                    usingSnack3: preferences.usingSnack3
+                });
+            });
+        }
+
+        // TODO: need to save preferences the first time the app is opened
+        this.loadPreferences();
+
+        getAllWorkouts((error, result) => {
+            if (error) {
+              console.log(error);
+            }
+            else {
+              this.setState({workouts: result});
+              this.setState({nReady: this.state.nReady + 1});
+              this.updateCalendar(false, this.state.desiredCalPerMeal, this.state.nAllowedMealRepeats);
+            }
+        });
+
+        getAllRecipes((error, result) => {
+            if (error) {
+              console.log(error);
+            }
+            else {
+              this.setState({recipes: result});
+              this.setState({nReady: this.state.nReady + 1});
+              this.updateCalendar(false, this.state.desiredCalPerMeal, this.state.nAllowedMealRepeats);
+            }
+        });
     }
 
     generateMeals(desiredCalPerMeal, nAllowedMealRepeats, savedCalendar){
@@ -932,24 +974,58 @@ export default class CalendarListView extends Component {
                                         onPress={() => { this.setState({usingSnack3: !this.state.usingSnack3}); }}
                                         title="Use Snack 3"
                                     />
+                                    <View style={{  flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignContent: 'center'}}>
+                                        <Subheading>Allowed Meal Repeats</Subheading>
+                                        <Menu 
+                                            visible={this.state.mealRepeatMenuVisible} 
+                                            onDismiss={() => { this.setState({mealRepeatMenuVisible: false}); }} 
+                                            anchor={
+                                                <TouchableHighlight onPress={() => { this.setState({mealRepeatMenuVisible: true}); }}>
+                                                    <Subheading style={{paddingRight: 12}}>{this.state.nAllowedMealRepeats}</Subheading>
+                                                </TouchableHighlight>
+                                            }
+                                        >
+                                            <MenuItemList 
+                                                startIdx={0} 
+                                                endIdx={this.state.nDaysToShow} 
+                                                onValSelected={(value) => { 
+                                                    this.setState({nAllowedMealRepeats: value, mealRepeatMenuVisible: false});
+                                                }}
+                                            />
+                                        </Menu>
+                                    </View>
+                                    <View style={{  flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignContent: 'center'}}>
+                                        <Subheading>Length of Meal Plan</Subheading>
+                                        <Menu 
+                                            visible={this.state.daysToShowMenuVisible} 
+                                            onDismiss={() => { this.setState({daysToShowMenuVisible: false}); }} 
+                                            anchor={
+                                                <TouchableHighlight onPress={() => { this.setState({daysToShowMenuVisible: true}); }}>
+                                                    <Subheading style={{paddingRight: 12}}>{this.state.nDaysToShow}</Subheading>
+                                                </TouchableHighlight>
+                                            }
+                                        >
+                                            <MenuItemList 
+                                                startIdx={1} 
+                                                endIdx={14} 
+                                                onValSelected={(value) => { 
+                                                    this.setState({nDaysToShow: value, daysToShowMenuVisible: false});
+                                                }}
+                                            />
+                                        </Menu>
+                                    </View>
                                 </ScrollView>
                             </Dialog.Content>
                             <Dialog.Actions>
                                 <Button 
-                                    onPress={() => {
-                                        this.setState({preferencesDialogVisible: false});
-                                        
-                                        this.updateCalendar(true, this.state.desiredCalPerMeal, this.state.nAllowedMealRepeats, null);
-                                    }}
-                                >
-                                DONE
-                                </Button>
-                                <Button 
-                                    onPress={() => {
-                                        this.setState({preferencesDialogVisible: false});
-                                    }}
+                                    onPress={this.loadPreferences}
                                 >
                                 CANCEL
+                                </Button>
+                                <Button 
+                                    onPress={this.savePreferences}
+                                >
+                                DONE
                                 </Button>
                             </Dialog.Actions>
                         </Dialog>
@@ -957,6 +1033,14 @@ export default class CalendarListView extends Component {
             </React.Fragment>
         );
     }
+}
+
+function MenuItemList(props) {
+    let menuItems = [];
+    for (let i = props.startIdx; i <= props.endIdx; i++) {
+        menuItems.push(<Menu.Item title={i} key={i} onPress={() => { props.onValSelected(i); }}/>);
+    }
+    return menuItems;
 }
 
 function CustomChip(props) {
