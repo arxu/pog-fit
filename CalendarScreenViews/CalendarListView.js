@@ -3,7 +3,7 @@ import {Image, View, StyleSheet} from 'react-native';
 import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
 import { 
     Card, Chip, Appbar, Dialog, Portal, Button, Subheading, Paragraph, 
-    List, Headline, DataTable, ProgressBar, Menu, Checkbox, Switch, TextInput
+    List, Headline, DataTable, ProgressBar, Menu, Switch, Divider
 } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -51,12 +51,13 @@ export default class CalendarListView extends Component {
             usingLunch: true,
             usingDinner: true,
             usingSnack1: true,
-            usingSnack2: true,
-            usingSnack3: true,
+            usingSnack2: false,
+            usingSnack3: false,
             nAllowedMealRepeats: 2,
             mealRepeatMenuVisible: false,
             nDaysToShow: 7,
-            daysToShowMenuVisible: false
+            daysToShowMenuVisible: false,
+            useOnlyUserRecipes: false
         };
 
         this.showDialog = (data) => { 
@@ -175,6 +176,7 @@ export default class CalendarListView extends Component {
             let preferences = {
                 nAllowedMealRepeats: this.state.nAllowedMealRepeats,
                 nDaysToShow: this.state.nDaysToShow,
+                useOnlyUserRecipes: this.state.useOnlyUserRecipes,
                 usingBreakfast: this.state.usingBreakfast,
                 usingLunch: this.state.usingLunch,
                 usingDinner: this.state.usingDinner,
@@ -196,6 +198,7 @@ export default class CalendarListView extends Component {
                     preferencesDialogVisible: false,
                     nAllowedMealRepeats: preferences.nAllowedMealRepeats,
                     nDaysToShow: preferences.nDaysToShow,
+                    useOnlyUserRecipes: preferences.useOnlyUserRecipes,
                     usingBreakfast: preferences.usingBreakfast,
                     usingLunch: preferences.usingLunch,
                     usingDinner: preferences.usingDinner,
@@ -292,6 +295,9 @@ export default class CalendarListView extends Component {
 
         // Sort each recipe from the database into the categories by adding to appropriate array
         for (let i = 0; i < this.state.recipes.length; i++) {
+            if (this.state.useOnlyUserRecipes && this.state.recipes[i].user_id === 1) {
+                continue;
+            }
             if (this.state.usingBreakfast && this.state.recipes[i].category == "Breakfast"){
                 breakfasts.push(this.state.recipes[i]);
             }
@@ -494,7 +500,7 @@ export default class CalendarListView extends Component {
                 colour: 'white'
             }
         }
-        
+
         return nextNDays;
     }
 
@@ -944,36 +950,7 @@ export default class CalendarListView extends Component {
                             <Dialog.Title>Preferences</Dialog.Title>
                             <Dialog.Content  >
                                 <ScrollView>
-                                    <TitledCheckbox 
-                                        status={this.state.usingBreakfast ? "checked" : "unchecked"} 
-                                        onPress={() => { this.setState({usingBreakfast: !this.state.usingBreakfast}); }}
-                                        title="Use Breakfasts"
-                                    />
-                                    <TitledCheckbox 
-                                        status={this.state.usingLunch ? "checked" : "unchecked"}
-                                        onPress={() => { this.setState({usingLunch: !this.state.usingLunch}); }}
-                                        title="Use Lunches"
-                                    />
-                                    <TitledCheckbox 
-                                        status={this.state.usingDinner ? "checked" : "unchecked"}
-                                        onPress={() => { this.setState({usingDinner: !this.state.usingDinner}); }}
-                                        title="Use Dinners"
-                                    />
-                                    <TitledCheckbox 
-                                        status={this.state.usingSnack1 ? "checked" : "unchecked"}
-                                        onPress={() => { this.setState({usingSnack1: !this.state.usingSnack1}); }}
-                                        title="Use Snack 1"
-                                    />
-                                    <TitledCheckbox 
-                                        status={this.state.usingSnack2 ? "checked" : "unchecked"}
-                                        onPress={() => { this.setState({usingSnack2: !this.state.usingSnack2}); }}
-                                        title="Use Snack 2"
-                                    />
-                                    <TitledCheckbox 
-                                        status={this.state.usingSnack3 ? "checked" : "unchecked"}
-                                        onPress={() => { this.setState({usingSnack3: !this.state.usingSnack3}); }}
-                                        title="Use Snack 3"
-                                    />
+                                    
                                     <View style={{  flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignContent: 'center'}}>
                                         <Subheading>Allowed Meal Repeats</Subheading>
                                         <Menu 
@@ -1014,19 +991,69 @@ export default class CalendarListView extends Component {
                                             />
                                         </Menu>
                                     </View>
+                                    <TitledCheckbox 
+                                        status={this.state.useOnlyUserRecipes}
+                                        onPress={() => { this.setState({useOnlyUserRecipes: !this.state.useOnlyUserRecipes}); }}
+                                        title="Use Only User Recipes"
+                                    />
+                                    <View style={{margin: 5}}>
+                                        <Divider />
+                                    </View>
+                                    <TitledCheckbox 
+                                        status={this.state.usingBreakfast} 
+                                        onPress={() => { this.setState({usingBreakfast: !this.state.usingBreakfast}); }}
+                                        title="Use Breakfasts"
+                                    />
+                                    <TitledCheckbox 
+                                        status={this.state.usingLunch}
+                                        onPress={() => { this.setState({usingLunch: !this.state.usingLunch}); }}
+                                        title="Use Lunches"
+                                    />
+                                    <TitledCheckbox 
+                                        status={this.state.usingDinner}
+                                        onPress={() => { this.setState({usingDinner: !this.state.usingDinner}); }}
+                                        title="Use Dinners"
+                                    />
+                                    <TitledCheckbox 
+                                        status={this.state.usingSnack1}
+                                        onPress={() => { this.setState({usingSnack1: !this.state.usingSnack1}); }}
+                                        title="Use Snack 1"
+                                    />
+                                    <TitledCheckbox 
+                                        status={this.state.usingSnack2}
+                                        onPress={() => { this.setState({usingSnack2: !this.state.usingSnack2}); }}
+                                        title="Use Snack 2"
+                                    />
+                                    <TitledCheckbox 
+                                        status={this.state.usingSnack3}
+                                        onPress={() => { this.setState({usingSnack3: !this.state.usingSnack3}); }}
+                                        title="Use Snack 3"
+                                    />
+                                    
                                 </ScrollView>
                             </Dialog.Content>
                             <Dialog.Actions>
                                 <Button 
-                                    onPress={this.loadPreferences}
+                                    onPress={ () => {
+                                        this.setState({
+                                            usingBreakfast: true,
+                                            usingLunch: true,
+                                            usingDinner: true,
+                                            usingSnack1: true,
+                                            usingSnack2: false,
+                                            usingSnack3: false,
+                                            nAllowedMealRepeats: 2,
+                                            nDaysToShow: 7,
+                                            useOnlyUserRecipes: false
+                                        }, () => {
+                                            this.savePreferences();
+                                        });
+                                    }}
                                 >
-                                CANCEL
+                                    RESTORE DEFAULTS
                                 </Button>
-                                <Button 
-                                    onPress={this.savePreferences}
-                                >
-                                DONE
-                                </Button>
+                                <Button onPress={this.loadPreferences}>CANCEL</Button>
+                                <Button onPress={this.savePreferences}>SAVE</Button>
                             </Dialog.Actions>
                         </Dialog>
                     </Portal>
@@ -1063,7 +1090,7 @@ function TitledCheckbox(props) {
     return (
         <View style={{  flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignContent: 'center'}}>
             <Subheading>{props.title}</Subheading>
-            <Checkbox status={props.status} onPress={props.onPress}/>
+            <Switch value={props.status} onValueChange={props.onPress} color="#7a871e"/>
         </View>
     );
     
