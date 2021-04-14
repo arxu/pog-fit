@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import RecipeScreen from "./RecipeScreen";
 import WorkoutScreen from "./WorkoutScreen";
-import ProfileRoute from "./ProfileScreen";
-import CalendarRoute from "./CalendarScreen";
+import ProfileScreen from "./ProfileScreen";
+import CalendarScreen from "./CalendarScreen";
 import { BottomNavigation } from "react-native-paper";
 
 const Screen = (props) => {
@@ -17,8 +17,8 @@ const Screen = (props) => {
   const renderScene = BottomNavigation.SceneMap({
     recipes: RecipeScreen,
     workouts: WorkoutScreen,
-    profile: ProfileRoute,
-    calendar: CalendarRoute
+    profile: ProfileScreen,
+    calendar: CalendarScreen
   });
 
   return (

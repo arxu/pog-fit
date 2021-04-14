@@ -604,10 +604,10 @@ export default class CalendarListView extends Component {
         function convertMeasurementToLowest(value, unit){
             let converted;
             switch (unit) {
-                case Units.ml: 
+                case Units.ml || Units.mg: 
                     converted = value;
                     break;
-                case Units.l: 
+                case Units.l || Units.g: 
                     converted = value * 1000
                     break;
                 case Units.cup: 
@@ -619,12 +619,12 @@ export default class CalendarListView extends Component {
                 case Units.tbsp: 
                     converted = value * 17.75816
                     break;
-                case Units.mg: 
-                    converted = value;
-                    break;
-                case Units.g: 
-                    converted = value * 1000;
-                    break;
+                // case Units.mg: 
+                //     converted = value;
+                //     break;
+                // case Units.g: 
+                //     converted = value * 1000;
+                //     break;
                 case Units.kg: 
                     converted = value * 1000000;
                     break;

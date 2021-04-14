@@ -7,7 +7,7 @@ import WorkoutListView from '../WorkoutScreenViews/WorkoutListView';
 
 const Stack = createStackNavigator();
 
-export default function RecipeScreen(props) {
+export default function WorkoutScreen(props) {
   return (
       <NavigationContainer>
         <React.Fragment>

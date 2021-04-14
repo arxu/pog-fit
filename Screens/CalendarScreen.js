@@ -8,7 +8,7 @@ import RecipeView from '../RecipeScreenViews/RecipeView';
 
 const Stack = createStackNavigator();
 
-export default function CalendarRoute(props) {
+export default function CalendarScreen(props) {
     return (
         <NavigationContainer>
             <React.Fragment>

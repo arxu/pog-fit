@@ -31,7 +31,8 @@ export function createDefaultTables() {
                 date_of_birth TEXT, 
                 weight REAL,
                 height_cm REAL,
-                gender TEXT
+                gender TEXT,
+                target_weight REAL
             );
         `,
         [],
@@ -146,8 +147,8 @@ export function createDefaultTables() {
     // Add default user
     db.transaction((tx) => {
        tx.executeSql(
-           `INSERT INTO users (username, date_of_birth, weight, height_cm, gender) 
-           VALUES (\"default\", 2000-01-01 12:00:00.000, 0, 0, \"male\");`
+           `INSERT INTO users (username, date_of_birth, weight, height_cm, gender, target_weight) 
+           VALUES (\"default\", 2000-01-01 12:00:00.000, 0, 0, \"male\", 0);`
         );
     });
 
