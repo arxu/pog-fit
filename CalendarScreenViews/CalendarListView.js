@@ -209,8 +209,17 @@ export default class CalendarListView extends Component {
             });
         }
 
-        // TODO: need to save preferences the first time the app is opened
-        this.loadPreferences();
+        AsyncStorage.getItem("firstStartup", (error, result) => {
+            if (error) {
+                throw error;
+            }
+            if (result) {
+                this.savePreferences();
+            }
+            else {
+                this.loadPreferences();
+            }
+        });
 
         getAllWorkouts((error, result) => {
             if (error) {
