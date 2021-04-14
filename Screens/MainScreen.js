@@ -14,12 +14,18 @@ const Screen = (props) => {
     { key: "workouts", title: "Workouts", icon: "dumbbell", color: "#f6a21e" }
   ]);
 
-  const renderScene = BottomNavigation.SceneMap({
-    profile: ProfileRoute,
-    calendar: CalendarRoute,
-    recipes: RecipeScreen,
-    workouts: WorkoutScreen
-  });
+  const renderScene = ({route, jumpTo}) => {
+      switch (route.key) {
+        case "profile":
+          return <ProfileRoute jumpTo={jumpTo}/>
+        case "calendar":
+          return <CalendarRoute jumpTo={jumpTo}/>
+        case "recipes":
+          return <RecipeScreen jumpTo={jumpTo}/>
+        case "workouts":
+          return <WorkoutScreen jumpTo={jumpTo}/>
+      }
+  }
 
   return (
     <BottomNavigation
