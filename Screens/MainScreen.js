@@ -8,17 +8,17 @@ import { BottomNavigation } from "react-native-paper";
 const Screen = (props) => {
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    { key: "recipes", title: "Recipes", icon: "message", color: "#3F51B5" },
-    { key: "workouts", title: "Workouts", icon: "album", color: "#009688" },
-    { key: "profile", title: "Profile", icon: "history", color: "#795548" },
-    { key: "calendar", title: "Calendar", icon: "history", color: "#795548" }
+    { key: "profile", title: "Profile", icon: "account", color: "#e55b13" },
+    { key: "calendar", title: "Calendar", icon: "calendar-text", color: "#655010" },
+    { key: "recipes", title: "Recipes", icon: "food-apple", color: "#7a871e" },
+    { key: "workouts", title: "Workouts", icon: "dumbbell", color: "#f6a21e" }
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
-    recipes: RecipeScreen,
-    workouts: WorkoutScreen,
     profile: ProfileRoute,
-    calendar: CalendarRoute
+    calendar: CalendarRoute,
+    recipes: RecipeScreen,
+    workouts: WorkoutScreen
   });
 
   return (
