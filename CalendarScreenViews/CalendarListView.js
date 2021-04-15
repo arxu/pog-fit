@@ -3,7 +3,7 @@ import {Image, View, StyleSheet} from 'react-native';
 import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
 import { 
     Card, Chip, Appbar, Dialog, Portal, Button, Subheading, Paragraph, 
-    List, Headline, DataTable, ProgressBar, Menu, Switch, Divider
+    List, Headline, DataTable, ProgressBar, Menu, Switch, Divider, Text
 } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -797,14 +797,19 @@ export default class CalendarListView extends Component {
                                             dayOfWeek.totalCal + " Calories: " 
                                             + dayOfWeek.fatPercent + "% fat, " 
                                             + dayOfWeek.proteinPercent + "% protein, "
-                                            + dayOfWeek.carbPercent + "% carbohydrates"}/>
+                                            + dayOfWeek.carbPercent + "% carbohydrates"
+                                        }
+                                    />
                                     <Card.Content>
+                                        <View style={{margin: 5}}>
+                                                <Divider/>
+                                        </View> 
                                         <View style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start'}}>
                                             { dayOfWeek.selectedRecipes && dayOfWeek.selectedRecipes.breakfast ? 
                                                 <CustomChip
                                                     title={dayOfWeek.selectedRecipes.breakfast.title}
                                                     onPress={() => {this.showDialog({type: "recipe", data: dayOfWeek.selectedRecipes.breakfast})}}
-                                                    icon='food-croissant'
+                                                    icon='baguette'
                                                     style={{backgroundColor: '#f6a21e'}}
                                                 />
                                                 :
@@ -834,7 +839,7 @@ export default class CalendarListView extends Component {
                                                 <CustomChip
                                                     title={dayOfWeek.selectedRecipes.snack1.title}
                                                     onPress={() => {this.showDialog({type: "recipe", data: dayOfWeek.selectedRecipes.snack1})}}
-                                                    icon='food-steak'
+                                                    icon='food-croissant'
                                                     style={{backgroundColor: '#f6a21e'}}
                                                 />
                                                 :
@@ -844,7 +849,7 @@ export default class CalendarListView extends Component {
                                                 <CustomChip
                                                     title={dayOfWeek.selectedRecipes.snack2.title}
                                                     onPress={() => {this.showDialog({type: "recipe", data: dayOfWeek.selectedRecipes.snack2})}}
-                                                    icon='food-steak'
+                                                    icon='food-croissant'
                                                     style={{backgroundColor: '#7a871e'}}
                                                 />
                                                 :
@@ -854,12 +859,18 @@ export default class CalendarListView extends Component {
                                                 <CustomChip
                                                     title={dayOfWeek.selectedRecipes.snack3.title}
                                                     onPress={() => {this.showDialog({type: "recipe", data: dayOfWeek.selectedRecipes.snack3})}}
-                                                    icon='food-steak'
+                                                    icon='food-croissant'
                                                     style={{backgroundColor: '#655010'}}
                                                 />
                                                 :
                                                 null
-                                            }         
+                                            }       
+                                            
+                                        </View>
+                                        <View style={{margin: 5}}>
+                                                <Divider/>
+                                        </View>
+                                        <View style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start'}}>
                                             {dayOfWeek.selectedWorkouts.map((e) => {
                                                 return (
                                                     <CustomChip 
@@ -871,6 +882,12 @@ export default class CalendarListView extends Component {
                                                     />
                                                 );
                                             })}
+                                            <CustomChip 
+                                                title={"add"} 
+                                                onPress={null} 
+                                                style={{backgroundColor: "#eeeeee"}}
+                                                icon="plus"
+                                            />
                                         </View>
                                     </Card.Content>
                                 </Card>

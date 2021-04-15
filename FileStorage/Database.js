@@ -540,3 +540,25 @@ export function testQuery(callback){
         console.log(error);
     });
 }
+
+export function insertIngredients(ingredientArray, recipeId) {
+    ingredientArray.forEach((ing, ingIdx) => {
+        db.transaction((tx) => {
+            let str = JSON.stringify(ing);
+            tx.executeSql(`
+                INSERT INTO recipe_ingredients (title, recipe_id)
+                VALUES ('${str}', ${recipeId});
+            `,
+            [],
+            (tx, resultSet) => {
+                
+            },
+            (tx, error) => {
+                console.log(error);
+            });
+        },
+        (error) => {
+            console.log(error);
+        });
+    });
+}
