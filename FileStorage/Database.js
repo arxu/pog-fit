@@ -9,7 +9,7 @@ export function createDefaultTables(callback) {
     let userTableCreated, recipeTableCreated, recipeIngredientTableCreated, workoutTableCreated, muscleGroupTableCreated = false;
     let addedDefaultUser, allRecipesInserted, allIngredientsInserted, allWorkoutsInserted, 
         allMuscleGroupsInserted = false;
-    
+  
     function onAllTablesDeleted() {
         if (!(userTableDeleted && recipeTableDeleted && recipeIngredientTableDeleted && workoutTableDeleted && muscleGroupTableDeleted))
             return;
@@ -519,14 +519,75 @@ export function getAllWorkouts(callback) {
     });
 }
 
+export function addRecipe(title){
+    const db = SQLite.openDatabase("pogFit");
+    db.transaction( (tx) => {
+        tx.executeSql(`
+            INSERT INTO recipes (title) 
+            VALUES ("${title}");
+        `,
+        [],
+        (tx, resultSet) => {
+            // console.log(resultSet);
+        },
+        (tx, error) => {
+            console.log(error);
+        });
+    },
+    (error) => {
+        console.log(error);
+    });
+} 
+
+export function updateRecipe(title, cat, fat, pro, car, sug, met){
+    const db = SQLite.openDatabase("pogFit");
+    db.transaction( (tx) => {
+        tx.executeSql(`
+            UPDATE recipes 
+            SET category = "${cat}", fat = "${fat}", protein = "${pro}", carbohydrates = "${car}", sugars = "${sug}", method = "${met}"
+            WHERE title = "${title}"
+        `,
+        [],
+        (tx, resultSet) => {
+            // console.log(resultSet);
+        },
+        (tx, error) => {
+            console.log(error);
+        });
+    },
+    (error) => {
+        console.log(error);
+    });
+}
+
+export function del(title){
+    const db = SQLite.openDatabase("pogFit");
+    db.transaction( (tx) => {
+        tx.executeSql(`
+            DELETE FROM recipes 
+            WHERE title = "${title}"
+        `,
+        [],
+        (tx, resultSet) => {
+            // console.log(resultSet);
+        },
+        (tx, error) => {
+            console.log(error);
+        });
+    },
+    (error) => {
+        console.log(error);
+    });
+}
 
 // NOTE: for testing purposes only
 export function testQuery(callback){
     const db = SQLite.openDatabase("pogFit");
     db.transaction( (tx) => {
         tx.executeSql(`
-            SELECT * 
-            FROM recipes;
+            SELECT title, id
+            FROM recipes
+            ;
         `,
         [],
         (tx, resultSet) => {
@@ -538,27 +599,5 @@ export function testQuery(callback){
     },
     (error) => {
         console.log(error);
-    });
-}
-
-export function insertIngredients(ingredientArray, recipeId) {
-    ingredientArray.forEach((ing, ingIdx) => {
-        db.transaction((tx) => {
-            let str = JSON.stringify(ing);
-            tx.executeSql(`
-                INSERT INTO recipe_ingredients (title, recipe_id)
-                VALUES ('${str}', ${recipeId});
-            `,
-            [],
-            (tx, resultSet) => {
-                
-            },
-            (tx, error) => {
-                console.log(error);
-            });
-        },
-        (error) => {
-            console.log(error);
-        });
     });
 }
