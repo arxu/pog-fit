@@ -206,6 +206,105 @@
     "protein": 15,
     "carbohydrates": 45,
     "sugars": 10
+  },
+  {
+    "title": "snack1 1",
+    "ingredients": [{"item": "Olive Oil", "quantity": 1, "measurement": "tbsp"}, {"item": "Onion", "quantity": 0.25, "measurement": "none"}, {"item": "Garlic", "quantity": 0.5, "measurement": "none"}, {"item": "Chorizo", "quantity": 0.3, "measurement": "g"}, {"item": "Chopped Tomatoes", "quantity": 0.5, "measurement": "can"}, {"item": "Sugar", "quantity": 0.25, "measurement": "tsp"}, {"item": "Gnocchi", "quantity": 150, "measurement": "g"}, {"item": "Mozarella", "quantity": 60, "measurement": "g"}, {"item": "Fresh Basil", "quantity": 1, "measurement": "none"}],
+    "method": "Heat the oil in a medium pan over a medium heat. Fry the onion and garlic for 8-10 mins until soft. Add the chorizo and fry for 5 mins more. Tip in the tomatoes and sugar, and season. Bring to a simmer, then add the gnocchi and cook for 8 mins, stirring often, until soft. Heat the grill to high. Stir ¾ of the mozzarella and most of the basil through the gnocchi. Divide the mixture between six ovenproof ramekins, or put in one baking dish. Top with the remaining mozzarella, then grill for 3 mins, or until the cheese is melted and golden. Season, scatter over the remaining basil and serve with green salad.",
+    "uri": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/gnocchi-1d16725.jpg?quality=90&webp=true&resize=300,272",
+    "category": "Snack1",
+    "fat": 15,
+    "protein": 15,
+    "carbohydrates": 45,
+    "sugars": 10
+  },
+  {
+    "title": "snack1 2",
+    "ingredients": [{"item": "Olive Oil", "quantity": 1, "measurement": "tbsp"}, {"item": "Onion", "quantity": 0.25, "measurement": "none"}, {"item": "Garlic", "quantity": 0.5, "measurement": "none"}, {"item": "Chorizo", "quantity": 0.3, "measurement": "g"}, {"item": "Chopped Tomatoes", "quantity": 0.5, "measurement": "can"}, {"item": "Sugar", "quantity": 0.25, "measurement": "tsp"}, {"item": "Gnocchi", "quantity": 150, "measurement": "g"}, {"item": "Mozarella", "quantity": 60, "measurement": "g"}, {"item": "Fresh Basil", "quantity": 1, "measurement": "none"}],
+    "method": "Heat the oil in a medium pan over a medium heat. Fry the onion and garlic for 8-10 mins until soft. Add the chorizo and fry for 5 mins more. Tip in the tomatoes and sugar, and season. Bring to a simmer, then add the gnocchi and cook for 8 mins, stirring often, until soft. Heat the grill to high. Stir ¾ of the mozzarella and most of the basil through the gnocchi. Divide the mixture between six ovenproof ramekins, or put in one baking dish. Top with the remaining mozzarella, then grill for 3 mins, or until the cheese is melted and golden. Season, scatter over the remaining basil and serve with green salad.",
+    "uri": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/gnocchi-1d16725.jpg?quality=90&webp=true&resize=300,272",
+    "category": "Snack1",
+    "fat": 30,
+    "protein": 20,
+    "carbohydrates": 50,
+    "sugars": 10
+  },
+  {
+    "title": "snack1 3",
+    "ingredients": [{"item": "Olive Oil", "quantity": 1, "measurement": "tbsp"}, {"item": "Onion", "quantity": 0.25, "measurement": "none"}, {"item": "Garlic", "quantity": 0.5, "measurement": "none"}, {"item": "Chorizo", "quantity": 0.3, "measurement": "g"}, {"item": "Chopped Tomatoes", "quantity": 0.5, "measurement": "can"}, {"item": "Sugar", "quantity": 0.25, "measurement": "tsp"}, {"item": "Gnocchi", "quantity": 150, "measurement": "g"}, {"item": "Mozarella", "quantity": 60, "measurement": "g"}, {"item": "Fresh Basil", "quantity": 1, "measurement": "none"}],
+    "method": "Heat the oil in a medium pan over a medium heat. Fry the onion and garlic for 8-10 mins until soft. Add the chorizo and fry for 5 mins more. Tip in the tomatoes and sugar, and season. Bring to a simmer, then add the gnocchi and cook for 8 mins, stirring often, until soft. Heat the grill to high. Stir ¾ of the mozzarella and most of the basil through the gnocchi. Divide the mixture between six ovenproof ramekins, or put in one baking dish. Top with the remaining mozzarella, then grill for 3 mins, or until the cheese is melted and golden. Season, scatter over the remaining basil and serve with green salad.",
+    "uri": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/gnocchi-1d16725.jpg?quality=90&webp=true&resize=300,272",
+    "category": "Snack1",
+    "fat": 24,
+    "protein": 22,
+    "carbohydrates": 75,
+    "sugars": 5
+  },
+  {
+    "title": "snack 2 1",
+    "ingredients": [{"item": "Olive Oil", "quantity": 1, "measurement": "tbsp"}, {"item": "Onion", "quantity": 0.25, "measurement": "none"}, {"item": "Garlic", "quantity": 0.5, "measurement": "none"}, {"item": "Chorizo", "quantity": 0.3, "measurement": "g"}, {"item": "Chopped Tomatoes", "quantity": 0.5, "measurement": "can"}, {"item": "Sugar", "quantity": 0.25, "measurement": "tsp"}, {"item": "Gnocchi", "quantity": 150, "measurement": "g"}, {"item": "Mozarella", "quantity": 60, "measurement": "g"}, {"item": "Fresh Basil", "quantity": 1, "measurement": "none"}],
+    "method": "Heat the oil in a medium pan over a medium heat. Fry the onion and garlic for 8-10 mins until soft. Add the chorizo and fry for 5 mins more. Tip in the tomatoes and sugar, and season. Bring to a simmer, then add the gnocchi and cook for 8 mins, stirring often, until soft. Heat the grill to high. Stir ¾ of the mozzarella and most of the basil through the gnocchi. Divide the mixture between six ovenproof ramekins, or put in one baking dish. Top with the remaining mozzarella, then grill for 3 mins, or until the cheese is melted and golden. Season, scatter over the remaining basil and serve with green salad.",
+    "uri": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/gnocchi-1d16725.jpg?quality=90&webp=true&resize=300,272",
+    "category": "Snack2",
+    "fat": 20,
+    "protein": 20,
+    "carbohydrates": 10,
+    "sugars": 10
+  },
+  {
+    "title": "snack 2 2",
+    "ingredients": [{"item": "Olive Oil", "quantity": 1, "measurement": "tbsp"}, {"item": "Onion", "quantity": 0.25, "measurement": "none"}, {"item": "Garlic", "quantity": 0.5, "measurement": "none"}, {"item": "Chorizo", "quantity": 0.3, "measurement": "g"}, {"item": "Chopped Tomatoes", "quantity": 0.5, "measurement": "can"}, {"item": "Sugar", "quantity": 0.25, "measurement": "tsp"}, {"item": "Gnocchi", "quantity": 150, "measurement": "g"}, {"item": "Mozarella", "quantity": 60, "measurement": "g"}, {"item": "Fresh Basil", "quantity": 1, "measurement": "none"}],
+    "method": "Heat the oil in a medium pan over a medium heat. Fry the onion and garlic for 8-10 mins until soft. Add the chorizo and fry for 5 mins more. Tip in the tomatoes and sugar, and season. Bring to a simmer, then add the gnocchi and cook for 8 mins, stirring often, until soft. Heat the grill to high. Stir ¾ of the mozzarella and most of the basil through the gnocchi. Divide the mixture between six ovenproof ramekins, or put in one baking dish. Top with the remaining mozzarella, then grill for 3 mins, or until the cheese is melted and golden. Season, scatter over the remaining basil and serve with green salad.",
+    "uri": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/gnocchi-1d16725.jpg?quality=90&webp=true&resize=300,272",
+    "category": "Snack2",
+    "fat": 10,
+    "protein": 35,
+    "carbohydrates": 25,
+    "sugars": 10
+  },
+  {
+    "title": "snack 2 3",
+    "ingredients": [{"item": "Olive Oil", "quantity": 1, "measurement": "tbsp"}, {"item": "Onion", "quantity": 0.25, "measurement": "none"}, {"item": "Garlic", "quantity": 0.5, "measurement": "none"}, {"item": "Chorizo", "quantity": 0.3, "measurement": "g"}, {"item": "Chopped Tomatoes", "quantity": 0.5, "measurement": "can"}, {"item": "Sugar", "quantity": 0.25, "measurement": "tsp"}, {"item": "Gnocchi", "quantity": 150, "measurement": "g"}, {"item": "Mozarella", "quantity": 60, "measurement": "g"}, {"item": "Fresh Basil", "quantity": 1, "measurement": "none"}],
+    "method": "Heat the oil in a medium pan over a medium heat. Fry the onion and garlic for 8-10 mins until soft. Add the chorizo and fry for 5 mins more. Tip in the tomatoes and sugar, and season. Bring to a simmer, then add the gnocchi and cook for 8 mins, stirring often, until soft. Heat the grill to high. Stir ¾ of the mozzarella and most of the basil through the gnocchi. Divide the mixture between six ovenproof ramekins, or put in one baking dish. Top with the remaining mozzarella, then grill for 3 mins, or until the cheese is melted and golden. Season, scatter over the remaining basil and serve with green salad.",
+    "uri": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/gnocchi-1d16725.jpg?quality=90&webp=true&resize=300,272",
+    "category": "Snack2",
+    "fat": 40,
+    "protein": 10,
+    "carbohydrates": 25,
+    "sugars": 10
+  },
+  {
+    "title": "snack 3 1",
+    "ingredients": [{"item": "Olive Oil", "quantity": 1, "measurement": "tbsp"}, {"item": "Onion", "quantity": 0.25, "measurement": "none"}, {"item": "Garlic", "quantity": 0.5, "measurement": "none"}, {"item": "Chorizo", "quantity": 0.3, "measurement": "g"}, {"item": "Chopped Tomatoes", "quantity": 0.5, "measurement": "can"}, {"item": "Sugar", "quantity": 0.25, "measurement": "tsp"}, {"item": "Gnocchi", "quantity": 150, "measurement": "g"}, {"item": "Mozarella", "quantity": 60, "measurement": "g"}, {"item": "Fresh Basil", "quantity": 1, "measurement": "none"}],
+    "method": "Heat the oil in a medium pan over a medium heat. Fry the onion and garlic for 8-10 mins until soft. Add the chorizo and fry for 5 mins more. Tip in the tomatoes and sugar, and season. Bring to a simmer, then add the gnocchi and cook for 8 mins, stirring often, until soft. Heat the grill to high. Stir ¾ of the mozzarella and most of the basil through the gnocchi. Divide the mixture between six ovenproof ramekins, or put in one baking dish. Top with the remaining mozzarella, then grill for 3 mins, or until the cheese is melted and golden. Season, scatter over the remaining basil and serve with green salad.",
+    "uri": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/gnocchi-1d16725.jpg?quality=90&webp=true&resize=300,272",
+    "category": "Snack3",
+    "fat": 15,
+    "protein": 15,
+    "carbohydrates": 45,
+    "sugars": 10
+  },
+  {
+    "title": "snack 3 2",
+    "ingredients": [{"item": "Olive Oil", "quantity": 1, "measurement": "tbsp"}, {"item": "Onion", "quantity": 0.25, "measurement": "none"}, {"item": "Garlic", "quantity": 0.5, "measurement": "none"}, {"item": "Chorizo", "quantity": 0.3, "measurement": "g"}, {"item": "Chopped Tomatoes", "quantity": 0.5, "measurement": "can"}, {"item": "Sugar", "quantity": 0.25, "measurement": "tsp"}, {"item": "Gnocchi", "quantity": 150, "measurement": "g"}, {"item": "Mozarella", "quantity": 60, "measurement": "g"}, {"item": "Fresh Basil", "quantity": 1, "measurement": "none"}],
+    "method": "Heat the oil in a medium pan over a medium heat. Fry the onion and garlic for 8-10 mins until soft. Add the chorizo and fry for 5 mins more. Tip in the tomatoes and sugar, and season. Bring to a simmer, then add the gnocchi and cook for 8 mins, stirring often, until soft. Heat the grill to high. Stir ¾ of the mozzarella and most of the basil through the gnocchi. Divide the mixture between six ovenproof ramekins, or put in one baking dish. Top with the remaining mozzarella, then grill for 3 mins, or until the cheese is melted and golden. Season, scatter over the remaining basil and serve with green salad.",
+    "uri": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/gnocchi-1d16725.jpg?quality=90&webp=true&resize=300,272",
+    "category": "Snack3",
+    "fat": 35,
+    "protein": 15,
+    "carbohydrates": 35,
+    "sugars": 6
+  },
+  {
+    "title": "snack 3 3",
+    "ingredients": [{"item": "Olive Oil", "quantity": 1, "measurement": "tbsp"}, {"item": "Onion", "quantity": 0.25, "measurement": "none"}, {"item": "Garlic", "quantity": 0.5, "measurement": "none"}, {"item": "Chorizo", "quantity": 0.3, "measurement": "g"}, {"item": "Chopped Tomatoes", "quantity": 0.5, "measurement": "can"}, {"item": "Sugar", "quantity": 0.25, "measurement": "tsp"}, {"item": "Gnocchi", "quantity": 150, "measurement": "g"}, {"item": "Mozarella", "quantity": 60, "measurement": "g"}, {"item": "Fresh Basil", "quantity": 1, "measurement": "none"}],
+    "method": "Heat the oil in a medium pan over a medium heat. Fry the onion and garlic for 8-10 mins until soft. Add the chorizo and fry for 5 mins more. Tip in the tomatoes and sugar, and season. Bring to a simmer, then add the gnocchi and cook for 8 mins, stirring often, until soft. Heat the grill to high. Stir ¾ of the mozzarella and most of the basil through the gnocchi. Divide the mixture between six ovenproof ramekins, or put in one baking dish. Top with the remaining mozzarella, then grill for 3 mins, or until the cheese is melted and golden. Season, scatter over the remaining basil and serve with green salad.",
+    "uri": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/gnocchi-1d16725.jpg?quality=90&webp=true&resize=300,272",
+    "category": "Snack3",
+    "fat": 25,
+    "protein": 10,
+    "carbohydrates": 25,
+    "sugars": 10
   }
 
 ]
