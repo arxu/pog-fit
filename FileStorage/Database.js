@@ -375,7 +375,7 @@ export function addRecipe(title){
     (error) => {
         console.log(error);
     });
-}
+} 
 
 export function updateRecipe(title, cat, fat, pro, car, sug, met){
     const db = SQLite.openDatabase("pogFit");
