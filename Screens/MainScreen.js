@@ -17,13 +17,13 @@ const Screen = (props) => {
   const renderScene = ({route, jumpTo}) => {
       switch (route.key) {
         case "profile":
-          return <ProfileRoute jumpTo={jumpTo}/>
+          return <ProfileRoute jumpTo={jumpTo} firstStartup={props.firstStartup}/>
         case "calendar":
-          return <CalendarRoute jumpTo={jumpTo}/>
+          return <CalendarRoute jumpTo={jumpTo} firstStartup={props.firstStartup}/>
         case "recipes":
-          return <RecipeScreen jumpTo={jumpTo}/>
+          return <RecipeScreen jumpTo={jumpTo} firstStartup={props.firstStartup}/>
         case "workouts":
-          return <WorkoutScreen jumpTo={jumpTo}/>
+          return <WorkoutScreen jumpTo={jumpTo} firstStartup={props.firstStartup}/>
       }
   }
 

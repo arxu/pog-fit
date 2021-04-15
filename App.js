@@ -41,7 +41,7 @@ export default function App() {
 
   return (
       <PaperProvider theme = { theme }>
-          { appReady? <MainScreen/> : null}
+          { appReady? <MainScreen firstStartup={firstStartup}/> : null}
       </PaperProvider>
   );
 }

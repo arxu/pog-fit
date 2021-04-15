@@ -228,7 +228,7 @@ export default class CalendarListView extends Component {
             else {
               this.setState({workouts: result});
               this.setState({nReady: this.state.nReady + 1});
-              this.updateCalendar(false, this.state.desiredCalPerMeal, this.state.nAllowedMealRepeats);
+              this.updateCalendar(this.props.firstStartup, this.state.desiredCalPerMeal, this.state.nAllowedMealRepeats);
             }
         });
 
@@ -239,7 +239,7 @@ export default class CalendarListView extends Component {
             else {
               this.setState({recipes: result});
               this.setState({nReady: this.state.nReady + 1});
-              this.updateCalendar(false, this.state.desiredCalPerMeal, this.state.nAllowedMealRepeats);
+              this.updateCalendar(this.props.firstStartup, this.state.desiredCalPerMeal, this.state.nAllowedMealRepeats);
             }
         });
     }
