@@ -452,7 +452,7 @@ export function getAllRecipes(callback) {
 
 // Extracts all users from the database as an array of objects. Calls the callback function with values (error, userArray)
 export function getAllUsers(callback) {
-    const db = SQLite.openDatabase("PogFit");
+    const db = SQLite.openDatabase("pogFit");
     db.transaction((tx) => {
         tx.executeSql(`
             SELECT * 
