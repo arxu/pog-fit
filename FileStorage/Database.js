@@ -23,7 +23,7 @@ export function createDefaultTables(callback) {
                     date_of_birth TEXT, 
                     weight REAL,
                     height_cm REAL,
-                    gender TEXT
+                    gender TEXT,
                     target_weight REAL
                 );
             `,
