@@ -6,7 +6,7 @@ import CalendarScreen from "./CalendarScreen";
 import { BottomNavigation } from "react-native-paper";
 
 const Screen = (props) => {
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(1);
   const [routes] = useState([
     { key: "profile", title: "Profile", icon: "account", color: "#e55b13" },
     { key: "calendar", title: "Calendar", icon: "calendar-text", color: "#655010" },

@@ -3,6 +3,7 @@ import {Subheading, Paragraph, List, Appbar, Dialog, Portal, TextInput, Headline
 import {Image, StyleSheet, ScrollView, View} from "react-native";
 import {TouchableWithoutFeedback as TWF} from 'react-native-gesture-handler';
 
+import { getAllUsers } from "../FileStorage/Database";
 import ProfileDataTable from '../Components/ProfileDataTable';
 import { disableExpoCliLogging } from 'expo/build/logs/Logs';
 
@@ -13,29 +14,41 @@ const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
 export default class ProfileView extends Component {
     constructor(props){
         super(props);
-        
-        this.state = {
-            editMode: false,
-            editDialogVisible: false,
-            editDialogIsNumeric: true,
-            editDialogLabel: null,
-            editDialogTitle: null,
-            currEditedElements: [],
-            profile: ld.cloneDeep(props.route.params.data),
-            editedProfile: ld.cloneDeep(props.route.params.data)
-        }
 
-        this.openEditDialog = (elements, dialogTitle, dialogLabel) => {
-            this.setState({
-                editDialogIsNumeric: false,
-                currEditedElements: elements,
-                editDialogTitle: dialogTitle,
-                editDialogLabel: dialogLabel  
-            }, () => { 
-                console.log(this.state.currEditedElements); // Logs array ["username"]
-                this.setState({editDialogVisible: true,});
-            });
-        }
+        this.state = {
+            profile: []
+          };
+          getAllUsers((error, result) => {
+            if (error) {
+              console.log(error);
+            }
+            else {
+              this.setState({profile: result[0]});
+            }
+          });
+
+        // this.state = {
+        //     editMode: false,
+        //     editDialogVisible: false,
+        //     editDialogIsNumeric: true,
+        //     editDialogLabel: null,
+        //     editDialogTitle: null,
+        //     currEditedElements: [],
+        //     profile: ld.cloneDeep(props.route.params.data),
+        //     editedProfile: ld.cloneDeep(props.route.params.data)
+        // }
+
+        // this.openEditDialog = (elements, dialogTitle, dialogLabel) => {
+        //     this.setState({
+        //         editDialogIsNumeric: false,
+        //         currEditedElements: elements,
+        //         editDialogTitle: dialogTitle,
+        //         editDialogLabel: dialogLabel  
+        //     }, () => { 
+        //         console.log(this.state.currEditedElements); // Logs array ["username"]
+        //         this.setState({editDialogVisible: true,});
+        //     });
+        // }
     }
     
     render() { 
@@ -43,18 +56,18 @@ export default class ProfileView extends Component {
             <React.Fragment>
                 <Appbar.Header>
                     <Appbar.Content 
-                        username={this.state.editMode ? this.state.editedProfile.username : this.state.profile.username} 
-                        onPress={ ()=> {
-                            this.state.editMode ?
-                                this.openEditDialog(["username"], "Profile Name", "Profile Name")
-                            : 
-                                null;
-                        }}
+                        username={this.state.profile.username} 
+                        // onPress={ ()=> {
+                        //     this.state.editMode ?
+                        //         this.openEditDialog(["username"], "Profile Name", "Profile Name")
+                        //     : 
+                        //         null;
+                        // }}
                     />
-                    <Appbar.Action 
+                    {/* <Appbar.Action 
                         icon={MORE_ICON} 
                         onPress={ () => { this.setState({editMode: !this.state.editMode, editedProfile: ld.cloneDeep(this.state.profile)});}}
-                    />
+                    /> */}
                 </Appbar.Header>
                 <ScrollView>
                     <React.Fragment>
@@ -63,7 +76,7 @@ export default class ProfileView extends Component {
                         </View>
                     </React.Fragment>
                 </ScrollView>
-                <Portal>
+                {/* <Portal>
                     <EditDialog 
                         visible={this.state.editDialogVisible}
                         onDismiss={() => { this.setState({editDialogVisible: false}); }}
@@ -81,65 +94,65 @@ export default class ProfileView extends Component {
                             this.setState({editedProfile: updated}); 
                         }}
                     />
-                </Portal>
+                </Portal> */}
             </React.Fragment>
         );
     }
 }
 
-function EditDialog(props) {
-    const [textboxValues, setText] = useState(props.initValues);
+// function EditDialog(props) {
+//     const [textboxValues, setText] = useState(props.initValues);
 
-    function convertInputToNumber(input) {
-        let numeric;
-        return numeric;
-    }
+//     function convertInputToNumber(input) {
+//         let numeric;
+//         return numeric;
+//     }
 
-    return (
-        <Dialog visible={props.visible} onDismiss={() => {props.onDismiss();}}>
-            <Dialog.Title>{props.username}</Dialog.Title>
-            <Dialog.Content>
-                {textboxValues.map((text, idx)=>{
-                    return (
-                        <TextInput 
-                            key={idx}
-                            label={props.label} 
-                            mode="outlined" 
-                            value={text === "" || text ? text : props.initValues[idx]} 
-                            onChangeText={(newText) => { 
-                                let updated = ld.cloneDeep(textboxValues);
-                                updated[idx] = newText;
-                                setText(updated); 
-                            }}
-                        />
-                    );
-                })}
+//     return (
+//         <Dialog visible={props.visible} onDismiss={() => {props.onDismiss();}}>
+//             <Dialog.Title>{props.username}</Dialog.Title>
+//             <Dialog.Content>
+//                 {textboxValues.map((text, idx)=>{
+//                     return (
+//                         <TextInput 
+//                             key={idx}
+//                             label={props.label} 
+//                             mode="outlined" 
+//                             value={text === "" || text ? text : props.initValues[idx]} 
+//                             onChangeText={(newText) => { 
+//                                 let updated = ld.cloneDeep(textboxValues);
+//                                 updated[idx] = newText;
+//                                 setText(updated); 
+//                             }}
+//                         />
+//                     );
+//                 })}
                 
-            </Dialog.Content>
-            <Dialog.Actions>
-                <Button 
-                    onPress={ () => { 
-                        setText(props.initValues);
-                        props.onDismiss(); 
-                    }}
-                >CANCEL</Button>
-                <Button 
-                    onPress={() => { 
-                        props.isNumeric ? 
-                            /* convert input value to number and execute callback */ null
-                        :
-                            props.onSubmit(textboxValues);
-                        props.onDismiss();
-                    }}
-                >SAVE</Button>
-            </Dialog.Actions>
-        </Dialog>
-    );
-}
+//             </Dialog.Content>
+//             <Dialog.Actions>
+//                 <Button 
+//                     onPress={ () => { 
+//                         setText(props.initValues);
+//                         props.onDismiss(); 
+//                     }}
+//                 >CANCEL</Button>
+//                 <Button 
+//                     onPress={() => { 
+//                         props.isNumeric ? 
+//                             /* convert input value to number and execute callback */ null
+//                         :
+//                             props.onSubmit(textboxValues);
+//                         props.onDismiss();
+//                     }}
+//                 >SAVE</Button>
+//             </Dialog.Actions>
+//         </Dialog>
+//     );
+// }
 
-const styles = StyleSheet.create({
-    image: {
-        flexDirection: 'row',
-        height: 150
-    }
-});
+// const styles = StyleSheet.create({
+//     image: {
+//         flexDirection: 'row',
+//         height: 150
+//     }
+// });
