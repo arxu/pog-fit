@@ -580,6 +580,31 @@ export function del(title){
     });
 }
 
+export function searchName(title, callback){
+    const db = SQLite.openDatabase("pogFit");
+    db.transaction( (tx) => {
+        tx.executeSql(`
+            SELECT title FROM recipes 
+            WHERE title = "${title}"
+        `,
+        [],
+        (tx, resultSet) => {
+            if(resultSet.rows.length == 0){
+                callback(false) ;
+            }
+            else{
+                callback(true);
+            }
+        },
+        (tx, error) => {
+            console.log(error);
+        });
+    },
+    (error) => {
+        console.log(error);
+    });
+}
+
 // NOTE: for testing purposes only
 export function testQuery(callback){
     const db = SQLite.openDatabase("pogFit");

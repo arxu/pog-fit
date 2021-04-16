@@ -6,7 +6,7 @@ import { Appbar, Card, Menu, Dialog, Portal, Button, TextInput, RadioButton, Tex
 
 import CustomCard from "../Components/Card";
 import SearchBar from "../Components/SearchBar";
-import {getAllRecipes, addRecipe, updateRecipe, del} from "../FileStorage/Database";
+import {getAllRecipes, addRecipe, updateRecipe, del, searchName} from "../FileStorage/Database";
 
 const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
 
@@ -23,6 +23,8 @@ export default class RecipeListView extends Component{
       dialogVisible: false,
       newTitle: "Test",
       tempTitle: "",
+      nameTaken: false,
+      moveOn: true,
       categoryVis: false,
       check: "Breakfast",
       ingrVis: false,
@@ -39,6 +41,7 @@ export default class RecipeListView extends Component{
       methodVis: false,
       method:""
     };
+
     getAllRecipes((error, result) => {
       if (error) {
         console.log(error);
@@ -122,16 +125,25 @@ export default class RecipeListView extends Component{
               <TextInput
               label="Recipe Name"
               value= {this.state.newTitle}
-              onChangeText={text => this.setState({newTitle: text, tempTitle: text})}
+              onChangeText={text => this.setState({newTitle: text, tempTitle: text},searchName(text, (result)=>{this.setState({nameTaken:result}) }) )}
               />
+              <HelperText type="error" visible={this.state.nameTaken}>
+                Recipe name already taken
+              </HelperText>
               
             </Dialog.Content>
             <Dialog.Actions>
               {/* Cancel button to reset field and Next button to go to next page */}
               <Button onPress={()=>{this.setState({dialogVisible: false, newTitle:""})}}>Cancel</Button>
-              <Button disabled={this.state.newTitle.length < 1 ? true : false} onPress={()=>{this.setState({dialogVisible: false, categoryVis: true}), addRecipe(this.state.newTitle)}}>Next</Button>
+              {/* <Button disabled={this.state.newTitle.length < 1 ? true : false} onPress={()=>{this.setState({dialogVisible: false, categoryVis: true}), addRecipe(this.state.newTitle)}}>Next</Button> */}
+              <Button disabled={this.state.newTitle.length < 1 ? true : false} 
+              onPress={()=>{searchName(this.state.newTitle, (result)=>{this.setState({nameTaken:result}) }), this.state.nameTaken ? null : this.setState({dialogVisible: false, categoryVis: true}), addRecipe(this.state.newTitle) }}>Next</Button>
             </Dialog.Actions>
           </Dialog>
+
+
+
+
 
           {/* Pop up to select category */}
           <Dialog visible={this.state.categoryVis} onDismiss={()=> {this.setState({categoryVis: false, newTitle: ""}), del(this.state.tempTitle)}}>
@@ -152,7 +164,7 @@ export default class RecipeListView extends Component{
           </Dialog>
 
           {/* Pop up to add ingredients */}
-          <Dialog visible={this.state.ingrVis} onDismiss={()=> {this.setState({ingrVis: false, newTitle:"", check:"Breakfast", ingr:""})}}>
+          <Dialog visible={this.state.ingrVis} onDismiss={()=> {this.setState({ingrVis: false, newTitle:"", check:"Breakfast", ingr:""}), del(this.state.tempTitle)}}>
             <Dialog.Title>Ingredients</Dialog.Title>
             <Dialog.Content>
               <TextInput
@@ -163,13 +175,13 @@ export default class RecipeListView extends Component{
             </Dialog.Content>
             <Dialog.Actions>
               {/* Cancel button to reset field and Next button to go to next page */}
-              <Button onPress={()=>{this.setState({ingrVis: false, newTitle:"", check:"Breakfast", ingr: ""})}}>Cancel</Button>
+              <Button onPress={()=>{this.setState({ingrVis: false, newTitle:"", check:"Breakfast", ingr: ""}), del(this.state.tempTitle)}}>Cancel</Button>
               <Button onPress={()=>{this.setState({ingrVis: false, nutVis: true})}}>Next</Button>
             </Dialog.Actions>
           </Dialog>
 
           {/* Pop up to add nutrition */}
-          <Dialog visible={this.state.nutVis} onDismiss={()=> {this.setState({nutVis: false, newTitle:"", check:"Breakfast", ingr:"", fat: "", protein: "", carbs: "", sugar: "", dis1: true, dis2: true, dis3: true, dis4: true})}}>
+          <Dialog visible={this.state.nutVis} onDismiss={()=> {this.setState({nutVis: false, newTitle:"", check:"Breakfast", ingr:"", fat: "", protein: "", carbs: "", sugar: "", dis1: true, dis2: true, dis3: true, dis4: true}), del(this.state.tempTitle)}}>
             <Dialog.Title>Nutrition</Dialog.Title>
             <Dialog.Content>
 
@@ -220,7 +232,7 @@ export default class RecipeListView extends Component{
             </Dialog.Content>
             <Dialog.Actions>
               {/* Cancel button to reset field and Next button to go to next page */}
-              <Button onPress={()=>{this.setState({nutVis: false, newTitle:"", check:"Breakfast", ingr: "", fat: "", protein: "", carbs: "", sugar: "", dis1: true, dis2: true, dis3: true, dis4: true})}}>Cancel</Button>
+              <Button onPress={()=>{this.setState({nutVis: false, newTitle:"", check:"Breakfast", ingr: "", fat: "", protein: "", carbs: "", sugar: "", dis1: true, dis2: true, dis3: true, dis4: true}), del(this.state.tempTitle)}}>Cancel</Button>
               {/* <Button disabled={(this.state.fat.length && this.state.protein.length && this.state.carbs.length && this.state.sugar.length) < 1  ? true : false}   */}
               <Button disabled={this.state.dis1 || this.state.dis2 || this.state.dis3 || this.state.dis4  ? true : false}  
               onPress={()=>{this.setState({nutVis: false, methodVis: true})}}>Next</Button>
@@ -228,7 +240,7 @@ export default class RecipeListView extends Component{
           </Dialog>
 
           {/* Pop up to add method */}
-          <Dialog visible={this.state.methodVis} onDismiss={()=> {this.setState({methodVis: false, newTitle:"", check:"Breakfast", ingr:"", fat: "", protein: "", carbs: "", sugar: "", method: "", dis1: true, dis2: true, dis3: true, dis4: true})}}>
+          <Dialog visible={this.state.methodVis} onDismiss={()=> {this.setState({methodVis: false, newTitle:"", check:"Breakfast", ingr:"", fat: "", protein: "", carbs: "", sugar: "", method: "", dis1: true, dis2: true, dis3: true, dis4: true}), del(this.state.tempTitle)}}>
             <Dialog.Title>Method</Dialog.Title>
             <Dialog.Content>
               <TextInput
@@ -247,7 +259,7 @@ export default class RecipeListView extends Component{
             
             <Dialog.Actions>
               {/* Cancel button to reset field and Next button to go to next page */}
-              <Button onPress={()=>{this.setState({methodVis: false, newTitle:"", check:"Breakfast", ingr: "", fat: "", protein: "", carbs: "", sugar: "", method: "", dis1: true, dis2: true, dis3: true, dis4: true})}}>Cancel</Button>
+              <Button onPress={()=>{this.setState({methodVis: false, newTitle:"", check:"Breakfast", ingr: "", fat: "", protein: "", carbs: "", sugar: "", method: "", dis1: true, dis2: true, dis3: true, dis4: true}), del(this.state.tempTitle)}}>Cancel</Button>
               <Button 
                 onPress={()=>{this.setState({methodVis: false, newTitle:"", check:"Breakfast", ingr: "", fat: "", protein: "", carbs: "", sugar: "", method: "", dis1: true, dis2: true, dis3: true, dis4: true}, 
                   updateRecipe(this.state.newTitle, this.state.check, this.state.fat, this.state.protein, this.state.carbs, this.state.sugar, this.state.method))}
