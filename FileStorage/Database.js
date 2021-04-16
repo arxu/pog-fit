@@ -24,6 +24,7 @@ export function createDefaultTables(callback) {
                     weight REAL,
                     height_cm REAL,
                     gender TEXT
+                    target_weight REAL
                 );
             `,
             [],
