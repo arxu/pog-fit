@@ -22,7 +22,7 @@ export default class WorkoutScreen extends Component {
                 <React.Fragment>
                     <Stack.Navigator initialRouteName="Workout List" screenOptions={{headerShown: false}}>
                         <Stack.Screen name="Workout List">
-                            {props => <WorkoutListView {...this.props} />}
+                            {props => <WorkoutListView {...props} />}
                         </Stack.Screen>
                         <Stack.Screen 
                             name="Workout" 
