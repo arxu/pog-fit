@@ -135,15 +135,10 @@ export default class RecipeListView extends Component{
             <Dialog.Actions>
               {/* Cancel button to reset field and Next button to go to next page */}
               <Button onPress={()=>{this.setState({dialogVisible: false, newTitle:""})}}>Cancel</Button>
-              {/* <Button disabled={this.state.newTitle.length < 1 ? true : false} onPress={()=>{this.setState({dialogVisible: false, categoryVis: true}), addRecipe(this.state.newTitle)}}>Next</Button> */}
               <Button disabled={this.state.newTitle.length < 1 ? true : false} 
-              onPress={()=>{searchName(this.state.newTitle, (result)=>{this.setState({nameTaken:result}) }), this.state.nameTaken ? null : this.setState({dialogVisible: false, categoryVis: true}), addRecipe(this.state.newTitle) }}>Next</Button>
+              onPress={()=>{searchName(this.state.newTitle, (result)=>{this.setState({nameTaken:result}) }), this.state.nameTaken ? null : this.setState({dialogVisible: false, categoryVis: true}, addRecipe(this.state.newTitle)) }}>Next</Button>
             </Dialog.Actions>
           </Dialog>
-
-
-
-
 
           {/* Pop up to select category */}
           <Dialog visible={this.state.categoryVis} onDismiss={()=> {this.setState({categoryVis: false, newTitle: ""}), del(this.state.tempTitle)}}>
