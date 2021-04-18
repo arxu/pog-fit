@@ -19,6 +19,7 @@ export default class ProfileView extends Component {
             profile: []
           };
           getAllUsers((error, result) => {
+            console.log(result[0]);
             if (error) {
               console.log(error);
             }
@@ -56,7 +57,7 @@ export default class ProfileView extends Component {
             <React.Fragment>
                 <Appbar.Header>
                     <Appbar.Content 
-                        username={this.state.profile.username} 
+                        title="Profile"
                         // onPress={ ()=> {
                         //     this.state.editMode ?
                         //         this.openEditDialog(["username"], "Profile Name", "Profile Name")
@@ -72,7 +73,38 @@ export default class ProfileView extends Component {
                 <ScrollView>
                     <React.Fragment>
                         <View style={{paddingLeft: 17, paddingRight: 17}}>
-                            <ProfileDataTable profile={this.state.profile}/>
+                            {/* <ProfileDataTable profile={this.state.profile}/> */}
+                            <DataTable>
+                                <DataTable.Header>
+                                    <DataTable.Title>Name</DataTable.Title>
+                                    <DataTable.Cell>{this.state.profile.username}</DataTable.Cell>
+                                </DataTable.Header>
+
+                                <DataTable.Row>
+                                    <DataTable.Title>Date of Birth</DataTable.Title>
+                                    <DataTable.Cell>{this.state.profile.date_of_birth}</DataTable.Cell>
+                                </DataTable.Row>
+
+                                <DataTable.Row>
+                                    <DataTable.Title>Weight</DataTable.Title>
+                                    <DataTable.Cell numeric>{this.state.profile.weight}</DataTable.Cell>
+                                </DataTable.Row>
+                                
+                                <DataTable.Row>
+                                    <DataTable.Title>Height</DataTable.Title>
+                                    <DataTable.Cell numeric>{this.state.profile.height_cm}</DataTable.Cell>
+                                </DataTable.Row>
+                                
+                                <DataTable.Row>
+                                    <DataTable.Title>Sex</DataTable.Title>
+                                    <DataTable.Cell>{this.state.profile.gender}</DataTable.Cell>
+                                </DataTable.Row>
+                                
+                                <DataTable.Row>
+                                    <DataTable.Title>Target Weight</DataTable.Title>
+                                    <DataTable.Cell numeric>{this.state.profile.target_weight}</DataTable.Cell>
+                                </DataTable.Row>
+                            </DataTable>
                         </View>
                     </React.Fragment>
                 </ScrollView>

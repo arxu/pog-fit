@@ -1,6 +1,6 @@
 import React from 'react';
 import {DataTable} from 'react-native-paper';
-
+// deprecated
 export default function ProfileDataTable(profile) {
     return (
         <DataTable>
