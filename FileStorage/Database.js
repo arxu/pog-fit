@@ -570,6 +570,7 @@ export function del(title){
         [],
         (tx, resultSet) => {
             // console.log(resultSet);
+            console.log("del recipe")
         },
         (tx, error) => {
             console.log(error);
@@ -617,6 +618,110 @@ export function testQuery(callback){
         [],
         (tx, resultSet) => {
             callback(resultSet.rows._array);
+        },
+        (tx, error) => {
+            console.log(error);
+        });
+    },
+    (error) => {
+        console.log(error);
+    });
+}
+
+var a = "    SELECT * FROM recipe_ingredients where id between 174 and 179    "
+
+export function test1(){
+    const db = SQLite.openDatabase("pogFit");
+    db.transaction( (tx) => {
+        tx.executeSql(`
+            SELECT * FROM recipe_ingredients where id between 174 and 200
+        `,
+        [],
+        (tx, resultSet) => {
+            console.log(resultSet);
+        },
+        (tx, error) => {
+            console.log(error);
+        });
+    },
+    (error) => {
+        console.log(error);
+    });
+} 
+
+export function test(){
+    const db = SQLite.openDatabase("pogFit");
+    db.transaction( (tx) => {
+        tx.executeSql(`
+            SELECT title, id FROM recipes 
+        `,
+        [],
+        (tx, resultSet) => {
+            console.log(resultSet);
+           
+        },
+        (tx, error) => {
+            console.log(error);
+        });
+    },
+    (error) => {
+        console.log(error);
+    });
+}
+
+export function searchId(title, callback){
+    const db = SQLite.openDatabase("pogFit");
+    db.transaction( (tx) => {
+        tx.executeSql(`
+            SELECT id FROM recipes 
+            WHERE title = "${title}"
+        `,
+        [],
+        (tx, resultSet) => {
+            callback(resultSet.rows._array[0].id)
+        },
+        (tx, error) => {
+            console.log(error);
+        });
+    },
+    (error) => {
+        console.log(error);
+    });
+}
+
+export function addIngr(items, id ){
+    const db = SQLite.openDatabase("pogFit");
+    db.transaction( (tx) => {
+        let str = JSON.stringify(items)
+        tx.executeSql(`
+            INSERT INTO recipe_ingredients (title, recipe_id) 
+            VALUES ('${str}', '${id}');
+        `,
+        [],
+        (tx, resultSet) => {
+            // console.log(resultSet);
+            console.log("add")
+        },
+        (tx, error) => {
+            console.log(error);
+        });
+    },
+    (error) => {
+        console.log(error);
+    });
+} 
+
+export function delIng(id){
+    const db = SQLite.openDatabase("pogFit");
+    db.transaction( (tx) => {
+        tx.executeSql(`
+            DELETE FROM recipe_ingredients 
+            WHERE recipe_id = "${id}"
+        `,
+        [],
+        (tx, resultSet) => {
+            // console.log(resultSet);
+            console.log("done", id)
         },
         (tx, error) => {
             console.log(error);
