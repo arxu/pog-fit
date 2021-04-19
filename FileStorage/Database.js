@@ -455,7 +455,7 @@ export function getAllUsers(callback) {
     const db = SQLite.openDatabase("pogFit");
     db.transaction((tx) => {
         tx.executeSql(`
-            SELECT * FROM users;
+            SELECT username, date(date_of_birth) AS dob, weight, height_cm, gender, target_weight FROM users;
         `,
         [],
         (tx, userResultSet) => {

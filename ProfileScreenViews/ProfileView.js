@@ -1,5 +1,5 @@
 import React, {Component, useState} from 'react';
-import {Subheading, Paragraph, List, Appbar, Dialog, Portal, TextInput, Headline, Button} from 'react-native-paper';
+import {Subheading, Paragraph, List, Appbar, Dialog, Portal, TextInput, Headline, Button, DataTable} from 'react-native-paper';
 import {Image, StyleSheet, ScrollView, View} from "react-native";
 import {TouchableWithoutFeedback as TWF} from 'react-native-gesture-handler';
 
@@ -16,10 +16,10 @@ export default class ProfileView extends Component {
         super(props);
 
         this.state = {
-            profile: []
+            profile: [],
+            editMode: false
           };
           getAllUsers((error, result) => {
-            console.log(result[0]);
             if (error) {
               console.log(error);
             }
@@ -65,10 +65,10 @@ export default class ProfileView extends Component {
                         //         null;
                         // }}
                     />
-                    {/* <Appbar.Action 
+                    <Appbar.Action 
                         icon={MORE_ICON} 
-                        onPress={ () => { this.setState({editMode: !this.state.editMode, editedProfile: ld.cloneDeep(this.state.profile)});}}
-                    /> */}
+                        onPress={ () => { this.setState({editMode: !this.state.editMode})}}
+                    />
                 </Appbar.Header>
                 <ScrollView>
                     <React.Fragment>
@@ -82,7 +82,7 @@ export default class ProfileView extends Component {
 
                                 <DataTable.Row>
                                     <DataTable.Title>Date of Birth</DataTable.Title>
-                                    <DataTable.Cell>{this.state.profile.date_of_birth}</DataTable.Cell>
+                                    <DataTable.Cell>{this.state.profile.dob}</DataTable.Cell>
                                 </DataTable.Row>
 
                                 <DataTable.Row>
