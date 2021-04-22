@@ -1,7 +1,9 @@
 import React, {Component, useState} from 'react';
-import {Subheading, Paragraph, List, Appbar, Dialog, Portal, TextInput, Headline, Button, DataTable} from 'react-native-paper';
-import {Image, StyleSheet, ScrollView, View} from "react-native";
+import {Appbar, Dialog, Portal, TextInput, DataTable, HelperText, RadioButton} from 'react-native-paper';
+import {ScrollView, View} from "react-native";
 import {TouchableWithoutFeedback as TWF} from 'react-native-gesture-handler';
+import DatePicker from "react-datepicker";
+require ('react-datepicker/dist/react-datepicker.css');
 
 import { getAllUsers } from "../FileStorage/Database";
 import { disableExpoCliLogging } from 'expo/build/logs/Logs';
@@ -53,16 +55,7 @@ export default class ProfileView extends Component {
                             <DataTable>
                                 <DataTable.Header>
                                     <DataTable.Title>Name</DataTable.Title>
-                                    <DataTable.Cell>{this.state.editing ? (
-                                        this.state.profile.username
-                                    ) : (
-                                        <TextInput type = "text"
-                                        value = {this.state.profile.username}
-                                        ref={node => {
-                                            this.edited.username = node;
-                                          }}
-                                        />
-                                    )}</DataTable.Cell>
+                                    <DataTable.Cell>{this.state.profile.username}</DataTable.Cell>
                                 </DataTable.Header>
 
                                 <DataTable.Row>
@@ -93,6 +86,39 @@ export default class ProfileView extends Component {
                         </View>
                     </React.Fragment>
                 </ScrollView>
+
+                <Portal>
+                    <Dialog visible={this.state.edit} onDismiss={() => {this.setState({edit: false})}}>
+                        <Dialog.Title>Edit Profile</Dialog.Title>
+                        <Dialog.Content>
+
+                                    <TextInput
+                                    label="Username"
+                                    mode="outlined" 
+                                    value= {this.state.username}
+                                    onChangeText={response => this.setState({username: response})}
+                                    />   
+                                    <DatePicker
+                                        selected={this.state.profile.dob}
+                                        onChange={date => this.setState({dob: date})}
+                                    />
+                                    {/* <HelperText type="info">
+                                        Please use the format dd/mm/yy.
+                                    </HelperText> */}
+                                    {/* <HelperText type="error" visible={this.state.dobValid}>
+                                        Invalid date of birth.
+                                    </HelperText> */}
+                            
+                                    <RadioButton.Group
+                                        onValueChange={gender => this.setState({ gender })}
+                                        value={this.state.gender}>
+                                        <RadioButton.Item label="Male" value="male" color="grey"/>
+                                        <RadioButton.Item label="Female" value="female" color="grey"/>
+                                    </RadioButton.Group>
+
+                        </Dialog.Content>
+                    </Dialog>
+                </Portal>
             </React.Fragment>
         );
     }

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Text } from "react-native-paper";
+import { Text, HelperText } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
 import {createStackNavigator} from '@react-navigation/stack';
 import ProfileView from '../ProfileScreenViews/ProfileView';

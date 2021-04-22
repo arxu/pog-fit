@@ -21,6 +21,7 @@
     "lodash.clonedeep": "^4.5.0",
     "node": "^15.8.0",
     "react": "16.13.1",
+    "react-datepicker": "^3.8.0",
     "react-dom": "16.13.1",
     "react-native": "0.63.4",
     "react-native-fs": "^2.16.6",
