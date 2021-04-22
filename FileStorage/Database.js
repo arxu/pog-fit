@@ -559,6 +559,48 @@ export function updateRecipe(title, cat, fat, pro, car, sug, met){
         console.log(error);
     });
 }
+export function updateTitle(title, newTitle){
+    const db = SQLite.openDatabase("pogFit");
+    db.transaction( (tx) => {
+        tx.executeSql(`
+            UPDATE recipes 
+            SET title = "${newTitle}"
+            WHERE title = "${title}"
+        `,
+        [],
+        (tx, resultSet) => {
+            console.log("done",resultSet);
+            // console.log("done")
+        },
+        (tx, error) => {
+            console.log(error);
+        });
+    },
+    (error) => {
+        console.log(error);
+    });
+}
+
+export function updateSingle(title, cat, update){
+    const db = SQLite.openDatabase("pogFit");
+    db.transaction( (tx) => {
+        tx.executeSql(`
+            UPDATE recipes 
+            SET "${cat}" = "${update}"
+            WHERE title = "${title}"
+        `,
+        [],
+        (tx, resultSet) => {
+            console.log("done",resultSet);
+        },
+        (tx, error) => {
+            console.log(error);
+        });
+    },
+    (error) => {
+        console.log(error);
+    });
+}
 
 export function del(title){
     const db = SQLite.openDatabase("pogFit");
@@ -649,11 +691,33 @@ export function test1(){
     });
 } 
 
-export function test(){
+export function test(cat, whereCat, search){
     const db = SQLite.openDatabase("pogFit");
     db.transaction( (tx) => {
         tx.executeSql(`
-            SELECT title, id FROM recipes 
+            SELECT "${cat}" FROM recipes
+            where "${whereCat}" = "${search}"
+        `,
+        [],
+        (tx, resultSet) => {
+            console.log(resultSet);
+           
+        },
+        (tx, error) => {
+            console.log(error);
+        });
+    },
+    (error) => {
+        console.log(error);
+    });
+}
+
+export function getFromDB(cat, whereCat, search){
+    const db = SQLite.openDatabase("pogFit");
+    db.transaction( (tx) => {
+        tx.executeSql(`
+            SELECT "${cat}" FROM recipes
+            where "${whereCat}" = "${search}"
         `,
         [],
         (tx, resultSet) => {
