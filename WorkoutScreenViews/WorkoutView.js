@@ -29,16 +29,20 @@ export default function WorkoutView(props) {
                     <Image source={{ uri: workout.uri }} style={styles.image}/>                                
                         
                     <Subheading>Description</Subheading>
-                    <Paragraph>{workout.method}</Paragraph>
+                    <Paragraph>{workout.description}</Paragraph>
 
                     <DataTable>
-                        <DataTable.Title numeric>Reps</DataTable.Title>
-                        <DataTable.Title numeric>Sets</DataTable.Title>
-                        <DataTable.Title numeric>Calories Burnt</DataTable.Title>
-
-                        <DataTable.Cell numeric>{workout.reps}</DataTable.Cell>
-                        <DataTable.Cell numeric>{workout.sets}</DataTable.Cell>
-                        <DataTable.Cell numeric>{workout.calPerSet * workout.sets}</DataTable.Cell>
+                        <DataTable.Row>
+                            <DataTable.Title >Reps</DataTable.Title>
+                            <DataTable.Title >Sets</DataTable.Title>
+                            <DataTable.Title >Calories Burnt</DataTable.Title>
+                        </DataTable.Row>
+                        
+                        <DataTable.Row>
+                            <DataTable.Cell >{workout.repetitions}</DataTable.Cell>
+                            <DataTable.Cell >{workout.sets}</DataTable.Cell>
+                            <DataTable.Cell >{workout.cal_per_set * workout.sets}</DataTable.Cell>
+                        </DataTable.Row>
                     </DataTable>
 
                 </React.Fragment>
