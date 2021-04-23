@@ -519,16 +519,16 @@ export function getAllWorkouts(callback) {
     });
 }
 
-export function addRecipe(title){
+export function addTitle(title, table){
     const db = SQLite.openDatabase("pogFit");
     db.transaction( (tx) => {
         tx.executeSql(`
-            INSERT INTO recipes (title) 
+            INSERT INTO "${table}" (title) 
             VALUES ("${title}");
         `,
         [],
         (tx, resultSet) => {
-            // console.log(resultSet);
+            console.log(resultSet);
         },
         (tx, error) => {
             console.log(error);
@@ -549,28 +549,7 @@ export function updateRecipe(title, cat, fat, pro, car, sug, met){
         `,
         [],
         (tx, resultSet) => {
-            // console.log(resultSet);
-        },
-        (tx, error) => {
-            console.log(error);
-        });
-    },
-    (error) => {
-        console.log(error);
-    });
-}
-export function updateTitle(title, newTitle){
-    const db = SQLite.openDatabase("pogFit");
-    db.transaction( (tx) => {
-        tx.executeSql(`
-            UPDATE recipes 
-            SET title = "${newTitle}"
-            WHERE title = "${title}"
-        `,
-        [],
-        (tx, resultSet) => {
-            console.log("done",resultSet);
-            // console.log("done")
+            console.log(resultSet);
         },
         (tx, error) => {
             console.log(error);
@@ -581,17 +560,38 @@ export function updateTitle(title, newTitle){
     });
 }
 
-export function updateSingle(title, cat, update){
+export function updateWorkouts(title, set, rep, kcal, met){
     const db = SQLite.openDatabase("pogFit");
     db.transaction( (tx) => {
         tx.executeSql(`
-            UPDATE recipes 
+            UPDATE workouts 
+            SET sets = "${set}", repetitions = "${rep}", cal_per_set = "${kcal}", description = "${met}"
+            WHERE title = "${title}"
+        `,
+        [],
+        (tx, resultSet) => {
+            console.log(resultSet);
+        },
+        (tx, error) => {
+            console.log(error);
+        });
+    },
+    (error) => {
+        console.log(error);
+    });
+}
+
+export function updateSingle(table, title, cat, update, str){
+    const db = SQLite.openDatabase("pogFit");
+    db.transaction( (tx) => {
+        tx.executeSql(`
+            UPDATE "${table}" 
             SET "${cat}" = "${update}"
-            WHERE title = "${title}"
+            WHERE "${str}" = "${title}"
         `,
         [],
         (tx, resultSet) => {
-            console.log("done",resultSet);
+            console.log(resultSet);
         },
         (tx, error) => {
             console.log(error);
@@ -602,17 +602,13 @@ export function updateSingle(title, cat, update){
     });
 }
 
-export function del(title){
+export function test(str){
     const db = SQLite.openDatabase("pogFit");
     db.transaction( (tx) => {
-        tx.executeSql(`
-            DELETE FROM recipes 
-            WHERE title = "${title}"
-        `,
+        tx.executeSql(str,
         [],
         (tx, resultSet) => {
-            // console.log(resultSet);
-            console.log("del recipe")
+            console.log(resultSet.rows._array);
         },
         (tx, error) => {
             console.log(error);
@@ -623,11 +619,52 @@ export function del(title){
     });
 }
 
-export function searchName(title, callback){
+export function getCat(id,callback){
     const db = SQLite.openDatabase("pogFit");
     db.transaction( (tx) => {
         tx.executeSql(`
-            SELECT title FROM recipes 
+            Select category from recipes where id = "${id}" 
+        `,
+        [],
+        (tx, resultSet) => {
+            // console.log(resultSet.rows._array[0].category);
+            callback(resultSet.rows._array[0].category);
+        },
+        (tx, error) => {
+            console.log(error);
+        });
+    },
+    (error) => {
+        console.log(error);
+    });
+}
+
+export function del(table, cat, value){
+    const db = SQLite.openDatabase("pogFit");
+    db.transaction( (tx) => {
+        tx.executeSql(`
+            DELETE FROM "${table}" 
+            WHERE "${cat}" = "${value}"
+        `,
+        [],
+        (tx, resultSet) => {
+            console.log(resultSet);
+        },
+        (tx, error) => {
+            console.log(error);
+        });
+    },
+    (error) => {
+        console.log(error);
+    });
+}
+
+
+export function searchName(title, table, callback){
+    const db = SQLite.openDatabase("pogFit");
+    db.transaction( (tx) => {
+        tx.executeSql(`
+            SELECT title FROM "${table}" 
             WHERE title = "${title}"
         `,
         [],
@@ -638,6 +675,29 @@ export function searchName(title, callback){
             else{
                 callback(true);
             }
+        },
+        (tx, error) => {
+            console.log(error);
+        });
+    },
+    (error) => {
+        console.log(error);
+    });
+}
+
+
+export function getNut(table,id,callback){
+    const db = SQLite.openDatabase("pogFit");
+    db.transaction( (tx) => {
+        tx.executeSql(`
+            SELECT *
+            FROM "${table}"
+            WHERE id = "${id}"
+        `,
+        [],
+            (tx, resultSet) => {
+            // console.log(resultSet.rows._array[0])
+            callback(resultSet.rows._array);
         },
         (tx, error) => {
             console.log(error);
@@ -660,69 +720,6 @@ export function testQuery(callback){
         [],
         (tx, resultSet) => {
             callback(resultSet.rows._array);
-        },
-        (tx, error) => {
-            console.log(error);
-        });
-    },
-    (error) => {
-        console.log(error);
-    });
-}
-
-var a = "    SELECT * FROM recipe_ingredients where id between 174 and 179    "
-
-export function test1(){
-    const db = SQLite.openDatabase("pogFit");
-    db.transaction( (tx) => {
-        tx.executeSql(`
-            SELECT * FROM recipe_ingredients where id between 174 and 200
-        `,
-        [],
-        (tx, resultSet) => {
-            console.log(resultSet);
-        },
-        (tx, error) => {
-            console.log(error);
-        });
-    },
-    (error) => {
-        console.log(error);
-    });
-} 
-
-export function test(cat, whereCat, search){
-    const db = SQLite.openDatabase("pogFit");
-    db.transaction( (tx) => {
-        tx.executeSql(`
-            SELECT "${cat}" FROM recipes
-            where "${whereCat}" = "${search}"
-        `,
-        [],
-        (tx, resultSet) => {
-            console.log(resultSet);
-           
-        },
-        (tx, error) => {
-            console.log(error);
-        });
-    },
-    (error) => {
-        console.log(error);
-    });
-}
-
-export function getFromDB(cat, whereCat, search){
-    const db = SQLite.openDatabase("pogFit");
-    db.transaction( (tx) => {
-        tx.executeSql(`
-            SELECT "${cat}" FROM recipes
-            where "${whereCat}" = "${search}"
-        `,
-        [],
-        (tx, resultSet) => {
-            console.log(resultSet);
-           
         },
         (tx, error) => {
             console.log(error);
@@ -763,8 +760,7 @@ export function addIngr(items, id ){
         `,
         [],
         (tx, resultSet) => {
-            // console.log(resultSet);
-            console.log("add")
+            console.log(resultSet);
         },
         (tx, error) => {
             console.log(error);
@@ -774,24 +770,3 @@ export function addIngr(items, id ){
         console.log(error);
     });
 } 
-
-export function delIng(id){
-    const db = SQLite.openDatabase("pogFit");
-    db.transaction( (tx) => {
-        tx.executeSql(`
-            DELETE FROM recipe_ingredients 
-            WHERE recipe_id = "${id}"
-        `,
-        [],
-        (tx, resultSet) => {
-            // console.log(resultSet);
-            console.log("done", id)
-        },
-        (tx, error) => {
-            console.log(error);
-        });
-    },
-    (error) => {
-        console.log(error);
-    });
-}
