@@ -8,7 +8,6 @@ import { BottomNavigation } from "react-native-paper";
 const Screen = (props) => {
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    { key: "profile", title: "Profile", icon: "account", color: "#3f51b5" },
     { key: "calendar", title: "Calendar", icon: "calendar-text", color: "#f44336" },
     { key: "recipes", title: "Recipes", icon: "food-apple", color: "#4caf50" },
     { key: "workouts", title: "Workouts", icon: "dumbbell", color: "#f6a21e" }
