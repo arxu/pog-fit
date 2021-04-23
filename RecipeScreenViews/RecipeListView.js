@@ -6,7 +6,7 @@ import { Appbar, Card, Menu, Dialog, Portal, Button, TextInput, RadioButton, Hel
 
 import CustomCard from "../Components/Card";
 import SearchBar from "../Components/SearchBar";
-import {getAllRecipes, addTitle, updateRecipe, del, searchName, test,test1, searchId, addIngr} from "../FileStorage/Database";
+import {getAllRecipes, addTitle, updateRecipe, del, searchName, searchId, addIngr} from "../FileStorage/Database";
 
 const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
 
@@ -20,7 +20,7 @@ export default class RecipeListView extends Component{
       dinners: [],
       snacks: [],
       dialogVisible: false,
-      newTitle: "Test",
+      newTitle: "",
       tempTitle: "",
       nameTaken: false,
       moveOn: true,
@@ -105,7 +105,6 @@ export default class RecipeListView extends Component{
             
             {/* Pressing an item will create a pop up and hide the menu */}
             <Menu.Item onPress={() => { this.setState({ dialogVisible: true, menuVisible: false }) }} title="Add Recipe" />
-            <Menu.Item onPress={() => {test1()}} title="Test" />
           </Menu>
 
         </Appbar.Header>
