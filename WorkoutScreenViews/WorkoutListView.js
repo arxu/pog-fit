@@ -172,7 +172,7 @@ export default class WorkoutListView extends Component{
               value= {this.state.method}
               placeholder="Step by step instructions"
               multiline={true}
-              numberOfLines={4}
+              numberOfLines={5}
               onChangeText={text => this.setState({method: text})}
               />
               <HelperText type="info" visible={true}>

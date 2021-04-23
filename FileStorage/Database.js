@@ -581,17 +581,54 @@ export function updateWorkouts(title, set, rep, kcal, met){
     });
 }
 
-export function updateSingle(title, cat, update){
+export function updateSingle(table, title, cat, update, str){
     const db = SQLite.openDatabase("pogFit");
     db.transaction( (tx) => {
         tx.executeSql(`
-            UPDATE recipes 
+            UPDATE "${table}" 
             SET "${cat}" = "${update}"
-            WHERE title = "${title}"
+            WHERE "${str}" = "${title}"
         `,
         [],
         (tx, resultSet) => {
             console.log(resultSet);
+        },
+        (tx, error) => {
+            console.log(error);
+        });
+    },
+    (error) => {
+        console.log(error);
+    });
+}
+
+export function test(str){
+    const db = SQLite.openDatabase("pogFit");
+    db.transaction( (tx) => {
+        tx.executeSql(str,
+        [],
+        (tx, resultSet) => {
+            console.log(resultSet.rows._array);
+        },
+        (tx, error) => {
+            console.log(error);
+        });
+    },
+    (error) => {
+        console.log(error);
+    });
+}
+
+export function getCat(id,callback){
+    const db = SQLite.openDatabase("pogFit");
+    db.transaction( (tx) => {
+        tx.executeSql(`
+            Select category from recipes where id = "${id}" 
+        `,
+        [],
+        (tx, resultSet) => {
+            // console.log(resultSet.rows._array[0].category);
+            callback(resultSet.rows._array[0].category);
         },
         (tx, error) => {
             console.log(error);
@@ -622,6 +659,7 @@ export function del(table, cat, value){
     });
 }
 
+
 export function searchName(title, table, callback){
     const db = SQLite.openDatabase("pogFit");
     db.transaction( (tx) => {
@@ -637,6 +675,29 @@ export function searchName(title, table, callback){
             else{
                 callback(true);
             }
+        },
+        (tx, error) => {
+            console.log(error);
+        });
+    },
+    (error) => {
+        console.log(error);
+    });
+}
+
+
+export function getNut(table,id,callback){
+    const db = SQLite.openDatabase("pogFit");
+    db.transaction( (tx) => {
+        tx.executeSql(`
+            SELECT *
+            FROM "${table}"
+            WHERE id = "${id}"
+        `,
+        [],
+            (tx, resultSet) => {
+            // console.log(resultSet.rows._array[0])
+            callback(resultSet.rows._array);
         },
         (tx, error) => {
             console.log(error);

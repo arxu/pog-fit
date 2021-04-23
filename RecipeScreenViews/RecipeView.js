@@ -1,16 +1,17 @@
 import React, {Component, useState} from 'react';
-import {Subheading, Paragraph, List, Appbar, Dialog, Portal, TextInput, Headline, Button, Menu, Text} from 'react-native-paper';
+import {Subheading, Paragraph, List, Appbar, Dialog, Portal, TextInput, RadioButton, Button, Menu, Text, HelperText} from 'react-native-paper';
 import {Image, StyleSheet, ScrollView, View} from "react-native";
 import {TouchableWithoutFeedback as TWF} from 'react-native-gesture-handler';
 
 import RecipeDataTable from '../Components/RecipeDataTable';
 import { disableExpoCliLogging } from 'expo/build/logs/Logs';
-import {delIng, del, updateTitle ,test, updateSingle} from "../FileStorage/Database";
+import {del, updateSingle, test, getCat, getNut} from "../FileStorage/Database";
 
 
 var ld = require('lodash');
 
 const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
+const str = ' Select * from recipes where title = "Test"'
 
 export default class RecipeView extends Component {
     constructor(props){
@@ -22,6 +23,11 @@ export default class RecipeView extends Component {
             editMethod: false,
             method: "",
             temp: "",
+            check: "",
+            fat: "",
+            protein: "",
+            carbs: "",
+            sugar: "",
             editMode: false,
             editDialogVisible: false,
             editDialogIsNumeric: true,
@@ -34,6 +40,27 @@ export default class RecipeView extends Component {
             deleteVisible: false,
         }
 
+        this.getDetails = function () {
+            var strFat = ""
+            var strPro = ""
+            var strCarbs = ""
+            var StrSugar = ""
+            getNut("recipes",this.state.recipe.id, (result) => {
+                console.log(result)
+                strFat = JSON.stringify(result[0].fat),
+                strPro = JSON.stringify(result[0].protein),
+                strCarbs = JSON.stringify(result[0].carbohydrates),
+                StrSugar = JSON.stringify(result[0].sugars),
+                this.setState({
+                    fat: strFat,
+                    protein: strPro,
+                    carbs: strCarbs,
+                    sugar: StrSugar,
+                    method: result[0].method
+                })
+            })
+        }
+
         this.openEditDialog = (elements, dialogTitle, dialogLabel) => {
             this.setState({
                 editDialogIsNumeric: false,
@@ -43,7 +70,6 @@ export default class RecipeView extends Component {
                 // editDialogVisible: true
             }, () => { 
                 console.log(this.state.currEditedElements); // Logs array ["title"]
-                console.log("11",this.state.editDialogVisible)
                 this.setState({ editDialogVisible: true });
             });
         }
@@ -54,13 +80,9 @@ export default class RecipeView extends Component {
             <React.Fragment>
                 <Appbar.Header>
                     <Appbar.Content 
-                        // title={this.state.editMode ? this.state.editedRecipe.title : this.state.recipe.title}
                         title={this.state.editedRecipe.title}
                         onPress={ ()=> {
-                            // this.state.editMode ?
                                 this.openEditDialog(["title"], "Recipe Title", "New Recipe Title")
-                            // : 
-                                // null;
                         }}
                     />
 
@@ -70,20 +92,11 @@ export default class RecipeView extends Component {
                         anchor={<Appbar.Action icon={MORE_ICON} color="white" onPress={() => {this.setState({menuVisible: true})}} />}>
                         
                         {/* Pressing an item will create a pop up and hide the menu */}
-                        {/* <Menu.Item onPress={() => { this.setState({ editMode: !this.state.editMode, editedRecipe: ld.cloneDeep(this.state.recipe), menuVisible: false }), console.log(this.state.editDialogTitle) }} title="Edit title" /> */}
-
-                        <Menu.Item onPress={() => { this.setState({ menuVisible: false, edit: true }) }} title="Edit Recipe" />
-                        
-
-                        <Menu.Item onPress={() => { this.setState({ menuVisible: false, deleteVisible: true }), console.log("ok") }} title="Delete" />
-                        <Menu.Item onPress={() => { console.log(this.state.editDialogVisible) }} title="Test" />
+                        <Menu.Item onPress={() => { this.setState({ menuVisible: false, edit: true }),this.getDetails() }} title="Edit Recipe" />
+                        <Menu.Item onPress={() => { this.setState({ menuVisible: false, deleteVisible: true }) }} title="Delete" />
 
                     </Menu>
 
-                    {/* <Appbar.Action 
-                        icon={MORE_ICON} 
-                        onPress={ () => { this.setState({editMode: !this.state.editMode, editedRecipe: ld.cloneDeep(this.state.recipe)}), console.log("yes");}}
-                    /> */}
                 </Appbar.Header>
                 <ScrollView>
                     <React.Fragment>
@@ -138,7 +151,7 @@ export default class RecipeView extends Component {
                         label={this.state.editDialogLabel}
                         isNumeric={this.state.editDialogIsNumeric}
                         initValues={() => {
-                            console.log("asdljkaw",this.state.currEditedElements); // Logs empty array as soon as this component renders. 
+                            console.log(this.state.currEditedElements); // Logs empty array as soon as this component renders. 
                                                                         // Doesn't update until EditDialog popup is closed
                             return this.state.currEditedElements.map((elm, idx) => this.state.editedRecipe[elm]);
                         }}
@@ -146,10 +159,7 @@ export default class RecipeView extends Component {
                             let updated = ld.cloneDeep(this.state.editedRecipe);
                             this.state.currEditedElements.forEach((elm, idx) => { updated[elm] = newVals[idx]; });
                             this.setState({ editedRecipe: updated });
-                            // come back here
-                            console.log("11", newVals[0], "and", this.state.currEditedElements[0], "and",updated);
-                            // updateTitle(this.state.recipe.title,newVals[0])
-                            updateSingle(this.state.recipe.title,this.state.currEditedElements[0],newVals[0])
+                            updateSingle("recipes", this.state.recipe.title,this.state.currEditedElements[0],newVals[0], "title")
                         }}
                     />
 
@@ -157,14 +167,25 @@ export default class RecipeView extends Component {
                         <Dialog.Title>Edit Recipe</Dialog.Title>
 
                         <Dialog.Content>
-                            <Button onPress={() => { this.openEditDialog(["title"], "Recipe Title", "New Recipe Title"),  this.setState({ editMode: true, editedRecipe: ld.cloneDeep(this.state.recipe), edit: false }) }}>Edit Title</Button>
-                            <Button onPress={() => {this.setState({editCat: true, edit: false}) }}>Edit Category</Button>
-                            <Button onPress={() => console.log('boink')}>Edit Ingredients</Button>
-                            <Button onPress={() => console.log('boink')}>Edit Nutrition</Button>
-                            <Button onPress={() => { this.openEditDialog(["method"], "Method", "Method",),this.setState({edit:false, editMode: true, editedRecipe: ld.cloneDeep(this.state.recipe)}) }}>Edit Methods</Button>
-                        </Dialog.Content> 
+                            <Button onPress={() => {
+                                this.openEditDialog(["title"], "Recipe Title", "New Recipe Title"),
+                                this.setState({ editMode: true, editedRecipe: ld.cloneDeep(this.state.recipe), edit: false })
+                            }}>Edit Title</Button>
+                            
+                            <Button onPress={() => {
+                                this.setState({ editCat: true, edit: false }),
+                                getCat(this.state.recipe.id, (result) => { this.setState({ check: result }) })
+                            }}>Edit Category</Button>
+                            
+                            {/* <Button onPress={() => console.log('no')}>Edit Ingredients</Button> */}
 
-                        {/* wip */}
+                            <Button onPress={() => this.setState({ edit: false, editNut: true })}> Edit Nutrition</Button>
+                            <Button onPress={() => {
+                                this.openEditDialog(["method"], "Method", "Method",),
+                                this.setState({ edit: false, editMode: true, editedRecipe: ld.cloneDeep(this.state.recipe) })
+                            }}>Edit Methods</Button>
+
+                        </Dialog.Content> 
                         <Dialog.Actions>
                             <Button onPress={()=>{this.setState({edit: false, editMode: false})  }}>Close Edit</Button>
                         </Dialog.Actions>
@@ -174,23 +195,90 @@ export default class RecipeView extends Component {
                         {/* Edit Category */}
                     <Dialog visible={this.state.editCat} onDismiss={()=> {this.setState({editCat: false, edit: true})}}>
                         <Dialog.Title>Edit Category</Dialog.Title>
-
                         <Dialog.Content>
-                            
+                            <RadioButton.Group onValueChange={check => this.setState({ check })}
+                                value={this.state.check}>
+                                
+                            <RadioButton.Item label="Breakfast" value="Breakfast" color="blue"/>
+                            <RadioButton.Item label="Lunch" value="Lunch" color="blue"/> 
+                            <RadioButton.Item label="Dinner" value="Dinner" color="blue"/>
+                            <RadioButton.Item label="Snack" value="Snack" color="blue"/>
+                        </RadioButton.Group>
 
                         </Dialog.Content>
-
-                        
                         <Dialog.Actions>
                             <Button onPress={()=>{this.setState({editCat: false, edit: true}) }}>Cancel</Button>
-                            <Button onPress={()=>{this.setState({editCat: false, edit: true}) }}>confirm</Button>
+                            <Button onPress={()=>{this.setState({editCat: false, edit: true}), updateSingle("recipes", this.state.recipe.id, "category", this.state.check, "id" )  }}>confirm</Button>
                         </Dialog.Actions>
                     </Dialog>
 
+                    <Dialog visible={this.state.editNut} onDismiss={() => { this.setState({ editNut: false, edit: true }) }}>
+                        <Dialog.Title>Edit Nutrition</Dialog.Title>
+                        <Dialog.Content>
 
+                        <TextInput
+                        keyboardType={'number-pad'}
+                        label="Fat"
+                        mode="outlined" 
+                        value= {this.state.fat}
+                        placeholder="0"
+                        onChangeText={text => this.setState({fat: text})}
+                        />
+                        <HelperText type="error" visible={!Number(this.state.fat) && this.state.fat.length > 1 ? true: false}>
+                            Not a valid number
+                        </HelperText>
 
+                        <TextInput
+                        keyboardType={'number-pad'}
+                        label="Protein"
+                        mode="outlined" 
+                        value= {this.state.protein}
+                        placeholder="0"
+                        onChangeText={text => this.setState({protein: text})}
+                        />
+                        <HelperText type="error" visible={!Number(this.state.protein) && this.state.protein.length > 1 ? true: false}>
+                            Not a valid number
+                        </HelperText>
 
+                        <TextInput
+                        keyboardType={'number-pad'}
+                        label="Carbohydrates"
+                        mode="outlined" 
+                        value= {this.state.carbs}
+                        placeholder="0"
+                        onChangeText={text => this.setState({carbs: text})}
+                        />
+                        <HelperText type="error" visible={!Number(this.state.carbs) && this.state.carbs.length > 1 ? true: false}>
+                            Not a valid number
+                        </HelperText>
 
+                        <TextInput
+                        keyboardType={'number-pad'}
+                        label="Sugar"
+                        mode="outlined" 
+                        value= {this.state.sugar}
+                        placeholder="0"
+                        onChangeText={text => this.setState({sugar: text})}
+                        />
+                        <HelperText type="error" visible={!Number(this.state.sugar) && this.state.sugar.length > 1 ? true: false}>
+                            Not a valid number
+                        </HelperText>
+
+                        </Dialog.Content>
+                        <Dialog.Actions>
+                        {/* Cancel button to reset field and Next button to go to next page */}
+                            <Button onPress={() => { this.setState({ editNut: false, edit: true }) }}>Cancel</Button>
+                            
+
+                            <Button onPress={() => {
+                                this.setState({ editNut: false, edit: true }),
+                                updateSingle("recipes", this.state.recipe.id, "fat", this.state.fat, "id"),
+                                updateSingle("recipes", this.state.recipe.id, "protein", this.state.protein, "id"),
+                                updateSingle("recipes", this.state.recipe.id, "carbohydrates", this.state.carbs, "id"),
+                                updateSingle("recipes", this.state.recipe.id, "sugars", this.state.sugar, "id")
+                            }}>Update</Button>
+                        </Dialog.Actions>
+                    </Dialog>
 
 
                     {/* Deletes the recipe */}
@@ -203,7 +291,7 @@ export default class RecipeView extends Component {
 
                         <Dialog.Actions>
                             <Button onPress={()=>{this.setState({deleteVisible: false}) }}>Cancel</Button>
-                            <Button onPress={()=>{this.setState({deleteVisible: false, editDialogVisible: false}), delIng(this.state.recipe.id), del(this.state.recipe.title) }}>Delete</Button>
+                            <Button onPress={()=>{this.setState({deleteVisible: false, editDialogVisible: false}), del("recipe_ingredients", "recipe_id", this.state.recipe.id), del("recipes", "title", this.state.recipe.title) }}>Delete</Button>
                         </Dialog.Actions>
                     </Dialog>
                 </Portal>
