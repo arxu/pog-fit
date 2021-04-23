@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import {Image, View, StyleSheet} from 'react-native';
 import { ScrollView, TouchableHighlight } from 'react-native-gesture-handler';
 import { 
     Card, Chip, Appbar, Dialog, Portal, Button, Subheading, Paragraph, 
     List, Headline, DataTable, ProgressBar, Menu, Switch, Divider,
-    IconButton
+    IconButton, Text
 } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -797,17 +797,19 @@ export default class CalendarListView extends Component {
                                 <Card key={idx} style={{margin: 3, backgroundColor: dayOfWeek.colour}} onLongPress={() =>{this.highlightSelectedCard(idx)}}>
                                     <Card.Title 
                                         title={dayOfWeek.day + " " + dayOfWeek.date + dayOfWeek.date_ext} 
-                                        subtitle={
-                                            dayOfWeek.totalCal + " Calories: " 
-                                            + dayOfWeek.fatPercent + "% fat, " 
-                                            + dayOfWeek.proteinPercent + "% protein, "
-                                            + dayOfWeek.carbPercent + "% carbohydrates"
-                                        }
                                     />
                                     <Card.Content>
-                                        <View style={{margin: 5}}>
+                                        <View style={{margin: 2}}>
                                                 <Divider/>
                                         </View> 
+                                        <Text style={{fontSize: 12, marginLeft: 3, marginBottom: 2, color: "#888888"}}>
+                                            {
+                                                dayOfWeek.totalCal + " Calories: " 
+                                                + dayOfWeek.fatPercent + "% fat, " 
+                                                + dayOfWeek.proteinPercent + "% protein, "
+                                                + dayOfWeek.carbPercent + "% carbohydrates"
+                                            }
+                                        </Text>
                                         <View style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start'}}>
                                             { dayOfWeek.selectedRecipes && dayOfWeek.selectedRecipes.breakfast ? 
                                                 <CustomChip
@@ -871,9 +873,16 @@ export default class CalendarListView extends Component {
                                             }       
                                             
                                         </View>
-                                        <View style={{margin: 5}}>
+                                        <View style={{margin: 2}}>
                                                 <Divider/>
                                         </View>
+                                        {dayOfWeek.addedWorkouts != undefined ?  
+                                            <Text style={{fontSize: 12, marginLeft: 3, marginBottom: 2, color: "#888888"}}>
+                                                {dayOfWeek.addedWorkouts.reduce((sum, workout) => sum + workout.cal_per_set * workout.sets, 0, null, 0) + " Calories burnt"}
+                                            </Text>
+                                        :
+                                            null
+                                        }
                                         <View style={{flex: 1, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start'}}>
                                             {dayOfWeek.addedWorkouts != undefined ? 
                                                 dayOfWeek.addedWorkouts.map((e) => {
@@ -891,7 +900,7 @@ export default class CalendarListView extends Component {
                                                 null
                                             }
                                             <CustomChip 
-                                                title={"Add"} 
+                                                title={"Add Exercise"} 
                                                 onPress={() => { this.setState({workoutDialogVisible: true, workoutAddDayIdx: idx}); }} 
                                                 style={{backgroundColor: "#efefef"}}
                                                 icon="plus"
@@ -981,116 +990,56 @@ export default class CalendarListView extends Component {
                         </Dialog>
                     </Portal>
                     <Portal>
-                        <Dialog visible={this.state.preferencesDialogVisible} onDismiss={() => { this.setState({preferencesDialogVisible: false}); }}>
-                            <Dialog.Title>Preferences</Dialog.Title>
-                            <Dialog.Content  >
-                                <ScrollView>
-                                    
-                                    <View style={{  flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignContent: 'center'}}>
-                                        <Subheading>Allowed Meal Repeats</Subheading>
-                                        <Menu 
-                                            visible={this.state.mealRepeatMenuVisible} 
-                                            onDismiss={() => { this.setState({mealRepeatMenuVisible: false}); }} 
-                                            anchor={
-                                                <TouchableHighlight onPress={() => { this.setState({mealRepeatMenuVisible: true}); }}>
-                                                    <Subheading style={{paddingRight: 12}}>{this.state.nAllowedMealRepeats}</Subheading>
-                                                </TouchableHighlight>
-                                            }
-                                        >
-                                            <MenuItemList 
-                                                startIdx={0} 
-                                                endIdx={this.state.nDaysToShow} 
-                                                onValSelected={(value) => { 
-                                                    this.setState({nAllowedMealRepeats: value, mealRepeatMenuVisible: false});
-                                                }}
-                                            />
-                                        </Menu>
-                                    </View>
-                                    <View style={{  flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignContent: 'center'}}>
-                                        <Subheading>Length of Meal Plan</Subheading>
-                                        <Menu 
-                                            visible={this.state.daysToShowMenuVisible} 
-                                            onDismiss={() => { this.setState({daysToShowMenuVisible: false}); }} 
-                                            anchor={
-                                                <TouchableHighlight onPress={() => { this.setState({daysToShowMenuVisible: true}); }}>
-                                                    <Subheading style={{paddingRight: 12}}>{this.state.nDaysToShow}</Subheading>
-                                                </TouchableHighlight>
-                                            }
-                                        >
-                                            <MenuItemList 
-                                                startIdx={1} 
-                                                endIdx={14} 
-                                                onValSelected={(value) => { 
-                                                    this.setState({nDaysToShow: value, daysToShowMenuVisible: false});
-                                                }}
-                                            />
-                                        </Menu>
-                                    </View>
-                                    <TitledCheckbox 
-                                        status={this.state.useOnlyUserRecipes}
-                                        onPress={() => { this.setState({useOnlyUserRecipes: !this.state.useOnlyUserRecipes}); }}
-                                        title="Use Only User Recipes"
-                                    />
-                                    <View style={{margin: 5}}>
-                                        <Divider />
-                                    </View>
-                                    <TitledCheckbox 
-                                        status={this.state.usingBreakfast} 
-                                        onPress={() => { this.setState({usingBreakfast: !this.state.usingBreakfast}); }}
-                                        title="Use Breakfasts"
-                                    />
-                                    <TitledCheckbox 
-                                        status={this.state.usingLunch}
-                                        onPress={() => { this.setState({usingLunch: !this.state.usingLunch}); }}
-                                        title="Use Lunches"
-                                    />
-                                    <TitledCheckbox 
-                                        status={this.state.usingDinner}
-                                        onPress={() => { this.setState({usingDinner: !this.state.usingDinner}); }}
-                                        title="Use Dinners"
-                                    />
-                                    <TitledCheckbox 
-                                        status={this.state.usingSnack1}
-                                        onPress={() => { this.setState({usingSnack1: !this.state.usingSnack1}); }}
-                                        title="Use Snack 1"
-                                    />
-                                    <TitledCheckbox 
-                                        status={this.state.usingSnack2}
-                                        onPress={() => { this.setState({usingSnack2: !this.state.usingSnack2}); }}
-                                        title="Use Snack 2"
-                                    />
-                                    <TitledCheckbox 
-                                        status={this.state.usingSnack3}
-                                        onPress={() => { this.setState({usingSnack3: !this.state.usingSnack3}); }}
-                                        title="Use Snack 3"
-                                    />
-                                    
-                                </ScrollView>
-                            </Dialog.Content>
-                            <Dialog.Actions>
-                                <Button 
-                                    onPress={ () => {
-                                        this.setState({
-                                            usingBreakfast: true,
-                                            usingLunch: true,
-                                            usingDinner: true,
-                                            usingSnack1: true,
-                                            usingSnack2: false,
-                                            usingSnack3: false,
-                                            nAllowedMealRepeats: 2,
-                                            nDaysToShow: 7,
-                                            useOnlyUserRecipes: false
-                                        }, () => {
-                                            this.savePreferences();
-                                        });
-                                    }}
-                                >
-                                    RESTORE DEFAULTS
-                                </Button>
-                                <Button onPress={this.loadPreferences}>CANCEL</Button>
-                                <Button onPress={this.savePreferences}>SAVE</Button>
-                            </Dialog.Actions>
-                        </Dialog>
+                        <PreferencesDialog
+                            visible={this.state.preferencesDialogVisible}
+                            onDismiss={() => { this.setState({preferencesDialogVisible: false}); }}
+                            nAllowedMealRepeats={this.state.nAllowedMealRepeats}
+                            onAllowedMealRepeatsSet={(value) => {
+                                this.setState({nAllowedMealRepeats: value, mealRepeatMenuVisible: false}); 
+                            }}
+                            nDaysToShow={this.state.nDaysToShow}
+                            onDaysToShowSet={(value) => {
+                                this.setState({nDaysToShow: value, daysToShowMenuVisible: false});
+                            }}
+                            useOnlyUserRecipes={this.state.useOnlyUserRecipes}
+                            onUseOnlyUserRecipesSet={() => {
+                                this.setState({useOnlyUserRecipes: !this.state.useOnlyUserRecipes})
+                            }}
+                            onSavePreferences={this.savePreferences}
+                            onCancelPreferences={this.loadPreferences}
+                            onRestoreDefaultPreferences={() => {
+                                this.setState({
+                                    usingBreakfast: true,
+                                    usingLunch: true,
+                                    usingDinner: true,
+                                    usingSnack1: true,
+                                    usingSnack2: false,
+                                    usingSnack3: false,
+                                    nAllowedMealRepeats: 2,
+                                    nDaysToShow: 7,
+                                    useOnlyUserRecipes: false
+                                }, () => {
+                                    this.savePreferences();
+                                });
+                            }}
+                            usedMeals={{
+                                breakfast: this.state.usingBreakfast,
+                                lunch: this.state.usingLunch,
+                                dinner: this.state.usingDinner,
+                                snack1: this.state.usingSnack1,
+                                snack2: this.state.usingSnack2,
+                                snack3: this.state.usingSnack3
+                            }}
+                            usedMealSetters={{
+                                breakfast: () => { this.setState({usingBreakfast: !this.state.usingBreakfast}); },
+                                lunch: () => { this.setState({usingLunch: !this.state.usingLunch}); },
+                                dinner: () => { this.setState({usingDinner: !this.state.usingDinner}); },
+                                snack1: () => { this.setState({usingSnack1: !this.state.usingSnack1}); },
+                                snack2: () => { this.setState({usingSnack2: !this.state.usingSnack2}); },
+                                snack3: () => { this.setState({usingSnack3: !this.state.usingSnack3}); }
+                            }}
+
+                        />
                     </Portal>
                     <Portal>
                         <WorkoutDialog 
@@ -1112,6 +1061,115 @@ export default class CalendarListView extends Component {
             </React.Fragment>
         );
     }
+}
+
+function PreferencesDialog(props) {
+    const [mealRepeatMenuVisible, setMealRepeatMenuVisible] = useState(false);
+    const [daysToShowMenuVisible, setDaysToShowMenuVisible] = useState(false);
+
+    return (
+        <Dialog visible={props.visible} onDismiss={props.onDismiss}>
+            <Dialog.Title>Preferences</Dialog.Title>
+            <Dialog.Content  >
+                <ScrollView>
+                    {/* Dropdown menu to set number of allowed meal repeats for meal plan */}
+                    <View style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignContent: 'center'}}>
+                        <Subheading>Allowed Meal Repeats</Subheading>
+                        <Menu 
+                            visible={mealRepeatMenuVisible} 
+                            onDismiss={() => { setMealRepeatMenuVisible(false); }} 
+                            anchor={
+                                <TouchableHighlight onPress={() => { setMealRepeatMenuVisible(true); }}>
+                                    <Subheading style={{paddingRight: 12}}>
+                                        {props.nAllowedMealRepeats}
+                                    </Subheading>
+                                </TouchableHighlight>
+                            }
+                        >
+                            <MenuItemList 
+                                startIdx={0} 
+                                endIdx={props.nDaysToShow} 
+                                onValSelected={props.onAllowedMealRepeatsSet}
+                            />
+                        </Menu>
+                    </View>
+
+                    {/* Dropdown menu to set number of Days to Show*/}
+                    <View style={{  flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignContent: 'center'}}>
+                        <Subheading>Length of Meal Plan</Subheading>
+                        <Menu 
+                            visible={daysToShowMenuVisible} 
+                            onDismiss={() => { setDaysToShowMenuVisible(false); }} 
+                            anchor={
+                                <TouchableHighlight onPress={() => { setDaysToShowMenuVisible(true); }}>
+                                    <Subheading style={{paddingRight: 12}}>{props.nDaysToShow}</Subheading>
+                                </TouchableHighlight>
+                            }
+                        >
+                            <MenuItemList 
+                                startIdx={1} 
+                                endIdx={14} 
+                                onValSelected={props.onDaysToShowSet}
+                            />
+                        </Menu>
+                    </View>
+
+                    {/* Checkbox for whether to use only user created recipes */}
+                    <TitledCheckbox 
+                        status={props.useOnlyUserRecipes}
+                        onPress={props.onUseOnlyUserRecipesSet}
+                        title="Use Only User Recipes"
+                    />
+                    <View style={{margin: 5}}>
+                        <Divider />
+                    </View>
+
+                    {/* Checkboxes to select which meals to use in the calendar */}
+                    <TitledCheckbox 
+                        status={props.usedMeals.breakfast} 
+                        onPress={props.usedMealSetters.breakfast}
+                        title="Use Breakfasts"
+                    />
+                    <TitledCheckbox 
+                        status={props.usedMeals.lunch}
+                        onPress={props.usedMealSetters.lunch}
+                        title="Use Lunches"
+                    />
+                    <TitledCheckbox 
+                        status={props.usedMeals.dinner}
+                        onPress={props.usedMealSetters.dinner}
+                        title="Use Dinners"
+                    />
+                    <TitledCheckbox 
+                        status={props.usedMeals.snack1}
+                        onPress={props.usedMealSetters.snack1}
+                        title="Use Snack 1"
+                    />
+                    <TitledCheckbox 
+                        status={props.usedMeals.snack2}
+                        onPress={props.usedMealSetters.snack2}
+                        title="Use Snack 2"
+                    />
+                    <TitledCheckbox 
+                        status={props.usedMeals.snack3}
+                        onPress={props.usedMealSetters.snack3}
+                        title="Use Snack 3"
+                    />
+                </ScrollView>
+            </Dialog.Content>
+            
+            {/* Save / Cancel / Restore defaults buttons */}
+            <Dialog.Actions>
+                <Button 
+                    onPress={props.onRestoreDefaultPreferences}
+                >
+                    RESTORE DEFAULTS
+                </Button>
+                <Button onPress={props.onCancelPreferences}>CANCEL</Button>
+                <Button onPress={props.onSavePreferences}>SAVE</Button>
+            </Dialog.Actions>
+        </Dialog>
+    );
 }
 
 function MenuItemList(props) {
