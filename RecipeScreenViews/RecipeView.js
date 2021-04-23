@@ -162,7 +162,7 @@ export default class RecipeView extends Component {
                             <Button onPress={() => console.log('boink')}>Edit Ingredients</Button>
                             <Button onPress={() => console.log('boink')}>Edit Nutrition</Button>
                             <Button onPress={() => { this.openEditDialog(["method"], "Method", "Method",),this.setState({edit:false, editMode: true, editedRecipe: ld.cloneDeep(this.state.recipe)}) }}>Edit Methods</Button>
-                        </Dialog.Content>
+                        </Dialog.Content> 
 
                         {/* wip */}
                         <Dialog.Actions>

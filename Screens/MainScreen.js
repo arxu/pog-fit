@@ -1,25 +1,24 @@
 import React, { useState } from "react";
 import RecipeScreen from "./RecipeScreen";
 import WorkoutScreen from "./WorkoutScreen";
-import ProfileRoute from "./ProfileScreen";
-import CalendarRoute from "./CalendarScreen";
+import ProfileScreen from "./ProfileScreen";
+import CalendarScreen from "./CalendarScreen";
 import { BottomNavigation } from "react-native-paper";
 
 const Screen = (props) => {
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    { key: "profile", title: "Profile", icon: "account", color: "#e55b13" },
-    { key: "calendar", title: "Calendar", icon: "calendar-text", color: "#655010" },
-    { key: "recipes", title: "Recipes", icon: "food-apple", color: "#7a871e" },
+    { key: "calendar", title: "Calendar", icon: "calendar-text", color: "#f44336" },
+    { key: "recipes", title: "Recipes", icon: "food-apple", color: "#4caf50" },
     { key: "workouts", title: "Workouts", icon: "dumbbell", color: "#f6a21e" }
   ]);
 
   const renderScene = ({route, jumpTo}) => {
       switch (route.key) {
         case "profile":
-          return <ProfileRoute jumpTo={jumpTo} firstStartup={props.firstStartup}/>
+          return <ProfileScreen jumpTo={jumpTo} firstStartup={props.firstStartup}/>
         case "calendar":
-          return <CalendarRoute jumpTo={jumpTo} firstStartup={props.firstStartup}/>
+          return <CalendarScreen jumpTo={jumpTo} firstStartup={props.firstStartup}/>
         case "recipes":
           return <RecipeScreen jumpTo={jumpTo} firstStartup={props.firstStartup}/>
         case "workouts":

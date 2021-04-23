@@ -23,7 +23,8 @@ export function createDefaultTables(callback) {
                     date_of_birth TEXT, 
                     weight REAL,
                     height_cm REAL,
-                    gender TEXT
+                    gender TEXT,
+                    target_weight REAL
                 );
             `,
             [],
@@ -160,8 +161,8 @@ export function createDefaultTables(callback) {
         db.transaction((tx) => {
             // dates stored as text in form of "YYYY-MM-DD HH:MM:SS.SSS"
             tx.executeSql(
-                `INSERT INTO users (username, date_of_birth, weight, height_cm, gender) 
-                VALUES (\"default\", \"2000-01-01 12:00:00.000\", 0, 0, \"male\");`
+                `INSERT INTO users (username, date_of_birth, weight, height_cm, gender, target_weight) 
+                VALUES (\"default\", \"2000-01-01 12:00:00.000\", 0, 0, \"male\", 0);`
             ,
             [],
             (tx, resultSet) => {
@@ -298,7 +299,7 @@ export function createDefaultTables(callback) {
     db.transaction(
         (tx) => { 
             tx.executeSql(
-                "DROP TABLE IF EXISTS users",
+                "DROP TABLE IF EXISTS users;",
                 [],
                 (tx, result) => {
                     userTableDeleted = true;
@@ -319,7 +320,7 @@ export function createDefaultTables(callback) {
     db.transaction(
         (tx) => { 
             tx.executeSql(
-                "DROP TABLE IF EXISTS recipes",
+                "DROP TABLE IF EXISTS recipes;",
                 [],
                 (tx, result) => {
                     recipeTableDeleted = true;
@@ -340,7 +341,7 @@ export function createDefaultTables(callback) {
     db.transaction(
         (tx) => { 
             tx.executeSql(
-                "DROP TABLE IF EXISTS recipe_ingredients",
+                "DROP TABLE IF EXISTS recipe_ingredients;",
                 [],
                 (tx, result) => {
                     recipeIngredientTableDeleted = true;
@@ -361,7 +362,7 @@ export function createDefaultTables(callback) {
     db.transaction(
         (tx) => { 
             tx.executeSql(
-                "DROP TABLE IF EXISTS workouts",
+                "DROP TABLE IF EXISTS workouts;",
                 [],
                 (tx, result) => {
                     workoutTableDeleted = true;
@@ -382,7 +383,7 @@ export function createDefaultTables(callback) {
     db.transaction(
         (tx) => { 
             tx.executeSql(
-                "DROP TABLE IF EXISTS muscle_groups",
+                "DROP TABLE IF EXISTS muscle_groups;",
                 [],
                 (tx, result) => {
                     muscleGroupTableDeleted = true;
@@ -451,11 +452,10 @@ export function getAllRecipes(callback) {
 
 // Extracts all users from the database as an array of objects. Calls the callback function with values (error, userArray)
 export function getAllUsers(callback) {
-    const db = SQLite.openDatabase("PogFit");
+    const db = SQLite.openDatabase("pogFit");
     db.transaction((tx) => {
         tx.executeSql(`
-            SELECT * 
-            FROM users
+            SELECT username, date(date_of_birth) AS dob, weight, height_cm, gender, target_weight FROM users;
         `,
         [],
         (tx, userResultSet) => {
