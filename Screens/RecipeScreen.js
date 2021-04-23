@@ -22,7 +22,7 @@ export default class RecipeScreen extends Component {
         <React.Fragment>
           <Stack.Navigator initialRouteName="Recipe List" screenOptions={{headerShown: false}}>
             <Stack.Screen name="Recipe List">
-              {props => <RecipeListView {...this.props} />}
+              {props => <RecipeListView {...props} />}
             </Stack.Screen>
             <Stack.Screen 
               name="Recipe" 

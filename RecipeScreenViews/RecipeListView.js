@@ -1,16 +1,15 @@
 import React, {Component} from 'react';
-import { ScrollView} from "react-native";
+import { ScrollView, View} from "react-native";
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { Appbar, Card, Menu, Dialog, Portal, Button, TextInput, RadioButton, Text, HelperText } from "react-native-paper";
+import { Appbar, Card, Menu, Dialog, Portal, Button, TextInput, RadioButton, HelperText, Snackbar, DataTable } from "react-native-paper";
 
 
 import CustomCard from "../Components/Card";
 import SearchBar from "../Components/SearchBar";
-import {getAllRecipes, addRecipe, updateRecipe, del} from "../FileStorage/Database";
+import {getAllRecipes, addRecipe, updateRecipe, del, searchName, test,test1, searchId, addIngr, delIng} from "../FileStorage/Database";
 
 const MORE_ICON = Platform.OS === 'ios' ? 'dots-horizontal' : 'dots-vertical';
 
-// added
 
 export default class RecipeListView extends Component{
   constructor(props) {
@@ -23,10 +22,25 @@ export default class RecipeListView extends Component{
       dialogVisible: false,
       newTitle: "Test",
       tempTitle: "",
+      nameTaken: false,
+      moveOn: true,
       categoryVis: false,
       check: "Breakfast",
       ingrVis: false,
-      ingr:"",
+      ing: {},
+      ingrName: "",
+      ingrQuan: "",
+      ingrUnit: "none",
+      ingrQLock: true,
+      ingrTitleVis: false,
+      ingrQuantVis: false,
+      ingrUnitVis: false,
+      ingrMoveOn1: false,
+      ingrMoveOn2: false,
+      unitPrev: "none",
+      unitTemp: "none",
+      searchID: 0,
+      snackVis: false,
       nutVis: false,
       fat: "",
       protein: "",
@@ -39,36 +53,42 @@ export default class RecipeListView extends Component{
       methodVis: false,
       method:""
     };
-    getAllRecipes((error, result) => {
-      if (error) {
-        console.log(error);
-      }
-      else {
-        let breakfasts = [], lunches = [], dinners = [], snacks = [];
-        for (let i = 0; i < result.length; i++){
-          switch (result[i].category){
-            case "Breakfast":
-              breakfasts.push(result[i]);
-              break;
-            case "Lunch":
-              lunches.push(result[i]);
-              break;
-            case "Dinner":
-              dinners.push(result[i]);
-              break;
-            case "Snack":
-              snacks.push(result[i]);
-              break;
-          }
+
+    this.getAll = function () {
+      getAllRecipes((error, result) => {
+        if (error) {
+          console.log(error);
         }
-        this.setState({
-          breakfasts: breakfasts, 
-          lunches: lunches, 
-          dinners: dinners, 
-          snacks: snacks
-        });
-      }
-    });
+        else {
+          let breakfasts = [], lunches = [], dinners = [], snacks = [];
+          for (let i = 0; i < result.length; i++) {
+            switch (result[i].category) {
+              case "Breakfast":
+                breakfasts.push(result[i]);
+                break;
+              case "Lunch":
+                lunches.push(result[i]);
+                break;
+              case "Dinner":
+                dinners.push(result[i]);
+                break;
+              case "Snack":
+                snacks.push(result[i]);
+                break;
+            }
+          }
+          this.setState({
+            breakfasts: breakfasts,
+            lunches: lunches,
+            dinners: dinners,
+            snacks: snacks
+          });
+        }
+      })
+    };
+
+    this.getAll();
+
   }
   
   render() {
@@ -84,8 +104,8 @@ export default class RecipeListView extends Component{
             anchor={<Appbar.Action icon={MORE_ICON} color="white" onPress={() => {this.setState({menuVisible: true})}} />}>
             
             {/* Pressing an item will create a pop up and hide the menu */}
-            <Menu.Item onPress={() => {this.setState({dialogVisible: true, menuVisible: false})}} title="Add Recipe" />
-
+            <Menu.Item onPress={() => { this.setState({ dialogVisible: true, menuVisible: false }) }} title="Add Recipe" />
+            <Menu.Item onPress={() => {test1()}} title="Test" />
           </Menu>
 
         </Appbar.Header>
@@ -121,15 +141,20 @@ export default class RecipeListView extends Component{
             <Dialog.Content>
               <TextInput
               label="Recipe Name"
+              mode="outlined" 
               value= {this.state.newTitle}
-              onChangeText={text => this.setState({newTitle: text, tempTitle: text})}
+              onChangeText={text => this.setState({newTitle: text, tempTitle: text}, searchName(text, (result)=>{this.setState({nameTaken:result})}))}
               />
+              <HelperText type="error" visible={this.state.nameTaken}>
+                Recipe name already taken
+              </HelperText>
               
             </Dialog.Content>
             <Dialog.Actions>
               {/* Cancel button to reset field and Next button to go to next page */}
-              <Button onPress={()=>{this.setState({dialogVisible: false, newTitle:""})}}>Cancel</Button>
-              <Button disabled={this.state.newTitle.length < 1 ? true : false} onPress={()=>{this.setState({dialogVisible: false, categoryVis: true}), addRecipe(this.state.newTitle)}}>Next</Button>
+              <Button onPress={()=>{this.setState({dialogVisible: false, newTitle:""}), test()}}>Cancel</Button>
+              <Button disabled={this.state.newTitle.length < 1 ? true : false} 
+              onPress={()=>{searchName(this.state.newTitle, (result)=>{this.setState({nameTaken:result}) }), this.state.nameTaken ? null : this.setState({dialogVisible: false, categoryVis: true}, addRecipe(this.state.newTitle)) }}>Next</Button>
             </Dialog.Actions>
           </Dialog>
 
@@ -147,92 +172,187 @@ export default class RecipeListView extends Component{
             <Dialog.Actions>
               {/* Cancel button to reset field and Next button to go to next page */}
               <Button onPress={()=>{this.setState({categoryVis: false, newTitle:"", check:"Breakfast"}), del(this.state.tempTitle)}}>Cancel</Button>
-              <Button onPress={()=>{this.setState({categoryVis: false, ingrVis: true})}}>Next</Button>
+              <Button onPress={()=>{this.setState({categoryVis: false, ingrVis: true}), searchId(this.state.newTitle, (result)=>{this.setState({searchID:result}) })}}>Next</Button>
             </Dialog.Actions>
           </Dialog>
 
           {/* Pop up to add ingredients */}
-          <Dialog visible={this.state.ingrVis} onDismiss={()=> {this.setState({ingrVis: false, newTitle:"", check:"Breakfast", ingr:""})}}>
+          <Dialog visible={this.state.ingrVis} onDismiss={()=> {this.setState({ingrVis: false, newTitle:"", check:"Breakfast", ingrName:"", ingrQuan: "", ingrUnit: "none"}), del(this.state.tempTitle)}}>
             <Dialog.Title>Ingredients</Dialog.Title>
+            
             <Dialog.Content>
-              <TextInput
-              label="Ingredients"
-              value= {this.state.ingr}
-              onChangeText={text => this.setState({ingr: text})}
-              />
+              <DataTable>
+                <DataTable.Row>
+                  <DataTable.Cell onPress={() => { this.setState({ ingrTitleVis: true, ingrVis: false }) }} >Ingredient</DataTable.Cell>
+                  <DataTable.Cell numeric onPress={() => { this.setState({ ingrTitleVis: true, ingrVis: false }) }} >{this.state.ingrName}</DataTable.Cell>
+                </DataTable.Row>
+
+                <DataTable.Row>
+                  <DataTable.Cell onPress={() => { this.setState({ ingrQuantVis: true, ingrVis: false }) }} >Quantity</DataTable.Cell>
+                  <DataTable.Cell numeric onPress={() => { this.setState({ ingrQuantVis: true, ingrVis: false }) }} >{this.state.ingrQuan}</DataTable.Cell>
+                </DataTable.Row>
+                
+                <DataTable.Row>
+                  <DataTable.Cell onPress={() => { this.setState({ ingrUnitVis: true, ingrVis: false }) }} >Unit</DataTable.Cell>
+                  <DataTable.Cell numeric onPress={() => { this.setState({ ingrUnitVis: true, ingrVis: false }) }} >{this.state.ingrUnit}</DataTable.Cell>
+                </DataTable.Row>
+              </DataTable>
+
+              <Button disabled={ this.state.ingrName.length < 1 || this.state.ingrQLock}
+                onPress={() => {
+                  addIngr({ "item": this.state.ingrName, "quantity": this.state.ingrQuan, "measurement": this.state.ingrUnit }, this.state.searchID),
+                this.setState({ ingrName: "", ingrQuan: "", ingrUnit: "none", snackVis: true })
+              }}>Save</Button>
+              
             </Dialog.Content>
             <Dialog.Actions>
               {/* Cancel button to reset field and Next button to go to next page */}
-              <Button onPress={()=>{this.setState({ingrVis: false, newTitle:"", check:"Breakfast", ingr: ""})}}>Cancel</Button>
-              <Button onPress={()=>{this.setState({ingrVis: false, nutVis: true})}}>Next</Button>
+              <Button onPress={()=>{this.setState({ingrVis: false, newTitle:"", check:"Breakfast", ingrName: "", ingrQuan: "", ingrUnit: "none"}), delIng(this.state.searchID), del(this.state.tempTitle)}}>Cancel</Button>
+              <Button disabled={(this.state.ingrMoveOn1? !this.state.ingrMoveOn2 : this.state.ingrMoveOn2) }onPress={()=>{this.setState({ingrVis: false, nutVis: true})}}>Next</Button>
             </Dialog.Actions>
           </Dialog>
 
+
+          {/* pop up to add name of ingredients */}
+          <Dialog visible={this.state.ingrTitleVis} onDismiss={()=> {}}>
+            <Dialog.Title>Ingredients</Dialog.Title>
+            <Dialog.Content>
+            <TextInput
+              label="Ingredients"
+              mode="outlined" 
+              value= {this.state.ingrName}
+              onChangeText={text => this.setState({ingrName: text})}
+              />
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={()=>{this.setState({ingrTitleVis: false, ingrVis: true})}}>Cancel</Button>
+              <Button onPress={()=>{this.setState({ingrTitleVis: false, ingrVis: true, ingrMoveOn1: true})}}>Select</Button>
+            </Dialog.Actions>
+          </Dialog>
+
+          
+          {/* pop up to add the quantity of the ingredient */}
+          <Dialog visible={this.state.ingrQuantVis} >
+            <Dialog.Title>Quantity</Dialog.Title>
+            <Dialog.Content>
+            <TextInput
+              keyboardType={'number-pad'}
+              label="Quantity"
+              mode="outlined" 
+              value= {this.state.ingrQuan}
+              placeholder="0"
+              onChangeText={text => this.setState({ingrQuan: text}, Number(text) ? this.setState({ingrQLock: false})  : this.setState({ingrQLock: true}))}
+              />
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={()=>{this.setState({ingrQuantVis: false, ingrVis: true})}}>Cancel</Button>
+              <Button disabled={this.state.ingrQLock} onPress={()=>{this.setState({ingrQuantVis: false, ingrVis: true, ingrMoveOn2: true})}}>Select</Button>
+            </Dialog.Actions>
+          </Dialog>
+
+
+          {/* pop up to select the unit of the ingredient */}
+          <Dialog visible={this.state.ingrUnitVis} onDismiss={()=> {this.setState({ingrUnitVis: false, ingrUnit: "none"})}}>
+            <Dialog.Title>Units</Dialog.Title>
+            <Dialog.ScrollArea style={{height: '48%'}}> 
+              <ScrollView>
+                <Dialog.Content>
+                  <RadioButton.Group
+                    onValueChange={ingrUnit => this.setState({ ingrUnit })}
+                    value={this.state.ingrUnit}>
+                    <RadioButton.Item label="none" value="none" color="blue"/>
+                    <RadioButton.Item label="tsp" value="tsp" color="blue"/>
+                    <RadioButton.Item label="tbsp" value="tbsp" color="blue"/> 
+                    <RadioButton.Item label="cup" value="cup" color="blue"/>
+                    <RadioButton.Item label="ml" value="ml" color="blue"/>
+                    <RadioButton.Item label="l" value="l" color="blue"/>
+                    <RadioButton.Item label="mg" value="mg" color="blue"/>
+                    <RadioButton.Item label="g" value="g" color="blue"/>
+                    <RadioButton.Item label="kg" value="kg" color="blue"/>
+                    <RadioButton.Item label="slice" value="slice" color="blue"/>
+                    <RadioButton.Item label="can" value="can" color="blue"/>
+                    <RadioButton.Item label="pinch" value="pinch" color="blue"/>
+                  </RadioButton.Group>
+                </Dialog.Content>
+              </ScrollView>
+            </Dialog.ScrollArea>
+            <Dialog.Actions>
+              {/* Cancel button doesn't work yet & look of this*/}
+              <Button onPress={()=>{this.setState({ingrUnitVis: false, ingrVis: true})}}>Cancel</Button>
+              <Button onPress={()=>{this.setState({ingrUnitVis: false, ingrVis: true})}}>Select</Button>
+            </Dialog.Actions>
+          </Dialog>
+
+
           {/* Pop up to add nutrition */}
-          <Dialog visible={this.state.nutVis} onDismiss={()=> {this.setState({nutVis: false, newTitle:"", check:"Breakfast", ingr:"", fat: "", protein: "", carbs: "", sugar: "", dis1: true, dis2: true, dis3: true, dis4: true})}}>
+          <Dialog visible={this.state.nutVis} onDismiss={()=> {this.setState({nutVis: false, newTitle:"", check:"Breakfast", ingrName:"", ingrQuan: "", ingrUnit: "none", fat: "", protein: "", carbs: "", sugar: "", dis1: true, dis2: true, dis3: true, dis4: true}), delIng(this.state.searchID), del(this.state.tempTitle)}}>
             <Dialog.Title>Nutrition</Dialog.Title>
             <Dialog.Content>
 
               <TextInput
               keyboardType={'number-pad'}
               label="Fat"
+              mode="outlined" 
               value= {this.state.fat}
               placeholder="0"
               onChangeText={text => this.setState({fat: text}, Number(text) ? this.setState({dis1: false})  : this.setState({dis1: true}))}
               />
               <HelperText type="error" visible={!Number(this.state.fat) && this.state.fat.length > 1 ? true: false}>
-                Not a number!
+                Not a valid number
               </HelperText>
 
               <TextInput
               keyboardType={'number-pad'}
               label="Protein"
+              mode="outlined" 
               value= {this.state.protein}
               placeholder="0"
               onChangeText={text => this.setState({protein: text}, Number(text) ? this.setState({dis2: false})  : this.setState({dis2: true}))}
               />
               <HelperText type="error" visible={!Number(this.state.protein) && this.state.protein.length > 1 ? true: false}>
-                Not a number!
+                Not a valid number
               </HelperText>
 
               <TextInput
               keyboardType={'number-pad'}
               label="Carbohydrates"
+              mode="outlined" 
               value= {this.state.carbs}
               placeholder="0"
               onChangeText={text => this.setState({carbs: text}, Number(text) ? this.setState({dis3: false})  : this.setState({dis3: true}))}
               />
               <HelperText type="error" visible={!Number(this.state.carbs) && this.state.carbs.length > 1 ? true: false}>
-                Not a number!
+                Not a valid number
               </HelperText>
 
               <TextInput
               keyboardType={'number-pad'}
               label="Sugar"
+              mode="outlined" 
               value= {this.state.sugar}
               placeholder="0"
               onChangeText={text => this.setState({sugar: text}, Number(text) ? this.setState({dis4: false})  : this.setState({dis4: true}))}
               />
               <HelperText type="error" visible={!Number(this.state.sugar) && this.state.sugar.length > 1 ? true: false}>
-                Not a number!
+                Not a valid number
               </HelperText>
 
             </Dialog.Content>
             <Dialog.Actions>
               {/* Cancel button to reset field and Next button to go to next page */}
-              <Button onPress={()=>{this.setState({nutVis: false, newTitle:"", check:"Breakfast", ingr: "", fat: "", protein: "", carbs: "", sugar: "", dis1: true, dis2: true, dis3: true, dis4: true})}}>Cancel</Button>
-              {/* <Button disabled={(this.state.fat.length && this.state.protein.length && this.state.carbs.length && this.state.sugar.length) < 1  ? true : false}   */}
+              <Button onPress={()=>{this.setState({nutVis: false, newTitle:"", check:"Breakfast", ingrName: "", ingrQuan: "", ingrUnit: "none", fat: "", protein: "", carbs: "", sugar: "", dis1: true, dis2: true, dis3: true, dis4: true}), delIng(this.state.searchID), del(this.state.tempTitle)}}>Cancel</Button>
               <Button disabled={this.state.dis1 || this.state.dis2 || this.state.dis3 || this.state.dis4  ? true : false}  
               onPress={()=>{this.setState({nutVis: false, methodVis: true})}}>Next</Button>
             </Dialog.Actions>
           </Dialog>
 
           {/* Pop up to add method */}
-          <Dialog visible={this.state.methodVis} onDismiss={()=> {this.setState({methodVis: false, newTitle:"", check:"Breakfast", ingr:"", fat: "", protein: "", carbs: "", sugar: "", method: "", dis1: true, dis2: true, dis3: true, dis4: true})}}>
+          <Dialog visible={this.state.methodVis} onDismiss={()=> {this.setState({methodVis: false, newTitle:"", check:"Breakfast", ingrName:"", ingrQuan: "", ingrUnit: "none", fat: "", protein: "", carbs: "", sugar: "", method: "", dis1: true, dis2: true, dis3: true, dis4: true}), delIng(this.state.searchID), del(this.state.tempTitle)}}>
             <Dialog.Title>Method</Dialog.Title>
             <Dialog.Content>
               <TextInput
               label="Method"
+              mode="outlined" 
               value= {this.state.method}
               placeholder="Step by step instructions"
               multiline={true}
@@ -247,16 +367,27 @@ export default class RecipeListView extends Component{
             
             <Dialog.Actions>
               {/* Cancel button to reset field and Next button to go to next page */}
-              <Button onPress={()=>{this.setState({methodVis: false, newTitle:"", check:"Breakfast", ingr: "", fat: "", protein: "", carbs: "", sugar: "", method: "", dis1: true, dis2: true, dis3: true, dis4: true})}}>Cancel</Button>
+              <Button onPress={()=>{this.setState({methodVis: false, newTitle:"", check:"Breakfast", ingrName: "", ingrQuan: "", ingrUnit: "none", fat: "", protein: "", carbs: "", sugar: "", method: "", dis1: true, dis2: true, dis3: true, dis4: true}), delIng(this.state.searchID), del(this.state.tempTitle)}}>Cancel</Button>
               <Button 
-                onPress={()=>{this.setState({methodVis: false, newTitle:"", check:"Breakfast", ingr: "", fat: "", protein: "", carbs: "", sugar: "", method: "", dis1: true, dis2: true, dis3: true, dis4: true}, 
-                  updateRecipe(this.state.newTitle, this.state.check, this.state.fat, this.state.protein, this.state.carbs, this.state.sugar, this.state.method))}
+                onPress={() => {
+                  this.setState({ methodVis: false, newTitle: "", check: "Breakfast", ingrName: "", ingrQuan: "", ingrUnit: "none", fat: "", protein: "", carbs: "", sugar: "", method: "", dis1: true, dis2: true, dis3: true, dis4: true },
+                    updateRecipe(this.state.newTitle, this.state.check, this.state.fat, this.state.protein, this.state.carbs, this.state.sugar, this.state.method), this.getAll())}
                 }>Next</Button>
 
             </Dialog.Actions>
           </Dialog>
 
         </Portal>
+
+        {/* Displays a message when an ingredient is added
+        Currently displayed behind the dialog, making it look darker
+        Looking to add an undo button? */}
+        <Snackbar
+          visible={this.state.snackVis}
+          onDismiss={()=> this.setState({snackVis: false})}
+          >
+          Ingredient added
+        </Snackbar>
 
       </React.Fragment>
     );
