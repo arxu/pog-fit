@@ -1,9 +1,9 @@
-import React, {Component, useState} from 'react';
+import * as React from 'react';
 import {Appbar, Dialog, Portal, TextInput, DataTable, HelperText, RadioButton} from 'react-native-paper';
 import {ScrollView, View} from "react-native";
 import {TouchableWithoutFeedback as TWF} from 'react-native-gesture-handler';
-import DatePicker from "react-datepicker";
-require ('react-datepicker/dist/react-datepicker.css');
+import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
+import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 
 import { getAllUsers } from "../FileStorage/Database";
 import { disableExpoCliLogging } from 'expo/build/logs/Logs';
@@ -22,10 +22,6 @@ export default class ProfileView extends Component {
             title: "Profile"
           };
 
-        this.edited = {
-            username : ""
-
-        };
           //get user profile
           getAllUsers((error, result) => {
             if (error) {
@@ -99,15 +95,13 @@ export default class ProfileView extends Component {
                                     onChangeText={response => this.setState({username: response})}
                                     />   
                                     <DatePicker
-                                        selected={this.state.profile.dob}
-                                        onChange={date => this.setState({dob: date})}
+                                        label="Date of Birth"
+                                        value={this.state.profile.dob}
+                                        onChange={(newValue) => {
+                                            this.setState({profile:{dob: newValue}});
+                                        }}
+                                        renderInput={(params) => <TextField {...params} />}
                                     />
-                                    {/* <HelperText type="info">
-                                        Please use the format dd/mm/yy.
-                                    </HelperText> */}
-                                    {/* <HelperText type="error" visible={this.state.dobValid}>
-                                        Invalid date of birth.
-                                    </HelperText> */}
                             
                                     <RadioButton.Group
                                         onValueChange={gender => this.setState({ gender })}
